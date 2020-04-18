@@ -1,26 +1,82 @@
 cmake_minimum_required(VERSION 3.5)
+if(COMPILER_SUPPORTS_CXX17)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+else()
+    #message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} doesn't have C++17 support.")
+endif()
+message(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(PROJECT Hello)
-
-project(${PROJECT} LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 
-set(HEADERS version.h)
-set(SOURCES main.cpp version.cpp)
+set(PROJECT Chat)
+set(SERVER server)
+set(CLIENT client)
+set(TESTS tests)
 
-add_executable(${PROJECT} ${HEADERS} ${SOURCES})
+set(SRC src/)
+set(Server ${SRC}server/)
+set(Cleint ${SRC}client/)
+set(Tests ${SRC}tests/)
 
-set_target_properties(${PROJECT} PROPERTIES
+set(Protocol ${SRC}protocol/)
+set(Logger ${SRC}log/)
+
+project(${PROJECT} LANGUAGES CXX)
+
+include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
+
+#****************************************************************************************************
+set(SERVER_SOURCES
+    ${Server}startup_server.cpp
+    ${Server}server.h
+    ${Server}session.h
+    ${Protocol}protocol.h ${Protocol}protocol.cpp
+    ${Logger}logger.h
+)
+
+set(CLIENT_SOURCES
+    ${Cleint}startup_client.cpp
+    ${Protocol}protocol.h
+    ${Protocol}protocol.cpp
+)
+
+set(TESTS_SOURSES
+    ${Tests}startup_tests.cpp
+    ${Tests}first_test.cpp)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+
+# add projects
+add_executable(${SERVER} ${SERVER_SOURCES})
+add_executable(${CLIENT} ${CLIENT_SOURCES})
+add_executable(${TESTS} ${TESTS_SOURSES})
+
+set_target_properties(${SERVER} ${CLIENT} ${TESTS} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
+        #COMPILE_OPTIONS "-O2;-Wall;-Wextra;-Wpedantic"
 )
+#****************************************************************************************************
+
+enable_testing()
+include_directories(${GTEST_INCLUDE_DIR})
+
 
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
+find_package(GTest REQUIRED)
 
-target_link_libraries (${PROJECT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+find_library(UnitTests gtest)
+find_library(LOGGER log4cplus)
+
+target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} )
+target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
 
 if(Boost_FOUND)
     include_directories(${BOOST_INCLUDE_DIRS})
@@ -28,6 +84,8 @@ if(Boost_FOUND)
     add_definitions(${Boost_DEFINITIONS})
 
     include_directories(${Boost_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT} ${Boost_LIBRARIES})
-    target_link_libraries(${PROJECT} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+    target_link_libraries(${SERVER} ${Boost_LIBRARIES})
+    target_link_libraries(${CLIENT} ${Boost_LIBRARIES})
+    target_link_libraries(${SERVER} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+    target_link_libraries(${CLIENT} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_SYSTEM_LIBRARY})
 endif()
