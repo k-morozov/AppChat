@@ -10,17 +10,20 @@
 #include <boost/asio.hpp>
 #include "../protocol/protocol.h"
 
+class chat_participant;
+
 using boost::asio::ip::tcp;
-
-class chat_participant {
-public:
-    virtual ~chat_participant() {};
-    virtual void deliver(const Messages&) = 0;
-};
-
 using chat_participant_ptr = std::shared_ptr<chat_participant>;
 using messege_deque = std::deque<Messages>;
 
+// **********************************************************************************************
+class chat_participant {
+public:
+    virtual ~chat_participant() {};
+    virtual void deliver(chat_participant_ptr , const Messages&) = 0;
+};
+
+// **********************************************************************************************
 class Chat_room  {
 public:
     Chat_room() = default;
@@ -29,7 +32,7 @@ public:
         std::cout << "join to room" << std::endl;
         participants.insert(ptr);
         for(const auto& mes:messeges) {
-            ptr->deliver(mes);
+            ptr->deliver(ptr, mes);
         }
     }
 
@@ -37,10 +40,10 @@ public:
         participants.erase(ptr);
     }
 
-    void deliver(const Messages& mes) {
+    void deliver(chat_participant_ptr from,const Messages& mes) {
         messeges.push_back(mes);
         for(auto& part: participants) {
-            part->deliver(mes);
+            if (from.get()!=part.get()) part->deliver(from, mes);
         }
     }
 
@@ -62,7 +65,7 @@ public:
         do_read_header();
     }
 
-    virtual void deliver(const Messages& mes) override {
+    virtual void deliver(chat_participant_ptr from, const Messages& mes) override {
         bool write_in_progress = !write_mess.empty();
         write_mess.push_back(mes);
         if (!write_in_progress) {
@@ -85,7 +88,7 @@ private:
                 if (read_mes.decode_header()) {
                     auto size_body = read_mes.get_body_length();
 //                    std::cout << "size body = " << size_body << std::endl;
-                    do_read_body(size_body);
+                    do_read_body();
                 }
             }
             else {
@@ -93,14 +96,13 @@ private:
             }
         });
     }
-    void do_read_body(std::size_t size_body) {
+    void do_read_body() {
         auto self(shared_from_this());
-        std::cout << "do_read_body" << std::endl;
-        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_body(), size_body),
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_body(), read_mes.get_body_length()),
             [this, self](boost::system::error_code error, std::size_t) {
-                std::cout << "body = " << read_mes.get_body() << std::endl;
+                *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
-                    chat_room.deliver(read_mes);
+                    chat_room.deliver(self, read_mes);
                     do_read_header();
                 }
                 else {

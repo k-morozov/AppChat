@@ -6,9 +6,9 @@ else()
 endif()
 message(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(PROJECT ASIO_Server)
-set(SERVER asio_server)
-set(CLIENT asio_client)
+set(PROJECT Chat)
+set(SERVER server)
+set(CLIENT client)
 
 set(SRC src/)
 set(Server ${SRC}server/)

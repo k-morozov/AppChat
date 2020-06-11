@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 
 class Messages {
 public:
@@ -11,11 +12,12 @@ public:
     enum { max_body_size = 512};
 
     Messages() : body_length(0) {};
-    Messages(char *mes)
+    Messages(const char *mes)
     {
             set_body_lenght(std::strlen(mes));
-            std::memcpy(get_body(), mes, body_length);
             encode_header();
+
+            std::memcpy(get_body(), mes, body_length+1);
     };
 
     const char* get_data() const { return data; }

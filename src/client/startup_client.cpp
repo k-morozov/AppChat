@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include <deque>
 #include <boost/asio.hpp>
@@ -13,7 +12,6 @@ public:
     }
 
     void write(const Messages& mes) {
-//        std::cout << "write header = " << mes.get_length() <<  std::endl;
         bool process_write = !write_mes.empty();
         write_mes.push_back(mes);
         if (!process_write) {
@@ -43,7 +41,6 @@ private:
     }
 
     void do_read_header() {
-//        std::cout << "do_read_header" << std::endl;
         boost::asio::async_read(sock, boost::asio::buffer(mes_read.get_data(), Messages::header_size),
             [this](boost::system::error_code ec, std::size_t) {
                 if (!ec) {
@@ -59,10 +56,10 @@ private:
         });
     }
     void do_read_body(std::size_t size_body) {
-//        std::cout << "do_read_body" << std::endl;
         boost::asio::async_read(sock, boost::asio::buffer(mes_read.get_body(), size_body),
             [this](boost::system::error_code error, std::size_t) {
                 if (!error) {
+                    *(mes_read.get_body()+mes_read.get_body_length()) = '\0';
                     std::cout << mes_read.get_body() << std::endl;
                     do_read_header();
                 }
@@ -72,11 +69,10 @@ private:
         });
     }
     void do_write() {
-        std::cout << "---> " << write_mes.front().get_body() << " ---> " << write_mes.front().get_body_length() << std::endl;;
-
         boost::asio::async_write(sock, boost::asio::buffer(write_mes.front().get_data(), write_mes.front().get_mes_length()),
             [this](boost::system::error_code ec, std::size_t) {
             if (!ec) {
+                //std::cout << mes_read.get_body() << std::endl;
                 write_mes.pop_front();
                 if (!write_mes.empty()) do_write();
             }
@@ -99,9 +95,9 @@ int main() {
     Client client(io_service, endpoints);
     std::thread th([&io_service]() { io_service.run();} );
 
-    std::string str;
-    while(std::cin >> str) {
-        client.write(Messages(str.data()));
+    char mes[Messages::max_body_size+1];
+    while(std::cin.getline(mes, Messages::max_body_size+1) ) {
+        client.write(Messages(mes));
     }
 
     th.join();
