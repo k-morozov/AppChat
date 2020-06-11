@@ -47,8 +47,11 @@ private:
         boost::asio::async_read(sock, boost::asio::buffer(mes_read.get_data(), Messages::header_size),
             [this](boost::system::error_code ec, std::size_t) {
                 if (!ec) {
-                    auto size_body = mes_read.get_length();
-                    do_read_body(size_body);
+                    if (mes_read.decode_header())
+                    {
+                        auto size_body = mes_read.get_body_length();
+                        do_read_body(size_body);
+                    }
                 }
                 else {
                     sock.close();
@@ -56,6 +59,7 @@ private:
         });
     }
     void do_read_body(std::size_t size_body) {
+//        std::cout << "do_read_body" << std::endl;
         boost::asio::async_read(sock, boost::asio::buffer(mes_read.get_body(), size_body),
             [this](boost::system::error_code error, std::size_t) {
                 if (!error) {
@@ -68,9 +72,9 @@ private:
         });
     }
     void do_write() {
-        std::cout << "---> " << write_mes.front().get_body() << " ---> " << write_mes.front().get_length() << std::endl;;
+        std::cout << "---> " << write_mes.front().get_body() << " ---> " << write_mes.front().get_body_length() << std::endl;;
 
-        boost::asio::async_write(sock, boost::asio::buffer(write_mes.front().get_data(), write_mes.front().get_length()),
+        boost::asio::async_write(sock, boost::asio::buffer(write_mes.front().get_data(), write_mes.front().get_mes_length()),
             [this](boost::system::error_code ec, std::size_t) {
             if (!ec) {
                 write_mes.pop_front();
@@ -95,7 +99,6 @@ int main() {
     Client client(io_service, endpoints);
     std::thread th([&io_service]() { io_service.run();} );
 
-    char mes[Messages::max_body_size];
     std::string str;
     while(std::cin >> str) {
         client.write(Messages(str.data()));

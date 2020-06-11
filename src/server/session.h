@@ -28,7 +28,7 @@ public:
     void join(chat_participant_ptr ptr) {
         std::cout << "join to room" << std::endl;
         participants.insert(ptr);
-        for(auto mes:messeges) {
+        for(const auto& mes:messeges) {
             ptr->deliver(mes);
         }
     }
@@ -38,6 +38,7 @@ public:
     }
 
     void deliver(const Messages& mes) {
+        messeges.push_back(mes);
         for(auto& part: participants) {
             part->deliver(mes);
         }
@@ -48,12 +49,13 @@ private:
     messege_deque messeges;
 };
 
+// **********************************************************************************************
 class Chat_session : public chat_participant, public std::enable_shared_from_this<Chat_session> {
 public:
     Chat_session(tcp::socket sock, Chat_room &chat_room)
         : sock(std::move(sock)), chat_room(chat_room)
     {
-        std::cout << "new chat session" << std::endl;
+        //std::cout << "new chat session" << std::endl;
     }
     void start() {
         chat_room.join(shared_from_this());
@@ -80,9 +82,11 @@ private:
         boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_data(), Messages::header_size),
                                 [this, self](boost::system::error_code error, std::size_t) {
             if (!error) {
-                auto size_body = read_mes.get_length()-Messages::header_size;
-                std::cout << "size body = " << size_body << std::endl;
-                do_read_body(size_body);
+                if (read_mes.decode_header()) {
+                    auto size_body = read_mes.get_body_length();
+//                    std::cout << "size body = " << size_body << std::endl;
+                    do_read_body(size_body);
+                }
             }
             else {
                 chat_room.leave(self);
@@ -91,6 +95,7 @@ private:
     }
     void do_read_body(std::size_t size_body) {
         auto self(shared_from_this());
+        std::cout << "do_read_body" << std::endl;
         boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_body(), size_body),
             [this, self](boost::system::error_code error, std::size_t) {
                 std::cout << "body = " << read_mes.get_body() << std::endl;
@@ -106,7 +111,7 @@ private:
     void do_write() {
         auto self(shared_from_this());
         boost::asio::async_write(sock,
-                                 boost::asio::buffer(write_mess.front().get_data() , write_mess.front().get_length()),
+                                 boost::asio::buffer(write_mess.front().get_data() , write_mess.front().get_mes_length()),
                                  [this, self](boost::system::error_code error, std::size_t) {
                 if (!error) {
                     write_mess.pop_front();

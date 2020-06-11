@@ -10,10 +10,10 @@ public:
     enum { header_size = 4};
     enum { max_body_size = 512};
 
-    Messages():body_length(0) {};
+    Messages() : body_length(0) {};
     Messages(char *mes)
     {
-            set_lenght(std::strlen(mes));
+            set_body_lenght(std::strlen(mes));
             std::memcpy(get_body(), mes, body_length);
             encode_header();
     };
@@ -24,8 +24,9 @@ public:
     const char* get_body() const { return data+header_size; }
     char * get_body() { return data+header_size; }
 
-    std::size_t get_length() const { return header_size + body_length; }
-    void set_lenght(std::size_t len) {
+    std::size_t get_mes_length() const { return header_size + body_length; }
+    std::size_t get_body_length() const { return body_length; }
+    void set_body_lenght(std::size_t len) {
         body_length = len;
         if (len>max_body_size) {
             body_length = 0;
