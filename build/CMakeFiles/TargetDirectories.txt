@@ -1,6 +1,0 @@
-/home/focus/Workspace/Development/App-chat/build/CMakeFiles/rebuild_cache.dir
-/home/focus/Workspace/Development/App-chat/build/CMakeFiles/server.dir
-/home/focus/Workspace/Development/App-chat/build/CMakeFiles/client.dir
-/home/focus/Workspace/Development/App-chat/build/CMakeFiles/edit_cache.dir
-/home/focus/Workspace/Development/App-chat/build/CMakeFiles/tests.dir
-/home/focus/Workspace/Development/App-chat/build/CMakeFiles/test.dir
