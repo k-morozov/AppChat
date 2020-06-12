@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/focus/Workspace/Development/App-chat/src/tests/first_test.cpp
+gtest/gtest.h
+-
+
+/home/focus/Workspace/Development/App-chat/src/tests/startup_tests.cpp
+gtest/gtest.h
+-
+
