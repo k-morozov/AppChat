@@ -3,6 +3,7 @@
 
 #include <server/server.h>
 #include <log/logger.h>
+#include "gtest/gtest.h"
 
 int main() {
     init_logger();

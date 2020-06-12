@@ -6,12 +6,21 @@ else()
 endif()
 message(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set (Boost_USE_STATIC_LIBS ON)
+set (Boost_USE_MULTITHREADED ON)
+
 set(PROJECT Chat)
 set(SERVER server)
 set(CLIENT client)
+set(TESTS tests)
+
 set(SRC src/)
 set(Server ${SRC}server/)
 set(Cleint ${SRC}client/)
+set(Tests ${SRC}tests/)
+
 set(Protocol ${SRC}protocol/)
 set(Logger ${SRC}log/)
 
@@ -19,20 +28,24 @@ project(${PROJECT} LANGUAGES CXX)
 
 include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
 
-set (Boost_USE_STATIC_LIBS ON)
-set (Boost_USE_MULTITHREADED ON)
-
-set(SERVER_SOURCES ${Server}startup_server.cpp
+#****************************************************************************************************
+set(SERVER_SOURCES
+    ${Server}startup_server.cpp
     ${Server}server.h
     ${Server}session.h
     ${Protocol}protocol.h ${Protocol}protocol.cpp
     ${Logger}logger.h
 )
 
-set(CLIENT_SOURCES ${Cleint}startup_client.cpp
+set(CLIENT_SOURCES
+    ${Cleint}startup_client.cpp
     ${Protocol}protocol.h
     ${Protocol}protocol.cpp
 )
+
+set(TESTS_SOURSES
+    ${Tests}startup_tests.cpp
+    ${Tests}first_test.cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
@@ -40,26 +53,30 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 # add projects
 add_executable(${SERVER} ${SERVER_SOURCES})
 add_executable(${CLIENT} ${CLIENT_SOURCES})
+add_executable(${TESTS} ${TESTS_SOURSES})
 
-set_target_properties(${SERVER} PROPERTIES
+set_target_properties(${SERVER} ${CLIENT} ${TESTS} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
         #COMPILE_OPTIONS "-O2;-Wall;-Wextra;-Wpedantic"
 )
+#****************************************************************************************************
 
-set_target_properties(${CLIENT} PROPERTIES
-        CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED ON
-        LINK_LIBRARIES pthread
-        #COMPILE_OPTIONS "-O2;-Wall;-Wextra;-Wpedantic"
-)
+enable_testing()
+include_directories(${GTEST_INCLUDE_DIR})
+
 
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
+find_package(GTest REQUIRED)
+
+find_library(UnitTests gtest)
 find_library(LOGGER log4cplus)
-target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER})
+
+target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} )
 target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
 
 if(Boost_FOUND)
     include_directories(${BOOST_INCLUDE_DIRS})

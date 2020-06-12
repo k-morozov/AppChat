@@ -27,7 +27,7 @@ public:
 // **********************************************************************************************
 class Chat_room  {
 public:
-    Chat_room(): logger(LOGGER("create Chat_room")) {};
+    Chat_room(): logger(LOGGER("Chat_room")) {};
 
     void join(chat_participant_ptr ptr) {
         LOG4CPLUS_INFO(logger, "join to Chat_room");
