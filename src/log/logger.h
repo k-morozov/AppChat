@@ -10,6 +10,8 @@
 #include <log4cplus/ndc.h>
 #include <log4cplus/helpers/loglog.h>
 
+#define LOGGER(x) log4cplus::Logger::getInstance(LOG4CPLUS_TEXT({x}))
+
 void init_logger() {
     log4cplus::initialize();
     log4cplus::SharedAppenderPtr appender_file(

@@ -1,8 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "session.h"
-
+#include <server/session.h>
 
 using boost::asio::ip::tcp;
 

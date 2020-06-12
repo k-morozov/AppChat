@@ -14,13 +14,5 @@ EOF
 ./b2 install variant=release link=shared,static threading=multi --layout=system -j 2 --prefix=${DIR_INSTALL} --toolset=gcc --without-python || return 1
 cd ..
 
-#log4cxx http://www.yolinux.com/TUTORIALS/Log4cxx.html
-sudo apt-get install apache2-dev libapr1-dev libaprutil1-dev
-tar xzf apache-log4cxx-0.10.0.tar.gz
-cd apache-log4cxx-0.10.0/
-./configure --prefix=/usr
-Typically I would specify /opt or /usr/local but xmlbeansxx (an XML parser I like) which has a dependency on log4cxx and requires an installation in /usr.
-make
-(will call Maven mvn)
-make instal
+#log4cplus https://sourceforge.net/projects/log4cplus/
 

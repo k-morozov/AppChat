@@ -9,7 +9,6 @@ message(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 set(PROJECT Chat)
 set(SERVER server)
 set(CLIENT client)
-
 set(SRC src/)
 set(Server ${SRC}server/)
 set(Cleint ${SRC}client/)
@@ -17,6 +16,8 @@ set(Protocol ${SRC}protocol/)
 set(Logger ${SRC}log/)
 
 project(${PROJECT} LANGUAGES CXX)
+
+include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
 
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
