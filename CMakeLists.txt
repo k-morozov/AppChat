@@ -14,6 +14,7 @@ set(SRC src/)
 set(Server ${SRC}server/)
 set(Cleint ${SRC}client/)
 set(Protocol ${SRC}protocol/)
+set(Logger ${SRC}log/)
 
 project(${PROJECT} LANGUAGES CXX)
 
@@ -24,6 +25,7 @@ set(SERVER_SOURCES ${Server}startup_server.cpp
     ${Server}server.h
     ${Server}session.h
     ${Protocol}protocol.h ${Protocol}protocol.cpp
+    ${Logger}logger.h
 )
 
 set(CLIENT_SOURCES ${Cleint}startup_client.cpp
@@ -54,8 +56,8 @@ set_target_properties(${CLIENT} PROPERTIES
 
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
-
-target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+find_library(LOGGER log4cplus)
+target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER})
 target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
 
 if(Boost_FOUND)

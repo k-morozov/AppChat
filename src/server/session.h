@@ -10,6 +10,7 @@
 #include <boost/asio.hpp>
 #include "../protocol/protocol.h"
 
+
 class chat_participant;
 
 using boost::asio::ip::tcp;
