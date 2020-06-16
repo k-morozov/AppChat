@@ -6,13 +6,13 @@
 #include <cstring>
 #include <iostream>
 
-class Messages {
+class Message {
 public:
     enum { header_size = 4};
     enum { max_body_size = 512};
 
-    Messages() : body_length(0) {};
-    Messages(const char *mes)
+    Message() : body_length(0) {};
+    Message(const char *mes)
     {
             set_body_lenght(std::strlen(mes));
             encode_header();
@@ -51,6 +51,7 @@ public:
         }
         return true;
     }
+
 private:
     char data[header_size + max_body_size];
     std::size_t body_length;

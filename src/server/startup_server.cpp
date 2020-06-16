@@ -15,6 +15,7 @@ int main() {
         boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 7777);
         Server server(io_service, endpoint);
         io_service.run();
+
     } catch (const std::exception & ex) {
         LOG4CPLUS_ERROR(logger, "exception " << ex.what());
         std::cout << ex.what() << std::endl;

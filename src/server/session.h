@@ -2,7 +2,7 @@
 #define SESSION_H
 
 #include <iostream>
-#include <set>
+#include <unordered_set>
 #include <deque>
 #include <queue>
 #include <memory>
@@ -11,17 +11,18 @@
 #include <protocol/protocol.h>
 #include <log/logger.h>
 
-class chat_participant;
+class ISubscriber;
 
 using boost::asio::ip::tcp;
-using chat_participant_ptr = std::shared_ptr<chat_participant>;
-using messege_deque = std::deque<Messages>;
+using subscriber_ptr = std::shared_ptr<ISubscriber>;
+using messege_deque = std::deque<Message>;
 
 // **********************************************************************************************
-class chat_participant {
+class ISubscriber {
 public:
-    virtual ~chat_participant() {};
-    virtual void deliver(chat_participant_ptr , const Messages&) = 0;
+    virtual ~ISubscriber() {};
+    virtual void deliver(subscriber_ptr , const Message&) = 0;
+    virtual std::string get_login() const = 0;
 };
 
 // **********************************************************************************************
@@ -29,65 +30,119 @@ class Chat_room  {
 public:
     Chat_room(): logger(LOGGER("Chat_room")) {};
 
-    void join(chat_participant_ptr ptr) {
-        LOG4CPLUS_INFO(logger, "join to Chat_room");
-        participants.insert(ptr);
+    void join(subscriber_ptr ptr) {
+        LOG4CPLUS_INFO(logger, "New subscriber: " << ptr->get_login());
+        std::cout << "New subscriber: " << ptr->get_login() << std::endl;
+
+        subscribers.insert(ptr);
         for(const auto& mes:messeges) {
             ptr->deliver(ptr, mes);
         }
     }
 
-    void leave(chat_participant_ptr ptr) {
-        LOG4CPLUS_INFO(logger, "leave from Chat_room");
-        participants.erase(ptr);
+    void leave(subscriber_ptr ptr) {
+        LOG4CPLUS_INFO(logger, "leave from Chat_room" << ptr->get_login());
+        std::cout << "leave from Chat_room: " << ptr->get_login() << std::endl;
+
+        subscribers.erase(ptr);
     }
 
-    void deliver(chat_participant_ptr from,const Messages& mes) {
+    void deliver(subscriber_ptr from, const Message& mes) {
         LOG4CPLUS_INFO(logger, "deliver messege");
+//        std::cout << "deliver messege: " << std::endl;
+
         messeges.push_back(mes);
-        for(auto& part: participants) {
+        for(auto& part: subscribers) {
             if (from.get()!=part.get()) part->deliver(from, mes);
         }
     }
 
 private:
-    std::set<chat_participant_ptr> participants;
+    std::unordered_set<subscriber_ptr> subscribers;
     messege_deque messeges;
     log4cplus::Logger logger;
 };
 
 // **********************************************************************************************
-class Chat_session : public chat_participant, public std::enable_shared_from_this<Chat_session> {
+class Chat_session : public ISubscriber, public std::enable_shared_from_this<Chat_session> {
 public:
     Chat_session(tcp::socket sock, Chat_room &chat_room)
         : sock(std::move(sock)), chat_room(chat_room), logger(LOGGER("Chat_session"))
     {
         LOG4CPLUS_INFO(logger, "new chat session");
     }
+
     void start() {
         LOG4CPLUS_INFO(logger, "start session");
-        chat_room.join(shared_from_this());
-        do_read_header();
+
+        read_login_header();
     }
 
-    virtual void deliver(chat_participant_ptr, const Messages& mes) override {
+    virtual void deliver(subscriber_ptr, const Message& mes) override {
         bool write_in_progress = !write_mess.empty();
         write_mess.push_back(mes);
         if (!write_in_progress) {
             do_write();
         }
     }
+    virtual std::string get_login() const override {
+        return login;
+    }
 private:
     tcp::socket sock;
     Chat_room &chat_room;
-    Messages read_mes;
+    Message read_mes;
     messege_deque write_mess;
     log4cplus::Logger logger;
+
+    std::string login;
 private:
+
+    void read_login_header() {
+        LOG4CPLUS_INFO(logger, "read login-header" );
+//        std::cout << "read login-header" << std::endl;
+        auto self(shared_from_this());
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_data(), Message::header_size),
+            [this, self](boost::system::error_code error, std::size_t) {
+
+            if (!error) {
+                if (read_mes.decode_header()) {
+                    auto size_body = read_mes.get_body_length();
+
+                    LOG4CPLUS_INFO(logger, "size body = " << size_body);
+//                    std::cout << "size body = " << size_body << std::endl;
+
+                    read_login_body();
+                }
+            }
+        });
+    }
+    void read_login_body() {
+        LOG4CPLUS_INFO(logger, "read login-body");
+//        std::cout << "read login-body" << std::endl;
+        auto self(shared_from_this());
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_body(), read_mes.get_body_length()),
+            [this, self](boost::system::error_code error, std::size_t) {
+                *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
+                if (!error) {
+                    LOG4CPLUS_INFO(logger, "login = " << read_mes.get_body());
+                    login = read_mes.get_body();
+                    std::cout << "login = " << login << std::endl;
+
+                    chat_room.join(self);
+                    do_read_header();
+                }
+                else {
+                    LOG4CPLUS_INFO(logger, "error async_read when read login-body");
+                    sock.close();
+                }
+        });
+    }
+
     void do_read_header() {
         LOG4CPLUS_INFO(logger, "read header message" );
         auto self(shared_from_this());
-        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_data(), Messages::header_size),
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_data(), Message::header_size),
                                 [this, self](boost::system::error_code error, std::size_t) {
             if (!error) {
                 if (read_mes.decode_header()) {
@@ -110,6 +165,7 @@ private:
                 *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "message = " << read_mes.get_body());
+                    std::cout << read_mes.get_body() << std::endl;
                     chat_room.deliver(self, read_mes);
                     do_read_header();
                 }
@@ -119,6 +175,7 @@ private:
                 }
         });
     }
+
     void do_write() {
         LOG4CPLUS_INFO(logger, "write message");
         auto self(shared_from_this());

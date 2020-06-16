@@ -6,7 +6,7 @@ else()
 endif()
 message(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
@@ -39,8 +39,8 @@ set(SERVER_SOURCES
 
 set(CLIENT_SOURCES
     ${Cleint}startup_client.cpp
-    ${Protocol}protocol.h
-    ${Protocol}protocol.cpp
+    ${Protocol}protocol.h ${Protocol}protocol.cpp
+    ${Logger}logger.h
 )
 
 set(TESTS_SOURSES
@@ -56,10 +56,10 @@ add_executable(${CLIENT} ${CLIENT_SOURCES})
 add_executable(${TESTS} ${TESTS_SOURSES})
 
 set_target_properties(${SERVER} ${CLIENT} ${TESTS} PROPERTIES
-        CXX_STANDARD 17
+        CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
-        #COMPILE_OPTIONS "-O2;-Wall;-Wextra;-Wpedantic"
+        COMPILE_OPTIONS "-std=c++2a;-O2;-Wall;-Wextra;-Wpedantic"
 )
 #****************************************************************************************************
 
@@ -75,7 +75,7 @@ find_library(UnitTests gtest)
 find_library(LOGGER log4cplus)
 
 target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} )
-target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER})
 target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
 
 if(Boost_FOUND)
