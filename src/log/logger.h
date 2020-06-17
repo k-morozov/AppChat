@@ -1,6 +1,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
-
+#pragma once
 
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
@@ -21,6 +21,5 @@ void init_logger() {
     appender_file->setLayout(std::unique_ptr<log4cplus::Layout>(new log4cplus::PatternLayout(LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} [%-5p] <%x> %c - %m%n"))));
     log4cplus::Logger::getRoot().addAppender(appender_file);
 }
-
 
 #endif // LOGGER_H

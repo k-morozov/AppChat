@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <server/session.h>
+#include <server/manager.h>
 
 using boost::asio::ip::tcp;
 
@@ -15,14 +15,15 @@ public:
 
 private:
     boost::asio::ip::tcp::acceptor acc;
-    Chat_room chat_room;
+    Chat_room welcome_room;
 
 private:
     void do_accept() {
         acc.async_accept([this](const boost::system::error_code& error, tcp::socket sock) {
             std::cout << "new connection" << std::endl;
             if (!error) {
-                std::make_shared<Chat_session>(std::move(sock), chat_room)->start();
+//                Manager::Instance().add_connection(std::move(sock), welcome_room);
+                std::make_shared<Chat_session>(std::move(sock), welcome_room)->start();
             }
             do_accept();
         });

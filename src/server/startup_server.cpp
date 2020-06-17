@@ -3,7 +3,6 @@
 
 #include <server/server.h>
 #include <log/logger.h>
-#include "gtest/gtest.h"
 
 int main() {
     init_logger();
@@ -20,6 +19,4 @@ int main() {
         LOG4CPLUS_ERROR(logger, "exception " << ex.what());
         std::cout << ex.what() << std::endl;
     }
-
-    LOG4CPLUS_INFO(logger, "end main.");
 }

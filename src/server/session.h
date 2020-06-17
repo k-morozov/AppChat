@@ -10,6 +10,8 @@
 #include <boost/asio.hpp>
 #include <protocol/protocol.h>
 #include <log/logger.h>
+#include <server/database.h>
+
 
 class ISubscriber;
 
@@ -100,7 +102,6 @@ private:
 
     void read_login_header() {
         LOG4CPLUS_INFO(logger, "read login-header" );
-//        std::cout << "read login-header" << std::endl;
         auto self(shared_from_this());
         boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_data(), Message::header_size),
             [this, self](boost::system::error_code error, std::size_t) {
@@ -108,9 +109,7 @@ private:
             if (!error) {
                 if (read_mes.decode_header()) {
                     auto size_body = read_mes.get_body_length();
-
                     LOG4CPLUS_INFO(logger, "size body = " << size_body);
-//                    std::cout << "size body = " << size_body << std::endl;
 
                     read_login_body();
                 }
@@ -118,10 +117,8 @@ private:
         });
     }
     void read_login_body() {
-        LOG4CPLUS_INFO(logger, "read login-body");
-//        std::cout << "read login-body" << std::endl;
         auto self(shared_from_this());
-        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_body(), read_mes.get_body_length()),
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_id_body(), Message::login_id_size + read_mes.get_body_length()),
             [this, self](boost::system::error_code error, std::size_t) {
                 *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
@@ -129,7 +126,13 @@ private:
                     login = read_mes.get_body();
                     std::cout << "login = " << login << std::endl;
 
+                    int32_t new_id = Database::Instance().get_new_id(login);
+
+                    Message num (std::to_string(new_id).c_str());
+                    boost::asio::write(sock,
+                                             boost::asio::buffer(&new_id, 4));
                     chat_room.join(self);
+
                     do_read_header();
                 }
                 else {
@@ -160,12 +163,16 @@ private:
     void do_read_body() {
         LOG4CPLUS_INFO(logger, "read body message" );
         auto self(shared_from_this());
-        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_body(), read_mes.get_body_length()),
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_id_body(), Message::login_id_size + read_mes.get_body_length()),
             [this, self](boost::system::error_code error, std::size_t) {
                 *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "message = " << read_mes.get_body());
-                    std::cout << read_mes.get_body() << std::endl;
+
+
+                    std::cout << Database::Instance().get_name(read_mes.get_id())
+                              << ": " << read_mes.get_body() << std::endl;
+
                     chat_room.deliver(self, read_mes);
                     do_read_header();
                 }

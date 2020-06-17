@@ -18,8 +18,12 @@ set(TESTS tests)
 
 set(SRC src/)
 set(Server ${SRC}server/)
-set(Cleint ${SRC}client/)
+set(Client ${SRC}client/)
 set(Tests ${SRC}tests/)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 set(Protocol ${SRC}protocol/)
 set(Logger ${SRC}log/)
@@ -31,16 +35,18 @@ include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
 #****************************************************************************************************
 set(SERVER_SOURCES
     ${Server}startup_server.cpp
+    ${Server}manager.h
     ${Server}server.h
     ${Server}session.h
+    ${Server}database.h
     ${Protocol}protocol.h ${Protocol}protocol.cpp
     ${Logger}logger.h
 )
 
 set(CLIENT_SOURCES
-    ${Cleint}startup_client.cpp
+    ${Client}startup_client.cpp
+    ${Client}client.h  ${Client}client.cpp
     ${Protocol}protocol.h ${Protocol}protocol.cpp
-    ${Logger}logger.h
 )
 
 set(TESTS_SOURSES
@@ -70,12 +76,13 @@ include_directories(${GTEST_INCLUDE_DIR})
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
 find_package(GTest REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_library(UnitTests gtest)
 find_library(LOGGER log4cplus)
 
 target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} )
-target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER})
+target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} Qt5::Widgets)
 target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
 
 if(Boost_FOUND)
