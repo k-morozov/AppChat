@@ -46,9 +46,11 @@ public:
         LOG4CPLUS_INFO(logger, "leave from Chat_room" << ptr->get_login());
 
         std::string mes_leave("leave from Chat_room: " + ptr->get_login());
-        std::cout << mes_leave << std::endl;
+        Message mes(mes_leave);
+//        std::cout << mes.get_body() << std::endl;
+        mes.set_login("server");
 
-        deliver(ptr, Message(mes_leave.data()));
+        deliver(ptr, mes);
 
         subscribers.erase(ptr);
     }
@@ -122,12 +124,11 @@ private:
     }
     void read_login_body() {
         auto self(shared_from_this());
-        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_id_body(), Message::login_id_size + read_mes.get_body_length()),
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_id_body(), Message::Settings_zone),
             [this, self](boost::system::error_code error, std::size_t) {
-                *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "login = " << read_mes.get_body());
-                    login = read_mes.get_body();
+                    login = read_mes.get_str_login();
 //                    std::cout << "login = " << login << std::endl;
 
                     int32_t new_id = Database::Instance().get_new_id(login);
@@ -136,7 +137,6 @@ private:
                     boost::asio::write(sock,
                                              boost::asio::buffer(&new_id, 4));
                     chat_room.join(self);
-
                     do_read_header();
                 }
                 else {
@@ -167,17 +167,13 @@ private:
     void do_read_body() {
         LOG4CPLUS_INFO(logger, "read body message" );
         auto self(shared_from_this());
-        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_id_body(), Message::login_id_size + read_mes.get_body_length()),
+        boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_id_body(), Message::Settings_zone + read_mes.get_body_length()),
             [this, self](boost::system::error_code error, std::size_t) {
                 *(read_mes.get_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "message = " << read_mes.get_body());
 
-                    // @todo need opt
-                    std::string answer_with_login(Database::Instance().get_name(read_mes.get_id()) + ": " + read_mes.get_body());
-                    std::cout << answer_with_login << std::endl;
-
-                    chat_room.deliver(self, Message(answer_with_login.data()));
+                    chat_room.deliver(self, read_mes);
                     do_read_header();
                 }
                 else {
@@ -195,6 +191,7 @@ private:
                                  [this, self](boost::system::error_code error, std::size_t) {
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "send: message = " << write_mess.front().get_body());
+                    std::cout << "send: " << write_mess.front().get_body() << std::endl;
                     write_mess.pop_front();
                     if (!write_mess.empty()) {
                         do_write();

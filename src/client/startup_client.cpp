@@ -15,10 +15,8 @@ void run_client() {
     std::thread th([&io_service]() { io_service.run();} );
 
     char mes[Message::max_body_size+1];
-//    std::cout << client.get_login() << ": ";
     while(std::cin.getline(mes, Message::max_body_size+1, '\n') ) {
         client.write(Message(mes));
-//        std::cout << client.get_login() << ": ";
     }
 
     th.join();

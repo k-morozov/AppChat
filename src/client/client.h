@@ -9,7 +9,7 @@
 class Client {
 public:
     Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps)
-        : io_service(io), sock(io) //, flag_logon(false)
+        : io_service(io), sock(io)
     {
         logon();
         do_connect(eps);
@@ -31,7 +31,7 @@ private:
     Message receiving_message;
     std::deque<Message> sending_message;
 
-    char login[32];
+    char login[Message::login_str_size];
     int32_t client_id;
 private:
     void logon() {
