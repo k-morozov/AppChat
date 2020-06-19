@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdint>
+#include <cstdio>
 
 class Message {
 public:
@@ -26,8 +27,7 @@ public:
         set_body_lenght(mes.length());
         encode_header();
 
-        std::strncpy(get_body(), mes.data(), body_length);
-        get_body()[body_length] = '\0';
+        snprintf(get_body(), body_length+1, "%s", mes.data());
     };
 
     char* get_data()                    { return data; }
@@ -53,9 +53,9 @@ public:
     int32_t get_id() const { return *reinterpret_cast<const int32_t*>(data+header_size); }
 
     void set_login(std::string from) {
-        std::size_t len = std::min(from.length(), login_str_size);
-        std::strncpy(data+header_size+login_id_size, from.data(), len);
-        *(data+header_size+login_id_size+len) = '\0';
+//        std::size_t len = std::min(from.length(), login_str_size);
+        snprintf(data+header_size+login_id_size,
+                 std::min(from.length(), login_str_size)+1, "%s", from.data());
     }
 
 
