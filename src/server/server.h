@@ -20,7 +20,7 @@ private:
 private:
     void do_accept() {
         acc.async_accept([this](const boost::system::error_code& error, tcp::socket sock) {
-            std::cout << "new connection" << std::endl;
+//            std::cout << "new connection" << std::endl;
             if (!error) {
 //                Manager::Instance().add_connection(std::move(sock), welcome_room);
                 std::make_shared<Chat_session>(std::move(sock), welcome_room)->start();

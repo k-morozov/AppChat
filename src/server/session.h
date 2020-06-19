@@ -44,7 +44,11 @@ public:
 
     void leave(subscriber_ptr ptr) {
         LOG4CPLUS_INFO(logger, "leave from Chat_room" << ptr->get_login());
-        std::cout << "leave from Chat_room: " << ptr->get_login() << std::endl;
+
+        std::string mes_leave("leave from Chat_room: " + ptr->get_login());
+        std::cout << mes_leave << std::endl;
+
+        deliver(ptr, Message(mes_leave.data()));
 
         subscribers.erase(ptr);
     }
@@ -124,7 +128,7 @@ private:
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "login = " << read_mes.get_body());
                     login = read_mes.get_body();
-                    std::cout << "login = " << login << std::endl;
+//                    std::cout << "login = " << login << std::endl;
 
                     int32_t new_id = Database::Instance().get_new_id(login);
 
@@ -169,11 +173,11 @@ private:
                 if (!error) {
                     LOG4CPLUS_INFO(logger, "message = " << read_mes.get_body());
 
+                    // @todo need opt
+                    std::string answer_with_login(Database::Instance().get_name(read_mes.get_id()) + ": " + read_mes.get_body());
+                    std::cout << answer_with_login << std::endl;
 
-                    std::cout << Database::Instance().get_name(read_mes.get_id())
-                              << ": " << read_mes.get_body() << std::endl;
-
-                    chat_room.deliver(self, read_mes);
+                    chat_room.deliver(self, Message(answer_with_login.data()));
                     do_read_header();
                 }
                 else {

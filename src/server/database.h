@@ -20,17 +20,6 @@ public:
     }
 
     std::string get_name(int32_t find_id) {
-//        for(auto [key, value]: id_name) {
-//            std::cout << key << " and " << value  << std::endl;
-//            if (find_id==key) {
-//                std::cout << "!!!" << std::endl;
-//            }
-//            else {
-//                std::cout << key << " != " << find_id  << std::endl;
-//            }
-//        }
-//        std::cout << std::endl;
-
         auto it = id_name.find(find_id);
         if (it!=id_name.end()) {
             return it->second;

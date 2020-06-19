@@ -9,7 +9,7 @@
 class Client {
 public:
     Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps)
-        : io_service(io), sock(io), flag_logon(false)
+        : io_service(io), sock(io) //, flag_logon(false)
     {
         logon();
         do_connect(eps);
@@ -23,6 +23,7 @@ public:
         });
     }
     void set_id(int id) {client_id = id;}
+    const char* get_login() const { return login; }
 private:
     boost::asio::io_service &io_service;
     boost::asio::ip::tcp::socket sock;
@@ -31,7 +32,6 @@ private:
     std::deque<Message> sending_message;
 
     char login[32];
-    volatile bool flag_logon;
     int32_t client_id;
 private:
     void logon() {

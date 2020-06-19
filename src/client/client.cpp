@@ -22,7 +22,6 @@ void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps)
 void Client::do_send_login(const Message& message) {
     boost::system::error_code error_code;
     boost::asio::write(sock, boost::asio::buffer(message.get_data(), message.get_mes_length()), error_code);
-    std::cout << "do send login: " << message.get_body() << std::endl;
     if (error_code) {
         sock.close();
         std::cout << "error when send login" << std::endl;
@@ -36,8 +35,8 @@ void Client::do_send_login(const Message& message) {
         return ;
     }
     this->set_id(id);
-    std::cout << "my id = " << id << std::endl;
-    flag_logon = true;
+//    std::cout << "login id = " << id << std::endl;
+//    flag_logon = true;
 
     do_read_header();
 }

@@ -26,3 +26,5 @@ sudo cp *.a /usr/lib
 sudo ln -s /usr/lib/libgtest.a /usr/local/lib/gtest/libgtest.a
 sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/gtest/libgtest_main.a
 
+#sqlite
+sudo apt-get install sqlite3 libsqlite3-dev
