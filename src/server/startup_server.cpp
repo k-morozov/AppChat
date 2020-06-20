@@ -7,7 +7,8 @@
 int main() {
     init_logger();
     auto logger = LOGGER("Main");
-    LOG4CPLUS_INFO(logger, "Server started. Version: 0.1");
+    LOG4CPLUS_INFO(logger, "Server started. Version: 0.2");
+    std::cout << "Server started. Version: 0.2" << std::endl;
 
     try {
         boost::asio::io_service io_service;

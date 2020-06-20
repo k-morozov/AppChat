@@ -22,7 +22,8 @@ public:
             sock.close();
         });
     }
-    void set_id(int id) {client_id = id;}
+    void set_login_id(int id)   { client_id = id;}
+    void set_room_id(int id)    { room_id = id;}
     const char* get_login() const { return login; }
 private:
     boost::asio::io_service &io_service;
@@ -33,6 +34,8 @@ private:
 
     char login[Message::login_str_size];
     int32_t client_id;
+    int32_t room_id;
+
 private:
     void logon() {
         std::cout << "Enter your login: ";
@@ -42,7 +45,7 @@ private:
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
 
     void send_login(const Message& mes) {
-//        std::cout << " send_login " << mes.get_body() << std::endl;
+//        std::cout << " send_login " << mes.get_buf_body() << std::endl;
         do_send_login(mes);
     }
 
