@@ -19,14 +19,16 @@ public:
     static constexpr std::size_t General_zone   = header_size + login_id_size + login_str_size + room_id;
     static constexpr std::size_t Settings_zone  =               login_id_size + login_str_size + room_id;
 
-    Message() : body_length(0) {
-//         std::memset(data, 0, General_zone);
+    Message() : body_length(0)
+    {
+        set_room_id(0);
     };
+
     Message(std::string mes)
     {
         set_body_lenght(mes.length());
         encode_header();
-
+        set_room_id(0);
         std::snprintf(get_buf_body(), body_length+1, "%s", mes.data());
     };
 
@@ -53,8 +55,8 @@ public:
 
     void set_login_id(int32_t id)   { std::memcpy(data+header_size, &id, 4); }
     void set_room_id(int32_t id)    { std::memcpy(room_id_pos, &id, 4); }
-    int32_t get_room_id() const     { return *reinterpret_cast<const int32_t*>(room_id_pos); }
-    int32_t get_login_id() const    { return *reinterpret_cast<const int32_t*>(data+header_size); }
+    int32_t get_room_id()           const { return *reinterpret_cast<const int32_t*>(room_id_pos); }
+    int32_t get_login_id()          const { return *reinterpret_cast<const int32_t*>(data+header_size); }
 
     void set_login(std::string from) {
         std::snprintf(data+header_size+login_id_size,
@@ -85,5 +87,10 @@ private:
 
     void *room_id_pos = data + header_size + login_id_size + login_str_size;
 };
+
+//std::ostream& operator<<(std::ostream& os, const Message& m) {
+//    os << m.get_buf_str_login() << ": " << m.get_buf_body() << std::endl;
+//    return os;
+//}
 
 #endif // PROTOCOL_H

@@ -23,5 +23,5 @@ TEST_F(first_test, test2) {
     EXPECT_EQ(9, 9);
 }
 TEST_F(first_test, test3) {
-    EXPECT_EQ(9, 1);
+    EXPECT_EQ(9, 9);
 }

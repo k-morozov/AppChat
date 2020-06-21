@@ -13,14 +13,16 @@
 #include <log/logger.h>
 #include <server/database.h>
 
-
 class ISubscriber;
 class Chat_room;
+class Chat_session;
 
 using boost::asio::ip::tcp;
 using subscriber_ptr = std::shared_ptr<ISubscriber>;
 using messege_deque = std::deque<Message>;
 using room_ptr = std::shared_ptr<Chat_room>;
+
+static constexpr int32_t Default_room_id = 0;
 
 // **********************************************************************************************
 class ISubscriber {
@@ -28,12 +30,13 @@ public:
     virtual ~ISubscriber() {};
     virtual void deliver(subscriber_ptr , const Message&) = 0;
     virtual std::string get_login() const = 0;
+    virtual int32_t get_login_id() const = 0;
 };
 
 // **********************************************************************************************
 class Chat_room  {
 public:
-    Chat_room(int32_t id = 0): id(id), logger(LOGGER("Chat_room")) {};
+    Chat_room(int32_t id = 0): room_id(id), logger(LOGGER("Chat_room")) {};
 
     void join(subscriber_ptr ptr) {
         LOG4CPLUS_INFO(logger, "New subscriber: " << ptr->get_login());
@@ -57,18 +60,27 @@ public:
     }
 
     void deliver(subscriber_ptr from, const Message& mes) {
-        LOG4CPLUS_INFO(logger, "deliver messege");
+        LOG4CPLUS_INFO(logger, "send messege");
 //        std::cout << "deliver messege: " << std::endl;
 
         messeges.push_back(mes);
+        std::cout << "send: " << "login=" <<mes.get_buf_str_login() << ", login_id=" <<
+                  mes.get_login_id() <<
+                     ", room_id=" << mes.get_room_id() <<
+                     ", message=" << mes.get_buf_body()
+                  << std::endl;
+
         for(auto& part: subscribers) {
-            if (from.get()!=part.get()) part->deliver(from, mes);
+            if (mes.get_login_id() != part->get_login_id()) {
+                std::cout << mes.get_login_id() << " and " << part->get_login_id() << std::endl;
+                part->deliver(from, mes);
+            }
         }
     }
 
-    auto get_login_id() const { return id; }
+    auto get_room_id() const { return room_id; }
 private:
-    int32_t id;
+    int32_t room_id;
     std::unordered_set<subscriber_ptr> subscribers;
     messege_deque messeges;
     log4cplus::Logger logger;
@@ -83,6 +95,7 @@ public:
         LOG4CPLUS_INFO(logger, "new chat session");
         ip_client = sock.remote_endpoint().address();
         port_client = sock.remote_endpoint().port();
+        login_id = -1;
     }
 
     void start() {
@@ -104,6 +117,10 @@ public:
         return login;
     }
 
+    virtual int32_t get_login_id() const override {
+        return login_id;
+    }
+
 
     virtual ~Chat_session() {
         LOG4CPLUS_INFO(logger, "end session");
@@ -121,6 +138,7 @@ private:
     log4cplus::Logger logger;
 
     std::string login;
+    int32_t login_id;
 private:
 
     void read_login_header() {
@@ -153,11 +171,10 @@ private:
                     login = read_mes.get_buf_str_login();
 //                    std::cout << "login = " << login << std::endl;
 
-                    int32_t new_id = Database::Instance().get_new_id(login);
+                    login_id = Database::Instance().get_new_id(login);
 
-                    Message num (std::to_string(new_id).c_str());
-                    boost::asio::write(sock,
-                                             boost::asio::buffer(&new_id, 4));
+                    Message num (std::to_string(login_id).c_str());
+                    boost::asio::write(sock, boost::asio::buffer(&login_id, 4));
                     chat_room->join(self);
                     do_read_header();
                 }
@@ -192,9 +209,13 @@ private:
         auto self(shared_from_this());
         boost::asio::async_read(sock, boost::asio::buffer(read_mes.get_buf_id_login(), Message::Settings_zone + read_mes.get_body_length()),
             [this, self](boost::system::error_code error, std::size_t) {
+//                std::cout << "room = " << read_mes.get_room_id() << std::endl;
+                if (read_mes.get_room_id() != chat_room->get_room_id()) {
+                    std::cout << "Change room from " << chat_room->get_room_id() << " to "
+                              << read_mes.get_room_id() ;
+                    // change room?
 
-            // @todo bug first?
-                std::cout << "room = " << read_mes.get_room_id() << std::endl;
+                }
 
                 *(read_mes.get_buf_body()+read_mes.get_body_length()) = '\0';
                 if (!error) {
@@ -217,8 +238,8 @@ private:
                                  boost::asio::buffer(write_mess.front().get_buf_data() , write_mess.front().get_mes_length()),
                                  [this, self](boost::system::error_code error, std::size_t) {
                 if (!error) {
-                    LOG4CPLUS_INFO(logger, "send: message = " << write_mess.front().get_buf_body());
-                    std::cout << "send: " << write_mess.front().get_buf_body() << std::endl;
+//                    LOG4CPLUS_INFO(logger, "send: message = " << write_mess.front().get_buf_body());
+//                    std::cout << "send: " << write_mess.front().get_buf_body() << std::endl;
                     write_mess.pop_front();
                     if (!write_mess.empty()) {
                         do_write();
