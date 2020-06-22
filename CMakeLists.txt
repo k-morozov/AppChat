@@ -25,6 +25,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(Connection ${Server}connection/)
+set(Channel ${Server}channel/)
+
 set(Protocol ${SRC}protocol/)
 set(Logger ${SRC}log/)
 
@@ -35,12 +38,15 @@ include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
 #****************************************************************************************************
 set(SERVER_SOURCES
     ${Server}startup_server.cpp
-    ${Server}manager.h
     ${Server}server.h
-    ${Server}session.h
-    ${Server}database.h
+    ${Connection}isubscriber.h ${Connection}isubscriber.cpp
+    ${Connection}connection.h ${Connection}connection.cpp
+    ${Channel}iroom.h ${Channel}iroom.cpp
+    ${Channel}channelsmanager.h ${Channel}channelsmanager.cpp
+    ${Channel}channel.h ${Channel}channel.cpp
+
     ${Protocol}protocol.h ${Protocol}protocol.cpp
-    ${Logger}logger.h
+    ${Logger}logger.h ${Logger}logger.cpp
 )
 
 set(CLIENT_SOURCES

@@ -1,37 +1,46 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <server/session.h>
+#include <boost/asio.hpp>
+#include <memory>
+
+#include <server/connection/connection.h>
 
 using boost::asio::ip::tcp;
 
 class Server {
 public:
-    Server(boost::asio::io_service& io, boost::asio::ip::tcp::endpoint ep)
-        : acc(io, ep)
+    Server():
+        endpoint(boost::asio::ip::tcp::v4(), 7777),
+        acceptor(io_service, endpoint)
     {
-        user_rooms.emplace(Default_room_id, std::make_shared<Chat_room>(Default_room_id));
-        do_accept();
+        scan_acception();
     }
 
+    void run() {
+        io_service.run();
+    }
 private:
-    boost::asio::ip::tcp::acceptor acc;
-    std::unordered_map<int32_t, room_ptr> user_rooms;
+    boost::asio::io_service io_service;
+    boost::asio::ip::tcp::endpoint endpoint;
+    boost::asio::ip::tcp::acceptor acceptor;
 
+    std::vector<connection_ptr> server_connections;
+//    std::shared_ptr<ChannelsManager> manager;
 private:
-    void do_accept() {
-        acc.async_accept([this](const boost::system::error_code& error, tcp::socket sock) {
+    void scan_acception() {
+        acceptor.async_accept([this](const boost::system::error_code& error, tcp::socket sock) {
             if (!error) {
-                if (auto it = user_rooms.find(Default_room_id); it!=user_rooms.end()) {
-                    std::make_shared<Chat_session>(std::move(sock), it->second)->start();
-                }
+                    auto connect_ptr = std::make_shared<Connection>(std::move(sock));
+                    // mutex?
+                    server_connections.push_back(connect_ptr);
+                    connect_ptr->start();
             }
-            else {
-                std::cerr << "Accept error" << std::endl;
-            }
-            do_accept();
+            std::cout << "new connection" << std::endl;
+            scan_acception();
         });
     }
+
 };
 
 #endif // SERVER_H

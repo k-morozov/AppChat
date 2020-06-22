@@ -64,22 +64,8 @@ public:
     }
 
 
-    void encode_header() {
-        char header[header_size+1] = "";
-        std::sprintf(header, "%4d", static_cast<int>(body_length));
-        std::memcpy(data, header, header_size);
-    }
-
-    bool decode_header() {
-        char header[header_size+1] = "";
-        std::strncat(header, data, header_size);
-        body_length = atoi(header);
-        if (body_length>max_body_size) {
-            body_length = 0;
-            return false;
-        }
-        return true;
-    }
+    void encode_header();
+    bool decode_header();
 
 private:
     char data[General_zone + max_body_size];
@@ -88,9 +74,6 @@ private:
     void *room_id_pos = data + header_size + login_id_size + login_str_size;
 };
 
-//std::ostream& operator<<(std::ostream& os, const Message& m) {
-//    os << m.get_buf_str_login() << ": " << m.get_buf_body() << std::endl;
-//    return os;
-//}
+std::ostream& operator<<(std::ostream& os, const Message& mes);
 
 #endif // PROTOCOL_H
