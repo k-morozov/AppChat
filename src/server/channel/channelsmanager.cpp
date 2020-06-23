@@ -26,3 +26,16 @@ void ChannelsManager::send(subscriber_ptr from, const Message& message) {
         std::cerr << "no room room_id=" << room_id << std::endl;
     }
 }
+
+
+void ChannelsManager::leave(subscriber_ptr sub) {
+    auto room_id = clinets_in_room[sub->get_client_id()];
+    std::cout << "client_id=" << sub->get_client_id()
+              << " is leave from " << room_id << std::endl;
+    if (auto it=channels.find(room_id); it!=channels.end()) {
+        it->second->leave(sub);
+    }
+    else {
+        std::cerr << "no room room_id=" << room_id << std::endl;
+    }
+}

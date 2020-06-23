@@ -17,6 +17,9 @@ void  Connection::read_login_header() {
                     read_login_body();
                 }
             }
+            else {
+                socket.close();
+            }
     });
 }
 
@@ -36,7 +39,6 @@ void Connection::read_login_body() {
                 do_read_header();
             }
             else {
-//                LOG4CPLUS_INFO(logger, "error async_read when read login-body");
                 socket.close();
             }
     });
@@ -52,7 +54,8 @@ void Connection::do_read_header() {
                 }
             }
             else {
-//                chat_room.leave(self);
+//                std::cout << "need leave" << std::endl;
+                ChannelsManager::Instance().leave(self);
             }
         });
     }
@@ -69,7 +72,7 @@ void Connection::do_read_body() {
                 do_read_header();
             }
             else {
-//                    chat_room.leave(self);
+                    ChannelsManager::Instance().leave(self);
             }
         }
     );
@@ -81,16 +84,13 @@ void Connection::send_to_client() {
         boost::asio::buffer(write_mess.front().get_buf_data() , write_mess.front().get_mes_length()),
             [this, self](boost::system::error_code error, std::size_t) {
                 if (!error) {
-//                        LOG4CPLUS_INFO(logger, "send: message = " << write_mess.front().get_body());
-//                    std::cout << "send: " << write_mess.front().get_buf_body() << std::endl;
                     write_mess.pop_front();
                     if (!write_mess.empty()) {
                         send_to_client();
                     }
                 } else {
                     std::cout << "error async_write when write" << std::endl;
-//                        LOG4CPLUS_INFO(logger, "error async_write when write");
-//                        chat_room.leave(self);
+                    ChannelsManager::Instance().leave(self);
                 }
             }
     );

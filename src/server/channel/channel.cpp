@@ -12,6 +12,10 @@ void Channel::join(subscriber_ptr new_subsciber) {
 
 void Channel::leave(subscriber_ptr subsciber) {
     subscribers.erase(subsciber->get_client_id());
+    Message mes("leave from Chat_room: "
+                + std::to_string(static_cast<int>(subsciber->get_client_id())));
+    mes.set_login("server");
+    notification(mes);
 }
 
 void Channel::notification(const Message& message) {
