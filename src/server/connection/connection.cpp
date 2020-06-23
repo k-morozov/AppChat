@@ -27,14 +27,12 @@ void Connection::read_login_body() {
             if (!error) {
                 auto login = read_mes.get_buf_str_login();
                 std::cout << "login = " << login << std::endl;
-                int32_t new_id = generate_client_id();
-                std::cout << "new id =" << new_id << std::endl;
-                Message num (std::to_string(new_id).c_str());
+                client_id = generate_client_id();
+                std::cout << "new id =" << client_id << std::endl;
+                Message num (std::to_string(client_id).c_str());
 
-                boost::asio::write(socket, boost::asio::buffer(&new_id, 4));
-//                std::cout << "start join" << std::endl;
+                boost::asio::write(socket, boost::asio::buffer(&client_id, 4));
                 ChannelsManager::Instance().join(self);
-//                std::cout << "finish join" << std::endl;
                 do_read_header();
             }
             else {
@@ -65,9 +63,9 @@ void Connection::do_read_body() {
         [this, self](boost::system::error_code error, std::size_t) {
             *(read_mes.get_buf_body()+read_mes.get_body_length()) = '\0';
             if (!error) {
-//                    chat_room.deliver(self, read_mes);
-                ChannelsManager::Instance().send(0, read_mes);
                 std::cout << read_mes << std::endl;
+                ChannelsManager::Instance().send(self, read_mes);
+
                 do_read_header();
             }
             else {
@@ -84,12 +82,13 @@ void Connection::send_to_client() {
             [this, self](boost::system::error_code error, std::size_t) {
                 if (!error) {
 //                        LOG4CPLUS_INFO(logger, "send: message = " << write_mess.front().get_body());
-                    std::cout << "send: " << write_mess.front().get_buf_body() << std::endl;
+//                    std::cout << "send: " << write_mess.front().get_buf_body() << std::endl;
                     write_mess.pop_front();
                     if (!write_mess.empty()) {
                         send_to_client();
                     }
                 } else {
+                    std::cout << "error async_write when write" << std::endl;
 //                        LOG4CPLUS_INFO(logger, "error async_write when write");
 //                        chat_room.leave(self);
                 }

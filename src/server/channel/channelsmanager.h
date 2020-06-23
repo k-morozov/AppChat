@@ -11,12 +11,12 @@ public:
         return manager;
     }
     void join(subscriber_ptr, identifier_t room_id = 0);
-    void send(identifier_t room_id, const Message&);
+    void send(subscriber_ptr, const Message&);
 private:
     ChannelsManager();
 
     std::unordered_map<identifier_t, iroom_ptr> channels;
-
+    std::unordered_map<identifier_t, identifier_t> clinets_in_room;
 };
 
 #endif // CHANNELSMANAGER_H

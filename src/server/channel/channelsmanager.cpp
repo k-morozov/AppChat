@@ -7,6 +7,7 @@ ChannelsManager::ChannelsManager()
 
 void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
     if (auto it=channels.find(room_id); it!=channels.end()) {
+        clinets_in_room.emplace(new_sub->get_client_id(), room_id);
         it->second->join(new_sub);
     }
     else {
@@ -14,7 +15,10 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
     }
 }
 
-void ChannelsManager::send(identifier_t room_id, const Message& message) {
+void ChannelsManager::send(subscriber_ptr from, const Message& message) {
+    auto room_id = clinets_in_room[from->get_client_id()];
+    std::cout << "\tfrom clinet_id=" <<  from->get_client_id()
+              << ", room_id=" <<  room_id << std::endl;
     if (auto it=channels.find(room_id); it!=channels.end()) {
         it->second->notification(message);
     }
