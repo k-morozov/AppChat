@@ -1,10 +1,17 @@
 #include <server/channel/channel.h>
-
+#include <sstream>
 void Channel::join(subscriber_ptr new_subsciber) {
-    auto [it, flag] = subscribers.try_emplace(new_subsciber->get_client_id(), new_subsciber);
-    std::cout << "join room_id=" << channel_id << ": " << (flag?"OK":"NO") << std::endl;
 
-    // get history
+    subscribers.try_emplace(new_subsciber->get_client_id(), new_subsciber);
+
+    std::string str("joined to room_id=" + std::to_string(channel_id));
+    Message notify(str);
+    notify.set_login(new_subsciber->get_login());
+    notify.set_login_id(new_subsciber->get_client_id());
+    notification(notify);
+    std::cout << new_subsciber->get_login() << " " << str << std::endl;
+
+
     for(const auto& message:history) {
         new_subsciber->send(message);
     }
@@ -12,9 +19,9 @@ void Channel::join(subscriber_ptr new_subsciber) {
 
 void Channel::leave(subscriber_ptr subsciber) {
     subscribers.erase(subsciber->get_client_id());
-    Message mes("leave from Chat_room: "
-                + std::to_string(static_cast<int>(subsciber->get_client_id())));
+    Message mes(subsciber->get_login() + " leave from Chat_room");
     mes.set_login("server");
+
     notification(mes);
 }
 

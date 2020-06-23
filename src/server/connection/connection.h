@@ -12,7 +12,7 @@ class Connection : public ISubscriber, public std::enable_shared_from_this<Conne
 {
 public:
     Connection(boost::asio::ip::tcp::socket&& socket):
-        socket(std::move(socket))
+        socket(std::move(socket)), client_id(generate_client_id())
     {
 
     }
@@ -26,16 +26,18 @@ public:
     virtual identifier_t get_client_id() const override {
         return client_id;
     }
-
+    virtual const std::string& get_login() const override { return login; }
 private:
     boost::asio::ip::tcp::socket socket;
     Message read_mes;
     std::deque<Message> write_mess;
 
-    identifier_t client_id;
+    const identifier_t client_id;
+    std::string login;
 private:
     void read_login_header();
     void read_login_body();
+
     void do_read_header();
     void do_read_body();
 

@@ -9,18 +9,15 @@ void Connection::send(const Message& message) {
 }
 
 void  Connection::read_login_header() {
-    auto self(shared_from_this());
-    boost::asio::async_read(socket, boost::asio::buffer(read_mes.get_buf_data(), Message::header_size),
-        [this, self](boost::system::error_code error, std::size_t) {
-            if (!error) {
-                if (read_mes.decode_header()) {
-                    read_login_body();
-                }
-            }
-            else {
-                socket.close();
-            }
-    });
+    boost::system::error_code error;
+    boost::asio::read(socket, boost::asio::buffer(read_mes.get_buf_data(), Message::header_size), error);
+    if (!error) {
+        if (read_mes.decode_header()) {
+            read_login_body();
+        }
+    } else {
+        socket.close();
+    }
 }
 
 void Connection::read_login_body() {
@@ -28,10 +25,8 @@ void Connection::read_login_body() {
     boost::asio::async_read(socket, boost::asio::buffer(read_mes.get_buf_id_login(), Message::Settings_zone),
         [this, self](boost::system::error_code error, std::size_t) {
             if (!error) {
-                auto login = read_mes.get_buf_str_login();
-                client_id = generate_client_id();
-                std::cout << "login=" << login << ", new client_id=" << client_id << std::endl;
                 boost::asio::write(socket, boost::asio::buffer(&client_id, 4));
+                login = read_mes.get_buf_str_login();
                 ChannelsManager::Instance().join(self, read_mes.get_room_id());
                 do_read_header();
             }
@@ -63,13 +58,14 @@ void Connection::do_read_body() {
         [this, self](boost::system::error_code error, std::size_t) {
             *(read_mes.get_buf_body()+read_mes.get_body_length()) = '\0';
             if (!error) {
-                std::cout << read_mes << std::endl;
-                ChannelsManager::Instance().send(self, read_mes);
-
+                if (read_mes.get_body_length()) {
+                    std::cout << read_mes << std::endl;
+                    ChannelsManager::Instance().send(self, read_mes);
+                }
                 do_read_header();
             }
             else {
-                    ChannelsManager::Instance().leave(self);
+                ChannelsManager::Instance().leave(self);
             }
         }
     );

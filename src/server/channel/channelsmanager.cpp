@@ -26,9 +26,6 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
 }
 
 void ChannelsManager::send(subscriber_ptr from, const Message& message) {
-//    auto room_id = message.get_room_id();
-    std::cout << "\tfrom clinet_id=" <<  from->get_client_id()
-              << ", room_id=" <<  message.get_room_id() << std::endl;
     if (auto it=channels.find(message.get_room_id()); it!=channels.end()) {
         it->second->notification(message);
     }
@@ -36,7 +33,6 @@ void ChannelsManager::send(subscriber_ptr from, const Message& message) {
         std::cerr << "no room room_id=" << message.get_room_id() << std::endl;
     }
 }
-
 
 void ChannelsManager::leave(subscriber_ptr sub) {
     auto room_id = clinets_in_room[sub->get_client_id()];

@@ -20,11 +20,12 @@ public:
     virtual void notification(const Message&) override;
 
     virtual identifier_t get_room_id() const override { return channel_id; }
+
 private:
     std::unordered_map<int32_t, subscriber_ptr> subscribers;
     std::deque<Message> history;
 
-    identifier_t channel_id;
+    const identifier_t channel_id;
 };
 
 using channel_ptr = std::shared_ptr<Channel>;
