@@ -29,13 +29,10 @@ void Connection::read_login_body() {
         [this, self](boost::system::error_code error, std::size_t) {
             if (!error) {
                 auto login = read_mes.get_buf_str_login();
-                std::cout << "login = " << login << std::endl;
                 client_id = generate_client_id();
-                std::cout << "new id =" << client_id << std::endl;
-                Message num (std::to_string(client_id).c_str());
-
+                std::cout << "login=" << login << ", new client_id=" << client_id << std::endl;
                 boost::asio::write(socket, boost::asio::buffer(&client_id, 4));
-                ChannelsManager::Instance().join(self);
+                ChannelsManager::Instance().join(self, read_mes.get_room_id());
                 do_read_header();
             }
             else {

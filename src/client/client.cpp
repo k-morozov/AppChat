@@ -3,7 +3,9 @@
 void Client::write(Message mes) {
     mes.set_login_id(client_id);
     mes.set_login(login);
+//    std::cout << "write: " << mes.get_login_id() << std::endl;
     mes.set_room_id(room_id);
+
     bool process_write = !sending_message.empty();
     sending_message.push_back(mes);
 
@@ -18,6 +20,7 @@ void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps)
            if (!ec) {
                Message mes;
                mes.set_login(login);
+               mes.set_room_id(room_id);
                send_login(mes);
            }
     });
@@ -39,8 +42,7 @@ void Client::do_send_login(const Message& message) {
         std::cout << "error when read login-id" << std::endl;
         return ;
     }
-    this->set_login_id(id);
-    this->set_room_id(0);
+    set_login_id(id);
 
     do_read_header();
 }
@@ -80,7 +82,8 @@ void Client::do_write() {
     boost::asio::async_write(sock, boost::asio::buffer(sending_message.front().get_buf_data(), sending_message.front().get_mes_length()),
         [this](boost::system::error_code ec, std::size_t) {
         if (!ec) {
-//                std::cout << "send: " << receiving_message.get_buf_body() << std::endl;
+//            std::cout << sending_message.front() << std::endl;
+//            std::cout << "mes with room_id=" << sending_message.front().get_room_id() << std::endl;
             sending_message.pop_front();
             if (!sending_message.empty()) do_write();
         }

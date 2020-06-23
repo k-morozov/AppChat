@@ -10,14 +10,21 @@
 class Channel : public IRoom
 {
 public:
-    Channel() = default;
+    Channel(identifier_t room = 0) : channel_id(room)
+    {
+        std::cout << "Create channel_id=" << channel_id << std::endl;
+    }
 
     virtual void join(subscriber_ptr) override;
     virtual void leave(subscriber_ptr) override;
     virtual void notification(const Message&) override;
+
+    virtual identifier_t get_room_id() const override { return channel_id; }
 private:
     std::unordered_map<int32_t, subscriber_ptr> subscribers;
     std::deque<Message> history;
+
+    identifier_t channel_id;
 };
 
 using channel_ptr = std::shared_ptr<Channel>;

@@ -23,7 +23,6 @@ public:
         });
     }
     void set_login_id(int id)   { client_id = id;}
-    void set_room_id(int id)    { room_id = id;}
     const char* get_login() const { return login; }
 private:
     boost::asio::io_service &io_service;
@@ -39,13 +38,16 @@ private:
 private:
     void logon() {
         std::cout << "Enter your login: ";
-        std::cin.getline(login, 32);
+        std::cin.getline(login, Message::login_str_size);
+        std::cout << "Enter room_id: ";
+        std::cin >> room_id;
+//        std::cout << "logon room_id=" << room_id << std::endl;
+        std::cout << "************************************" << std::endl;
     }
 
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
 
     void send_login(const Message& mes) {
-//        std::cout << " send_login " << mes.get_buf_body() << std::endl;
         do_send_login(mes);
     }
 

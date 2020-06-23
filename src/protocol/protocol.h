@@ -28,7 +28,7 @@ public:
     {
         set_body_lenght(mes.length());
         encode_header();
-        set_room_id(0);
+        set_room_id(-1);
         std::snprintf(get_buf_body(), body_length+1, "%s", mes.data());
     };
 
@@ -54,8 +54,14 @@ public:
     }
 
     void set_login_id(int32_t id)   { std::memcpy(data+header_size, &id, 4); }
-    void set_room_id(int32_t id)    { std::memcpy(room_id_pos, &id, 4); }
-    int32_t get_room_id()           const { return *reinterpret_cast<const int32_t*>(room_id_pos); }
+    void set_room_id(int32_t id)    {
+        std::memcpy(data + header_size + login_id_size + login_str_size, &id, 4);
+//        std::cout << "set_room_id=" << *(int32_t*)room_id_pos << ", id=" << id << std::endl;
+//        std::sprintf(room_id_pos, "%4d", id);
+    }
+    int32_t get_room_id()           const {
+        return *reinterpret_cast<const int32_t*>(data + header_size + login_id_size + login_str_size);
+    }
     int32_t get_login_id()          const { return *reinterpret_cast<const int32_t*>(data+header_size); }
 
     void set_login(std::string from) {
