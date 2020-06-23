@@ -1,4 +1,4 @@
-#include <server/channel/channelsmanager.h>
+#include <server/channel/channels_manager.h>
 
 ChannelsManager::ChannelsManager()
 {
@@ -25,7 +25,7 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
     }
 }
 
-void ChannelsManager::send(subscriber_ptr from, const Message& message) {
+void ChannelsManager::send(const Message& message) {
     if (auto it=channels.find(message.get_room_id()); it!=channels.end()) {
         it->second->notification(message);
     }

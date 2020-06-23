@@ -12,7 +12,7 @@ public:
     }
 
     void join(subscriber_ptr, identifier_t room_id);
-    void send(subscriber_ptr, const Message&);
+    void send(const Message&);
     void leave(subscriber_ptr);
 
 private:

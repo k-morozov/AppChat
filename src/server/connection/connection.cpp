@@ -60,7 +60,7 @@ void Connection::do_read_body() {
             if (!error) {
                 if (read_mes.get_body_length()) {
                     std::cout << read_mes << std::endl;
-                    ChannelsManager::Instance().send(self, read_mes);
+                    ChannelsManager::Instance().send(read_mes);
                 }
                 do_read_header();
             }

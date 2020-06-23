@@ -20,23 +20,23 @@ public:
     void run() {
         io_service.run();
     }
+
 private:
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::endpoint endpoint;
     boost::asio::ip::tcp::acceptor acceptor;
 
     std::vector<connection_ptr> server_connections;
-//    std::shared_ptr<ChannelsManager> manager;
+
 private:
     void scan_acception() {
         acceptor.async_accept([this](const boost::system::error_code& error, tcp::socket sock) {
             if (!error) {
-                    auto connect_ptr = std::make_shared<Connection>(std::move(sock));
-                    // mutex?
-                    server_connections.push_back(connect_ptr);
-                    connect_ptr->start();
+                auto connect_ptr = std::make_shared<Connection>(std::move(sock));
+                server_connections.push_back(connect_ptr);
+                connect_ptr->start();
             }
-            std::cout << "new connection" << std::endl;
+
             scan_acception();
         });
     }
@@ -44,3 +44,9 @@ private:
 };
 
 #endif // SERVER_H
+
+
+
+
+
+

@@ -42,7 +42,7 @@ set(SERVER_SOURCES
     ${Connection}isubscriber.h ${Connection}isubscriber.cpp
     ${Connection}connection.h ${Connection}connection.cpp
     ${Channel}iroom.h ${Channel}iroom.cpp
-    ${Channel}channelsmanager.h ${Channel}channelsmanager.cpp
+    ${Channel}channels_manager.h ${Channel}channels_manager.cpp
     ${Channel}channel.h ${Channel}channel.cpp
 
     ${Protocol}protocol.h ${Protocol}protocol.cpp

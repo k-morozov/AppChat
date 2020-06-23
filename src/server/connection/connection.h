@@ -6,15 +6,16 @@
 #include <deque>
 
 #include <server/connection/isubscriber.h>
-#include <server/channel/channelsmanager.h>
+#include <server/channel/channels_manager.h>
 
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
 public:
-    Connection(boost::asio::ip::tcp::socket&& socket):
-        socket(std::move(socket)), client_id(generate_client_id())
+    Connection(boost::asio::ip::tcp::socket&& _socket):
+        socket(std::move(_socket)), client_id(generate_client_id())
     {
-
+        std::cout << "new connection from " << socket.remote_endpoint() .address().to_string()
+                  << ":" << socket.remote_endpoint() .port() << std::endl;
     }
 
     virtual void start() override {

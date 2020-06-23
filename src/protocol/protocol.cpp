@@ -19,9 +19,9 @@ bool Message::decode_header() {
 
 std::ostream& operator<<(std::ostream& os, const Message& mes) {
     os << "message:"
-       <<  " login=<" <<mes.get_buf_str_login() << ">"
-       << ", login_id=<" << mes.get_login_id() << ">"
-       << ", room_id=<" << mes.get_room_id() << ">"
-       << ", message=<" << mes.get_buf_body() << ">";
+       <<  " login<" <<mes.get_buf_str_login() << ">"
+       << ", login_id<" << mes.get_login_id() << ">"
+       << ", room_id<" << mes.get_room_id() << ">"
+       << ", message<" << mes.get_buf_body() << ">";
     return os;
 }
