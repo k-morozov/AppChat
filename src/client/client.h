@@ -32,6 +32,7 @@ private:
     std::deque<Message> sending_message;
 
     char login[Message::login_str_size];
+    char password[Block::Password];
     int32_t client_id;
     int32_t room_id;
 
@@ -39,10 +40,15 @@ private:
     void logon() {
         std::cout << "Enter your login: ";
         std::cin.getline(login, Message::login_str_size);
-        std::cout << "Enter room_id: ";
-        std::cin >> room_id;
-//        std::cout << "logon room_id=" << room_id << std::endl;
+        std::cout << "Enter your password: ";
+        std::cin.getline(password, Block::Password);
+//        std::cout << "Enter room_id: ";
+//        std::cin >> room_id;
         std::cout << "************************************" << std::endl;
+        RegistrationRequest request(login, password);
+        std::cout << "protocol version: " << request.get_protocol_version() << std::endl;
+        std::cout << "type command: " << request.get_type_command() << std::endl;
+
     }
 
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);

@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstdio>
 
+#include <protocol/request/control_request.h>
+
 /*
  *
  *      |2 bytes|             |command 2 bytes|
@@ -16,7 +18,7 @@
  *
  * */
 
-constexpr uint16_t PROTOCOL_VERS = 1;
+
 
 enum class Status : bool {
     OK = true,

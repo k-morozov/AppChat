@@ -1,6 +1,1 @@
-#include "transport_request.h"
-
-TransportRequest::TransportRequest()
-{
-
-}
+#include <protocol/request/transport_request.h>
