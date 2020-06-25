@@ -45,14 +45,14 @@ set(SERVER_SOURCES
     ${Channel}channels_manager.h ${Channel}channels_manager.cpp
     ${Channel}channel.h ${Channel}channel.cpp
 
-    ${Protocol}protocol.h ${Protocol}protocol.cpp
+    ${Protocol}protocol.h ${Protocol}protocol.cpp ${Protocol}request/irequest.h ${Protocol}command_table.h ${Protocol}request/control_request.h ${Protocol}request/control_request.cpp ${Protocol}request/transport_request.h ${Protocol}request/transport_request.cpp
     ${Logger}logger.h ${Logger}logger.cpp
 )
 
 set(CLIENT_SOURCES
     ${Client}startup_client.cpp
     ${Client}client.h  ${Client}client.cpp
-    ${Protocol}protocol.h ${Protocol}protocol.cpp
+    ${Protocol}protocol.h ${Protocol}protocol.cpp ${Protocol}request/irequest.h ${Protocol}command_table.h ${Protocol}request/control_request.h ${Protocol}request/control_request.cpp ${Protocol}request/transport_request.h ${Protocol}request/transport_request.cpp
 )
 
 set(TESTS_SOURSES

@@ -8,6 +8,34 @@
 #include <cstdint>
 #include <cstdio>
 
+/*
+ *
+ *      |2 bytes|             |command 2 bytes|
+ *      |protocol vers.|    ->|AuthorizationRequest|  ->|login 8 bytes|         ->|password 32 bytes|
+ *      |protocol vers.|    ->|AuthorizationResponse| ->|size list login-id|    ->|login_id 4 bytes|    ->|login_id+login| ->->->->
+ *
+ * */
+
+constexpr uint16_t PROTOCOL_VERS = 1;
+
+enum class Status : bool {
+    OK = true,
+    FAIL = false
+};
+
+enum class Command : uint16_t {
+    Unknown                     = 0xFFFF,
+    RegistrationRequest         = 0x0001,
+    RegistrationResponse        = 0x0002,
+    AuthorizationRequest        = 0x0003,
+    AuthorizationResponse       = 0x0004,
+    EchoRequest                 = 0x0005,
+    EchoResponse                = 0x0006,
+    JoinRoomRequest             = 0x0007,
+    JoinRoomResponse            = 0x0008,
+    LeaveRoomRequest            = 0x000A,
+};
+
 class Message {
 public:
     static constexpr std::size_t header_size    = 4;
