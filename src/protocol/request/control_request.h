@@ -6,32 +6,28 @@
 class ControlRequest: public IRequest
 {
 public:
-    ControlRequest();
+    //ControlRequest();
     virtual ~ControlRequest() {}
 
-    virtual void write_block(std::size_t pos, const void* data, std::size_t count_bytes) = 0;
-    virtual void* get_data() = 0;
-    virtual void* read_block(std::size_t pos) = 0;
-    virtual TypeCommand get_type() const = 0;
+    virtual TypeCommand get_type() const override final { return type_request; }
 
+protected:
+    const TypeCommand type_request = TypeCommand::Unknown;
 };
 
 // ************************************************************************************
 class InputRequest : public ControlRequest {
 public:
-    virtual ~InputRequest() {}
-
-    virtual void write_block(std::size_t pos, const void* from, std::size_t count_bytes) override {
-        std::memcpy(__data+pos, from, count_bytes);
+    virtual uint16_t get_protocol_version() const override { return *(uint16_t*)__data; }
+    virtual uint16_t get_type_command() const override { return *(uint16_t*) (__data + Block::VersionProtocol) ; }
+    virtual const char* get_login() const {
+        return __data+Block::VersionProtocol + Block::Command;
+    }
+    virtual const char* get_password() const {
+        return __data+Block::VersionProtocol + Block::Command + Block::LoginName;
     }
 
-    virtual void* get_data() override {
-        return __data;
-    }
-    virtual void* read_block(std::size_t pos) override {
-        return __data+pos;
-    }
-    virtual TypeCommand get_type() const override { return type_request; }
+    virtual uint32_t get_length_request() const override { return LengthRequest;}
 
 protected:
     const TypeCommand type_request = TypeCommand::Unknown;
@@ -39,26 +35,23 @@ protected:
     char __data[LengthRequest];
 };
 
-class ChanelControlRequest : public ControlRequest {
-
-};
-
-
 // *************************************************************************************************
+
+
 // *** |protocol vers.|    ->|RegistrationRequest|  ->|login 8 bytes|         ->|password 32 bytes|
 class RegistrationRequest : public InputRequest {
 public:
     RegistrationRequest(const char* login, const char* password) {
-        std::cout << std::string(login) << " and " << std::string(password) << std::endl;
         std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
 
-//        std::memcpy(__data+Block::VersionProtocol+Block::Command, login, Block::LoginName);
-//        std::memcpy(__data+Block::VersionProtocol+Block::Command+Block::LoginName, password, Block::Password);
+        std::snprintf(__data+Block::VersionProtocol+Block::Command,
+                 Block::LoginName, "%s", login);
+        std::snprintf(__data+Block::VersionProtocol+Block::Command + Block::LoginName,
+                 Block::Password, "%s", password);
     }
 
-    uint16_t get_protocol_version() const { return *(uint16_t*)__data; }
-    uint16_t get_type_command() const { return *(uint16_t*) (__data + +Block::VersionProtocol) ; }
+
 private:
     const TypeCommand type_request = TypeCommand::RegistrationRequest;
 };

@@ -57,7 +57,7 @@ set(CLIENT_SOURCES
 
 set(TESTS_SOURSES
     ${Tests}startup_tests.cpp
-    ${Tests}first_test.cpp)
+    ${Tests}test_request.cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)

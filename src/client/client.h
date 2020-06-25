@@ -1,6 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <iostream>
 #include <string>
 #include <deque>
 #include <boost/asio.hpp>
@@ -48,7 +49,8 @@ private:
         RegistrationRequest request(login, password);
         std::cout << "protocol version: " << request.get_protocol_version() << std::endl;
         std::cout << "type command: " << request.get_type_command() << std::endl;
-
+        std::cout << "login: " << request.get_login() << std::endl;
+        std::cout << "password: " << request.get_password() << std::endl;
     }
 
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);

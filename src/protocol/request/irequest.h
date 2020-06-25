@@ -10,10 +10,10 @@ class IRequest {
 public:
     virtual ~IRequest() {}
 
-    virtual void write_block(std::size_t pos, const void* data, std::size_t count_bytes) = 0;
-    virtual void* get_data() = 0;
-    virtual void* read_block(std::size_t pos) = 0;
     virtual TypeCommand get_type() const = 0;
+    virtual uint16_t get_protocol_version() const = 0;
+    virtual uint16_t get_type_command() const = 0;
+    virtual uint32_t get_length_request() const = 0;
 };
 
 
