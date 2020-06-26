@@ -7,6 +7,7 @@
 
 #include <server/connection/isubscriber.h>
 #include <server/channel/channels_manager.h>
+#include <protocol/protocol.h>
 
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
@@ -19,7 +20,7 @@ public:
     }
 
     virtual void start() override {
-        read_login_header();
+        read_request_header();
     }
 
     virtual void send(const Message&) override;
@@ -35,9 +36,11 @@ private:
 
     const identifier_t client_id;
     std::string login;
+    std::string password;
+
 private:
-    void read_login_header();
-    void read_login_body();
+    void read_request_header();
+    void read_input_request_body(input_req_ptr);
 
     void do_read_header();
     void do_read_body();

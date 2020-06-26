@@ -3,7 +3,7 @@
 void Message::encode_header() {
     char header[header_size+1] = "";
     std::sprintf(header, "%4d", static_cast<int>(body_length));
-   std::memcpy(data, header, header_size);
+    std::memcpy(data, header, header_size);
 }
 
 bool Message::decode_header() {
