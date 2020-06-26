@@ -10,35 +10,52 @@ void Connection::send(const Message& message) {
 
 void Connection::read_request_header() {
     boost::system::error_code error;
-    input_req_ptr input_request = std::make_shared<AutorisationRequest>();
-    boost::asio::read(socket, boost::asio::buffer(input_request->get_data(), Block::Header), error);
+    request_ptr request = std::make_shared<Request>();
+    boost::asio::read(socket, boost::asio::buffer(request->get_header(), Block::Header), error);
+
     if (!error) {
-        if (input_request->get_type_data() == static_cast<uint16_t>(TypeCommand::RegistrationRequest)
-            || input_request->get_type_data() == static_cast<uint16_t>(TypeCommand::AuthorisationRequest))
-        {
-                read_input_request_body(input_request);
+
+        switch (request->get_type_data()) {
+            case TypeCommand::Unknown:
+            case TypeCommand::RegistrationRequest:
+                read_input_request_body(std::make_shared<RegistrationRequest>(request));
+                break;
+            case TypeCommand::RegistrationResponse:
+            case TypeCommand::AuthorisationRequest:
+                read_input_request_body(std::make_shared<AutorisationRequest>(request));
+                break;
+            case TypeCommand::AuthorisationResponse:
+            case TypeCommand::EchoRequest:
+            case TypeCommand::EchoResponse:
+            case TypeCommand::JoinRoomRequest:
+            case TypeCommand::JoinRoomResponse:
+            case TypeCommand::LeaveRoomRequest:
+            default:
+                break;
         }
+
     } else {
-        std::cout << "error request: " << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
+        std::cout << "error read_request_header" << std::endl;
         socket.close();
     }
 }
 
-void Connection::read_input_request_body(input_req_ptr input_request) {
+void Connection::read_input_request_body(input_req_ptr request) {
     auto self(shared_from_this());
-    boost::asio::async_read(socket, boost::asio::buffer(input_request->get_optional(), Block::InputOption),
-        [this, self, input_request](boost::system::error_code error, std::size_t) {
+    boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_request()),
+        [this, self, request](boost::system::error_code error, std::size_t) {
             if (!error) {
-                login = input_request->get_login();
-                password = input_request->get_password();
+                login = request->get_login();
+                password = request->get_password();
+                std::cout << request->get_login() << " " << request->get_password() << std::endl;
 
-                input_res_ptr input_response = std::make_shared<AutorisationResponse>(client_id);
-                std::cout << "write: " << input_response->get_protocol_version() << input_response->get_type_data() << " "
-                          << input_response->get_loginid() << std::endl;
-                boost::asio::write(socket, boost::asio::buffer(input_response->get_data(), input_response->get_length_response()));
+                input_res_ptr response = std::make_shared<AutorisationResponse>(client_id);
+
+                boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
+                boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_response()));
 
                 ChannelsManager::Instance().join(self, 0);
-                do_read_header();
+//                do_read_header();
             }
             else {
                 socket.close();

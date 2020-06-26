@@ -9,14 +9,16 @@ class IResponse {
 public:
     virtual ~IResponse() {}
 
+    virtual const void* get_header() const = 0;
+    virtual void* get_header() = 0;
     virtual const void* get_data() const = 0;
     virtual void* get_data() = 0;
-    virtual const void* get_optional() const = 0;
-    virtual void* get_optional() = 0;
+
+    virtual uint16_t get_protocol_version() const = 0;
 
     virtual TypeCommand get_type() const = 0;
-    virtual uint16_t get_protocol_version() const = 0;
-    virtual uint16_t get_type_data() const = 0;
+    virtual TypeCommand get_type_data() const = 0;
+
     virtual uint32_t get_length_response() const = 0;
 };
 

@@ -40,7 +40,7 @@ private:
     input_req_ptr logon();
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
 
-    void send_input_request(input_req_ptr request);
+    void send_input_request(request_ptr request);
     void do_read_header();
     void do_read_body(std::size_t size_body);
     void do_write();

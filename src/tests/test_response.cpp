@@ -17,11 +17,11 @@ protected:
 };
 
 TEST_F(response, registration_basic) {
-    uint32_t id = 12345;
+    int32_t id = 12345;
     RegistrationResponse  response(id);
 
     EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), static_cast<uint16_t>(TypeCommand::RegistrationResponse));
+    EXPECT_EQ(response.get_type_data(), TypeCommand::RegistrationResponse);
     EXPECT_EQ(response.get_loginid(), id);
 }
 
@@ -30,7 +30,7 @@ TEST_F(response, autorisation_basic) {
     AutorisationResponse  response(id);
 
     EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), static_cast<uint16_t>(TypeCommand::AuthorisationResponse));
+    EXPECT_EQ(response.get_type_data(), TypeCommand::AuthorisationResponse);
     EXPECT_EQ(response.get_loginid(), id);
 }
 
@@ -40,12 +40,12 @@ TEST_F(response, registration_basic_change_id) {
     id = 123;
     response.set_loginid(id);
     EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), static_cast<uint16_t>(TypeCommand::RegistrationResponse));
+    EXPECT_EQ(response.get_type_data(), TypeCommand::RegistrationResponse);
     EXPECT_EQ(response.get_loginid(), id);
 
     response.set_loginid();
     EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), static_cast<uint16_t>(TypeCommand::RegistrationResponse));
+    EXPECT_EQ(response.get_type_data(), TypeCommand::RegistrationResponse);
     EXPECT_EQ(response.get_loginid(), 0);
 }
 
@@ -56,11 +56,11 @@ TEST_F(response, autorisation_basic_change_id) {
     response.set_loginid(id);
 
     EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), static_cast<uint16_t>(TypeCommand::AuthorisationResponse));
+    EXPECT_EQ(response.get_type_data(), TypeCommand::AuthorisationResponse);
     EXPECT_EQ(response.get_loginid(), id);
 
     response.set_loginid();
     EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), static_cast<uint16_t>(TypeCommand::AuthorisationResponse));
+    EXPECT_EQ(response.get_type_data(), TypeCommand::AuthorisationResponse);
     EXPECT_EQ(response.get_loginid(), 0);
 }

@@ -16,7 +16,8 @@ void Client::write(Message mes) {
 
 void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps) {
     auto input_request = logon();
-
+//    std::cout << input_request->get_protocol_version() << " " << input_request->get_type_data() << std::endl;
+//    std::cout << input_request->get_login() << " and " << input_request->get_password() << std::endl;
     boost::asio::async_connect(sock, eps,
         [this, input_request](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
            if (!ec) {
@@ -37,10 +38,11 @@ input_req_ptr Client::logon() {
     return std::make_shared<AutorisationRequest>(login, password);
 }
 
-void Client::send_input_request(input_req_ptr input_request) {
+void Client::send_input_request(request_ptr input_request) {
     boost::system::error_code error_code;
 
-    boost::asio::write(sock, boost::asio::buffer(input_request->get_data(), input_request->get_length_request()), error_code);
+    boost::asio::write(sock, boost::asio::buffer(input_request->get_header(),
+                                                 Block::Header +input_request->get_length_request()), error_code);
     if (error_code) {
         sock.close();
         std::cout << "error when send login" << std::endl;
@@ -48,15 +50,23 @@ void Client::send_input_request(input_req_ptr input_request) {
     }
 
     input_res_ptr response = std::make_shared<AutorisationResponse>();
-    boost::asio::read(sock, boost::asio::buffer(response->get_data(), response->get_length_response()), error_code);
+    boost::asio::read(sock, boost::asio::buffer(response->get_header(),
+                                                Block::Header), error_code);
     if (error_code) {
         sock.close();
         std::cout << "error when read login-id" << std::endl;
         return ;
     }
-    set_login_id(response->get_loginid());
+    if (response->get_type_data()==TypeCommand::RegistrationResponse
+        || response->get_type_data()==TypeCommand::AuthorisationResponse)
+    {
+        boost::asio::read(sock, boost::asio::buffer(response->get_data(),
+                                                    response->get_length_response()), error_code);
+        set_login_id(response->get_loginid());
+        std::cout << "loginID=" << response->get_loginid() << std::endl;
+    //    do_read_header();
+    }
 
-    do_read_header();
 }
 
 void Client::do_read_header() {
