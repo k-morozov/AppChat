@@ -15,15 +15,29 @@ void Client::write(Message mes) {
 }
 
 void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps) {
+    auto input_request = logon();
+
     boost::asio::async_connect(sock, eps,
-        [this](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
+        [this, input_request](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
            if (!ec) {
                send_input_request(input_request);
            }
     });
 }
 
-void Client::send_input_request(input_req_ptr request) {
+input_req_ptr Client::logon() {
+    std::cout << "Enter your login: ";
+    std::cin.getline(login, Block::LoginName);
+    std::cout << "Enter your password: ";
+    std::cin.getline(password, Block::Password);
+//        std::cout << "Enter room_id: ";
+//        std::cin >> room_id;
+    std::cout << "************************************" << std::endl;
+
+    return std::make_shared<AutorisationRequest>(login, password);
+}
+
+void Client::send_input_request(input_req_ptr input_request) {
     boost::system::error_code error_code;
 
     boost::asio::write(sock, boost::asio::buffer(input_request->get_data(), input_request->get_length_request()), error_code);
@@ -32,22 +46,15 @@ void Client::send_input_request(input_req_ptr request) {
         std::cout << "error when send login" << std::endl;
         return ;
     }
-    else {
-        std::cout << "send input_request: OK" << std::endl;
-    }
-    std::cout << "send: " << input_request->get_protocol_version() << " " << input_request->get_type_data() << " "
-              << input_request->get_login() << input_request->get_password()
-              << " " << input_request->get_length_request() << std::endl;
-    return ;
 
-    int32_t id;
-    boost::asio::read(sock, boost::asio::buffer(&id, 4), error_code);
+    input_res_ptr response = std::make_shared<AutorisationResponse>();
+    boost::asio::read(sock, boost::asio::buffer(response->get_data(), response->get_length_response()), error_code);
     if (error_code) {
         sock.close();
         std::cout << "error when read login-id" << std::endl;
         return ;
     }
-    set_login_id(id);
+    set_login_id(response->get_loginid());
 
     do_read_header();
 }

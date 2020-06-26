@@ -8,17 +8,15 @@ void Connection::send(const Message& message) {
     }
 }
 
-void Connection::read_input_request_header() {
+void Connection::read_request_header() {
     boost::system::error_code error;
-    std::cout << "start read header" << std::endl;
-    std::cout << "request: " ;
-    input_request = std::make_shared<AutorisationRequest>();
-//    std::cout << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
+    input_req_ptr input_request = std::make_shared<AutorisationRequest>();
     boost::asio::read(socket, boost::asio::buffer(input_request->get_data(), Block::Header), error);
     if (!error) {
-        std::cout << "request: " << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
-        if (read_mes.decode_header()) {
-//            read_login_body();
+        if (input_request->get_type_data() == static_cast<uint16_t>(TypeCommand::RegistrationRequest)
+            || input_request->get_type_data() == static_cast<uint16_t>(TypeCommand::AuthorisationRequest))
+        {
+                read_input_request_body(input_request);
         }
     } else {
         std::cout << "error request: " << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
@@ -26,14 +24,20 @@ void Connection::read_input_request_header() {
     }
 }
 
-void Connection::read_login_body() {
+void Connection::read_input_request_body(input_req_ptr input_request) {
     auto self(shared_from_this());
-    boost::asio::async_read(socket, boost::asio::buffer(read_mes.get_buf_id_login(), Message::Settings_zone),
-        [this, self](boost::system::error_code error, std::size_t) {
+    boost::asio::async_read(socket, boost::asio::buffer(input_request->get_optional(), Block::InputOption),
+        [this, self, input_request](boost::system::error_code error, std::size_t) {
             if (!error) {
-                boost::asio::write(socket, boost::asio::buffer(&client_id, 4));
-                login = read_mes.get_buf_str_login();
-                ChannelsManager::Instance().join(self, read_mes.get_room_id());
+                login = input_request->get_login();
+                password = input_request->get_password();
+
+                input_res_ptr input_response = std::make_shared<AutorisationResponse>(client_id);
+                std::cout << "write: " << input_response->get_protocol_version() << input_response->get_type_data() << " "
+                          << input_response->get_loginid() << std::endl;
+                boost::asio::write(socket, boost::asio::buffer(input_response->get_data(), input_response->get_length_response()));
+
+                ChannelsManager::Instance().join(self, 0);
                 do_read_header();
             }
             else {

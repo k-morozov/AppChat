@@ -27,8 +27,29 @@ set(CMAKE_AUTOUIC ON)
 
 set(Connection ${Server}connection/)
 set(Channel ${Server}channel/)
-
 set(Protocol ${SRC}protocol/)
+
+set(PROTOCOL
+    ${Protocol}protocol.h ${Protocol}protocol.cpp
+    ${Protocol}command_table.h
+    ${Protocol}request/irequest.h
+    ${Protocol}response/iresponse.h
+    ${Protocol}request/control_request.h
+    ${Protocol}request/control_request.cpp
+    ${Protocol}request/transport_request.h
+    ${Protocol}request/transport_request.cpp
+    ${Protocol}response/control_response.h
+    ${Protocol}response/control_response.cpp
+    )
+set(CHANNELS
+    ${Channel}iroom.h ${Channel}iroom.cpp
+    ${Channel}channels_manager.h ${Channel}channels_manager.cpp
+    ${Channel}channel.h ${Channel}channel.cpp
+    )
+set(CONNECTION
+    ${Connection}isubscriber.h ${Connection}isubscriber.cpp
+    ${Connection}connection.h ${Connection}connection.cpp
+)
 set(Logger ${SRC}log/)
 
 project(${PROJECT} LANGUAGES CXX)
@@ -39,25 +60,25 @@ include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
 set(SERVER_SOURCES
     ${Server}startup_server.cpp
     ${Server}server.h
-    ${Connection}isubscriber.h ${Connection}isubscriber.cpp
-    ${Connection}connection.h ${Connection}connection.cpp
-    ${Channel}iroom.h ${Channel}iroom.cpp
-    ${Channel}channels_manager.h ${Channel}channels_manager.cpp
-    ${Channel}channel.h ${Channel}channel.cpp
 
-    ${Protocol}protocol.h ${Protocol}protocol.cpp ${Protocol}request/irequest.h ${Protocol}command_table.h ${Protocol}request/control_request.h ${Protocol}request/control_request.cpp ${Protocol}request/transport_request.h ${Protocol}request/transport_request.cpp
+    ${CONNECTION}
+    ${CHANNELS}
+    ${PROTOCOL}
+
     ${Logger}logger.h ${Logger}logger.cpp
 )
 
 set(CLIENT_SOURCES
     ${Client}startup_client.cpp
     ${Client}client.h  ${Client}client.cpp
-    ${Protocol}protocol.h ${Protocol}protocol.cpp ${Protocol}request/irequest.h ${Protocol}command_table.h ${Protocol}request/control_request.h ${Protocol}request/control_request.cpp ${Protocol}request/transport_request.h ${Protocol}request/transport_request.cpp
+    ${PROTOCOL}
 )
 
 set(TESTS_SOURSES
     ${Tests}startup_tests.cpp
-    ${Tests}test_request.cpp)
+    ${Tests}test_request.cpp
+    ${Tests}test_response.cpp
+)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)

@@ -12,7 +12,6 @@ public:
     Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps)
         : io_service(io), sock(io)
     {
-        logon();
         do_connect(eps);
     }
 
@@ -37,20 +36,8 @@ private:
     int32_t client_id;
     int32_t room_id;
 
-    autor_req_ptr input_request;
 private:
-    void logon() {
-        std::cout << "Enter your login: ";
-        std::cin.getline(login, Block::LoginName);
-        std::cout << "Enter your password: ";
-        std::cin.getline(password, Block::Password);
-//        std::cout << "Enter room_id: ";
-//        std::cin >> room_id;
-        std::cout << "************************************" << std::endl;
-        input_request = std::make_shared<AutorisationRequest>(login, password);
-
-    }
-
+    input_req_ptr logon();
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
 
     void send_input_request(input_req_ptr request);

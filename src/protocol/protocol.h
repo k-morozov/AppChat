@@ -9,6 +9,7 @@
 #include <cstdio>
 
 #include <protocol/request/control_request.h>
+#include <protocol/response/control_response.h>
 
 /*
  *

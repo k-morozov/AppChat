@@ -25,8 +25,12 @@ public:
     virtual void init(const void* from) override {
         std::memcpy(__data, from, LengthRequest);
     }
+
     virtual const void* get_data() const override { return __data; }
+    virtual const void* get_optional() const  override { return __data + Block::Header; }
     virtual void* get_data() override { return __data; }
+    virtual void* get_optional()  override { return __data + Block::Header; }
+
     virtual uint16_t get_protocol_version() const override { return *(uint16_t*)__data; }
     virtual uint16_t get_type_data() const override { return *(uint16_t*) (__data + Block::VersionProtocol) ; }
     virtual const char* get_login() const {

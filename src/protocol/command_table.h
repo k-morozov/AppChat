@@ -16,7 +16,8 @@ namespace Block {
     constexpr uint8_t Password          = 32;
     constexpr uint8_t LoginId           = 4;
 
-     constexpr uint8_t Header = VersionProtocol + Command;
+    constexpr uint8_t Header            = VersionProtocol + Command;
+    constexpr uint8_t InputOption       = LoginName + Password;
 }
 
 
@@ -25,7 +26,7 @@ enum class TypeCommand : uint16_t {
     RegistrationRequest         = 0x0001,
     RegistrationResponse        = 0x0002,
     AuthorisationRequest        = 0x0003,
-    AuthorizationResponse       = 0x0004,
+    AuthorisationResponse       = 0x0004,
     EchoRequest                 = 0x0005,
     EchoResponse                = 0x0006,
     JoinRoomRequest             = 0x0007,
