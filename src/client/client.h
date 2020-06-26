@@ -32,35 +32,28 @@ private:
     Message receiving_message;
     std::deque<Message> sending_message;
 
-    char login[Message::login_str_size];
+    char login[Block::LoginName];
     char password[Block::Password];
     int32_t client_id;
     int32_t room_id;
 
+    autor_req_ptr input_request;
 private:
     void logon() {
         std::cout << "Enter your login: ";
-        std::cin.getline(login, Message::login_str_size);
+        std::cin.getline(login, Block::LoginName);
         std::cout << "Enter your password: ";
         std::cin.getline(password, Block::Password);
 //        std::cout << "Enter room_id: ";
 //        std::cin >> room_id;
         std::cout << "************************************" << std::endl;
-        RegistrationRequest request(login, password);
-        std::cout << "protocol version: " << request.get_protocol_version() << std::endl;
-        std::cout << "type command: " << request.get_type_command() << std::endl;
-        std::cout << "login: " << request.get_login() << std::endl;
-        std::cout << "password: " << request.get_password() << std::endl;
+        input_request = std::make_shared<AutorisationRequest>(login, password);
+
     }
 
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
 
-    void send_login(const Message& mes) {
-        do_send_login(mes);
-    }
-
-
-    void do_send_login(const Message& message);
+    void send_input_request(input_req_ptr request);
     void do_read_header();
     void do_read_body(std::size_t size_body);
     void do_write();

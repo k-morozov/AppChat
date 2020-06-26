@@ -13,7 +13,7 @@
 /*
  *
  *      |2 bytes|             |command 2 bytes|
- *      |protocol vers.|    ->|AuthorizationRequest|  ->|login 8 bytes|         ->|password 32 bytes|
+ *      |protocol vers.|    ->|AuthorisationRequest|  ->|login 8 bytes|         ->|password 32 bytes|
  *      |protocol vers.|    ->|AuthorizationResponse| ->|size list login-id|    ->|login_id 4 bytes|    ->|login_id+login| ->->->->
  *
  * */
@@ -29,7 +29,7 @@ enum class Command : uint16_t {
     Unknown                     = 0xFFFF,
     RegistrationRequest         = 0x0001,
     RegistrationResponse        = 0x0002,
-    AuthorizationRequest        = 0x0003,
+    AuthorisationRequest        = 0x0003,
     AuthorizationResponse       = 0x0004,
     EchoRequest                 = 0x0005,
     EchoResponse                = 0x0006,

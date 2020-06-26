@@ -9,8 +9,8 @@ public:
     //ControlRequest();
     virtual ~ControlRequest() {}
 
+    virtual void init(const void*) override = 0;
     virtual TypeCommand get_type() const override final { return type_request; }
-
 protected:
     const TypeCommand type_request = TypeCommand::Unknown;
 };
@@ -18,8 +18,17 @@ protected:
 // ************************************************************************************
 class InputRequest : public ControlRequest {
 public:
+    InputRequest() {
+        std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
+    }
+    virtual void init(const void* from) override {
+        std::memcpy(__data, from, LengthRequest);
+    }
+    virtual const void* get_data() const override { return __data; }
+    virtual void* get_data() override { return __data; }
     virtual uint16_t get_protocol_version() const override { return *(uint16_t*)__data; }
-    virtual uint16_t get_type_command() const override { return *(uint16_t*) (__data + Block::VersionProtocol) ; }
+    virtual uint16_t get_type_data() const override { return *(uint16_t*) (__data + Block::VersionProtocol) ; }
     virtual const char* get_login() const {
         return __data+Block::VersionProtocol + Block::Command;
     }
@@ -36,11 +45,16 @@ protected:
 };
 
 // *************************************************************************************************
-
-
-// *** |protocol vers.|    ->|RegistrationRequest|  ->|login 8 bytes|         ->|password 32 bytes|
+/**
+ * @brief The RegistrationRequest class
+ * @todo add more settings for registration: email, name ...
+ */
 class RegistrationRequest : public InputRequest {
 public:
+    RegistrationRequest() {
+        std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
+    }
     RegistrationRequest(const char* login, const char* password) {
         std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
@@ -50,11 +64,63 @@ public:
         std::snprintf(__data+Block::VersionProtocol+Block::Command + Block::LoginName,
                  Block::Password, "%s", password);
     }
+    RegistrationRequest(const std::string& login, const std::string& password) {
+        std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
 
+        std::snprintf(__data+Block::VersionProtocol+Block::Command,
+                 Block::LoginName, "%s", login.data());
+        std::snprintf(__data+Block::VersionProtocol+Block::Command + Block::LoginName,
+                 Block::Password, "%s", password.data());
+    }
 
 private:
     const TypeCommand type_request = TypeCommand::RegistrationRequest;
 };
 
+/**
+ * @brief The AutorisationRequest class
+ */
+class AutorisationRequest : public InputRequest {
+public:
+    AutorisationRequest() {
+        std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
+    }
+    AutorisationRequest(const char* login, const char* password) {
+        std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
 
+        std::snprintf(__data+Block::VersionProtocol+Block::Command,
+                 Block::LoginName, "%s", login);
+        std::snprintf(__data+Block::VersionProtocol+Block::Command + Block::LoginName,
+                 Block::Password, "%s", password);
+    }
+    AutorisationRequest(const std::string& login, const std::string& password) {
+        std::memcpy(__data, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(__data+Block::VersionProtocol, &type_request, Block::Command);
+
+        std::snprintf(__data+Block::VersionProtocol+Block::Command,
+                 Block::LoginName, "%s", login.data());
+        std::snprintf(__data+Block::VersionProtocol+Block::Command + Block::LoginName,
+                 Block::Password, "%s", password.data());
+    }
+
+
+private:
+    const TypeCommand type_request = TypeCommand::AuthorisationRequest;
+};
+
+
+
+// *************************************************************************************************
+using input_req_ptr = std::shared_ptr<InputRequest>;
+using registr_req_ptr = std::shared_ptr<RegistrationRequest>;
+using autor_req_ptr = std::shared_ptr<AutorisationRequest>;
+
+std::ostream& operator<<(std::ostream& os, const RegistrationRequest& request);
+std::ostream& operator<<(std::ostream& os, const AutorisationRequest& request);
+std::ostream& operator<<(std::ostream& os, const registr_req_ptr& request);
+std::ostream& operator<<(std::ostream& os, const autor_req_ptr& request);
+std::ostream& operator<<(std::ostream& os, const InputRequest& request);
 #endif // CONTROLREQUEST_H

@@ -8,14 +8,20 @@ void Connection::send(const Message& message) {
     }
 }
 
-void  Connection::read_login_header() {
+void Connection::read_input_request_header() {
     boost::system::error_code error;
-    boost::asio::read(socket, boost::asio::buffer(read_mes.get_buf_data(), Message::header_size), error);
+    std::cout << "start read header" << std::endl;
+    std::cout << "request: " ;
+    input_request = std::make_shared<AutorisationRequest>();
+//    std::cout << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
+    boost::asio::read(socket, boost::asio::buffer(input_request->get_data(), Block::Header), error);
     if (!error) {
+        std::cout << "request: " << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
         if (read_mes.decode_header()) {
-            read_login_body();
+//            read_login_body();
         }
     } else {
+        std::cout << "error request: " << input_request->get_protocol_version() << " and " << input_request->get_type_data() << std::endl;
         socket.close();
     }
 }

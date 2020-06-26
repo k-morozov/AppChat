@@ -18,22 +18,27 @@ void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps)
     boost::asio::async_connect(sock, eps,
         [this](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
            if (!ec) {
-               Message mes;
-               mes.set_login(login);
-               mes.set_room_id(room_id);
-               send_login(mes);
+               send_input_request(input_request);
            }
     });
 }
 
-void Client::do_send_login(const Message& message) {
+void Client::send_input_request(input_req_ptr request) {
     boost::system::error_code error_code;
-    boost::asio::write(sock, boost::asio::buffer(message.get_buf_data(), Message::General_zone), error_code);
+
+    boost::asio::write(sock, boost::asio::buffer(input_request->get_data(), input_request->get_length_request()), error_code);
     if (error_code) {
         sock.close();
         std::cout << "error when send login" << std::endl;
         return ;
     }
+    else {
+        std::cout << "send input_request: OK" << std::endl;
+    }
+    std::cout << "send: " << input_request->get_protocol_version() << " " << input_request->get_type_data() << " "
+              << input_request->get_login() << input_request->get_password()
+              << " " << input_request->get_length_request() << std::endl;
+    return ;
 
     int32_t id;
     boost::asio::read(sock, boost::asio::buffer(&id, 4), error_code);
