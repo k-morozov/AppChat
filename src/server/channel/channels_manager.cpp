@@ -10,27 +10,27 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
         it->second->join(new_sub);
     }
     else {
+        std::cout << "ChannelsManager::join" << std::endl;
         auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id));
         if (!flag) {
             std::cout << "Non create" << std::endl;
         }
+        // add check
+        new_it->second->join(new_sub);
 
         auto [it2, error] = clinets_in_room.try_emplace(new_sub->get_client_id(), room_id);
         if (!error) {
             std::cout << "Non add subsciber" << std::endl;
         }
-
-        // add check
-        new_it->second->join(new_sub);
     }
 }
 
-void ChannelsManager::send(const Message& message) {
-    if (auto it=channels.find(message.get_room_id()); it!=channels.end()) {
-        it->second->notification(message);
+void ChannelsManager::send(text_response_ptr response) {
+    if (auto it=channels.find(response->get_roomid()); it!=channels.end()) {
+        it->second->notification(response);
     }
     else {
-        std::cerr << "no room room_id=" << message.get_room_id() << std::endl;
+        std::cerr << "no room room_id=" << response->get_roomid() << std::endl;
     }
 }
 

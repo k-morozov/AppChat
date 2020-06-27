@@ -1,17 +1,58 @@
 #ifndef TRANSPORTREQUEST_H
 #define TRANSPORTREQUEST_H
 
-#include <protocol/request/irequest.h>
+#include <protocol/request/request.h>
 
-class TransportRequest: public IRequest {
+class TransportRequest : public Request {
 public:
-    virtual ~TransportRequest() {}
+    TransportRequest() {
+        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+    }
+    virtual const void* get_data() const  override { return __data; }
+    virtual void* get_data()  override { return __data; }
 
-    virtual std::string parse() const = 0;
-    virtual void write_block(std::size_t pos, void* data, std::size_t count_bytes) = 0;
-    virtual void* get_data() = 0;
-    virtual void* read_block(std::size_t pos) = 0;
-    virtual TypeCommand get_type() const = 0;
+    virtual const char* get_login() const {
+        return __data;
+    }
+
+    virtual int32_t get_roomid() const {
+        return *(int32_t *)(__data+Block::LoginName);
+    }
+
+    virtual uint32_t get_length_data() const override { return LengthRequest;}
+
+protected:
+    static constexpr auto LengthRequest = Block::LoginName + Block::RoomId + Block::TextMessage;
+    char __data[LengthRequest];
 };
 
+class TextRequest : public TransportRequest {
+public:
+    TextRequest() {
+        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
+    }
+
+    TextRequest(const std::string& login, int32_t roomid, const std::string& text) {
+        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
+        std::snprintf(__data, Block::LoginName, "%s", login.data());
+        std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
+        std::snprintf(__data+Block::LoginName+Block::RoomId, Block::TextMessage, "%s", text.data());
+    }
+
+    TextRequest(request_ptr request) {
+        std::memcpy(header, request->get_header(), Block::Header);
+        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
+    }
+
+    const char* get_message() const {
+        return __data+Block::LoginName+Block::RoomId;
+    }
+private:
+    const TypeCommand type_request = TypeCommand::EchoRequest;
+};
+
+using text_request_ptr = std::shared_ptr<TextRequest>;
 #endif // TRANSPORTREQUEST_H

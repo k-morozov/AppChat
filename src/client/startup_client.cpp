@@ -14,9 +14,9 @@ void run_client() {
     Client client(io_service, endpoints);
     std::thread th([&io_service]() { io_service.run();} );
 
-    char mes[Message::max_body_size+1];
-    while(std::cin.getline(mes, Message::max_body_size+1, '\n') ) {
-        client.write(Message(mes));
+    char message[Block::TextMessage+1];
+    while(std::cin.getline(message, Block::TextMessage, '\n') ) {
+        client.write(message);
     }
 
     th.join();
