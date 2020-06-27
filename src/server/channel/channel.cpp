@@ -1,37 +1,45 @@
 #include <server/channel/channel.h>
 #include <sstream>
 void Channel::join(subscriber_ptr new_subsciber) {
-
+    mutex_subs.lock();
     subscribers.try_emplace(new_subsciber->get_client_id(), new_subsciber);
+    mutex_subs.unlock();
 
-    std::string str("joined to room_id=" + std::to_string(channel_id));
-    Message notify(str);
-    notify.set_login(new_subsciber->get_login());
-    notify.set_login_id(new_subsciber->get_client_id());
-    notification(notify);
-    std::cout << new_subsciber->get_login() << " " << str << std::endl;
+    std::string message("joined to room_id=" + std::to_string(channel_id));
+
+    notification(new_subsciber->get_login(), message);
+    std::cout << new_subsciber->get_login() << ": " << message << std::endl;
 
 
-    for(const auto& message:history) {
-        new_subsciber->send(message);
-    }
+//    for(const auto& message:history) {
+//        new_subsciber->send(message);
+//    }
 }
 
 void Channel::leave(subscriber_ptr subsciber) {
+    mutex_subs.lock();
     subscribers.erase(subsciber->get_client_id());
-    Message mes(subsciber->get_login() + " leave from Chat_room");
-    mes.set_login("server");
+    mutex_subs.unlock();
 
-    notification(mes);
+    std::string message(subsciber->get_login() + " leave from Chat_room");
+
+    notification("server", message);
 }
 
-void Channel::notification(const Message& message) {
-    if(message.get_body_length()) {
-        history.push_back(message);
+void Channel::notification(const std::string& from, const std::string& message) {
+    if(!message.empty()) {
+        mutex_subs.lock();
         for(auto [id, sub]:subscribers) {
-            if (message.get_login_id() != sub->get_client_id()) {
-                sub->send(message);
-            }
+                sub->sendme(from, message);
         }
+        mutex_subs.unlock();
     }
+}
+
+// @todo update
+void Channel::notification(transport_response_ptr response) {
+        for(auto [id, sub]:subscribers) {
+                sub->sendme(response->get_login(),
+                            std::dynamic_pointer_cast<TextResponse>(response)->get_message());
+        }
 }

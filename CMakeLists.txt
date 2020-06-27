@@ -32,14 +32,15 @@ set(Protocol ${SRC}protocol/)
 set(PROTOCOL
     ${Protocol}protocol.h ${Protocol}protocol.cpp
     ${Protocol}command_table.h
-    ${Protocol}request/irequest.h
-    ${Protocol}response/iresponse.h
-    ${Protocol}request/control_request.h
-    ${Protocol}request/control_request.cpp
+    ${Protocol}request/request.h
+    ${Protocol}response/response.h
+    ${Protocol}request/input_request.h
+    ${Protocol}request/input_request.cpp
     ${Protocol}request/transport_request.h
     ${Protocol}request/transport_request.cpp
-    ${Protocol}response/control_response.h
-    ${Protocol}response/control_response.cpp
+    ${Protocol}response/input_response.h
+    ${Protocol}response/input_response.cpp
+    ${Protocol}response/transport_response.h
     )
 set(CHANNELS
     ${Channel}iroom.h ${Channel}iroom.cpp
@@ -88,7 +89,8 @@ add_executable(${SERVER} ${SERVER_SOURCES})
 add_executable(${CLIENT} ${CLIENT_SOURCES})
 add_executable(${TESTS} ${TESTS_SOURSES})
 
-set_target_properties(${SERVER} ${CLIENT} ${TESTS} PROPERTIES
+set_target_properties(${SERVER} #${CLIENT}
+    ${TESTS} PROPERTIES
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread

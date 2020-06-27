@@ -1,32 +1,8 @@
 #ifndef CONTROLREQUEST_H
 #define CONTROLREQUEST_H
 
-#include <protocol/request/irequest.h>
+#include <protocol/request/request.h>
 
-class Request : public IRequest {
-public:
-    Request() {
-        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
-    }
-
-    virtual const void* get_header() const override { return header; }
-    virtual void* get_header() override { return header; }
-    virtual const void* get_data() const override { return nullptr; }
-    virtual void* get_data() override { return nullptr; }
-
-    virtual uint16_t get_protocol_version() const override { return *(uint16_t*)header; }
-
-    virtual TypeCommand get_type() const override { return TypeCommand::Unknown; }
-    virtual TypeCommand get_type_data() const override { return (TypeCommand) *(header + Block::VersionProtocol) ; }
-
-    virtual uint32_t get_length_request() const override { return 0; }
-
-protected:
-    char header[Block::Header];
-};
-
-using request_ptr = std::shared_ptr<Request>;
-// ************************************************************************************
 class InputRequest : public Request {
 public:
     InputRequest():Request() {
@@ -42,7 +18,7 @@ public:
         return __data+Block::LoginName;
     }
 
-    virtual uint32_t get_length_request() const override { return LengthRequest;}
+    virtual uint32_t get_length_data() const override { return LengthRequest;}
 
 protected:
     static constexpr auto LengthRequest = Block::LoginName + Block::Password;

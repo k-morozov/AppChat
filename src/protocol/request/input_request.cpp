@@ -1,4 +1,4 @@
-#include <protocol/request/control_request.h>
+#include <protocol/request/input_request.h>
 
 std::ostream& operator<<(std::ostream& os, const RegistrationRequest& request) {
     os << "protocol version=" << request.get_protocol_version()
