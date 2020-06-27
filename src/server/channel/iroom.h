@@ -16,6 +16,7 @@ public:
     virtual void join(subscriber_ptr) = 0;
     virtual void leave(subscriber_ptr) = 0;
     virtual void notification(const Message&) = 0;
+    virtual void save_to_db(const Message&) = 0;
 
     virtual identifier_t get_room_id() const = 0;
 };

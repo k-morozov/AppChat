@@ -18,12 +18,14 @@ public:
     virtual void join(subscriber_ptr) override;
     virtual void leave(subscriber_ptr) override;
     virtual void notification(const Message&) override;
+    virtual void save_to_db(const Message&) override;
 
     virtual identifier_t get_room_id() const override { return channel_id; }
 
 private:
     std::unordered_map<int32_t, subscriber_ptr> subscribers;
     std::deque<Message> history;
+    static std::string create_table_query;
 
     const identifier_t channel_id;
 };
