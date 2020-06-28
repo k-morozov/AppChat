@@ -187,7 +187,7 @@ TEST_F(request, autorisation_basic_ptr) {
 }
 
 TEST_F(request, input_basic_empty_ptr) {
-    input_req_ptr request;
+    input_request_ptr request;
     request = std::make_shared<AutorisationRequest>();
 
     EXPECT_EQ(request->get_protocol_version(), PROTOCOL_VERS);

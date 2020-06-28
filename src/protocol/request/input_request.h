@@ -35,11 +35,7 @@ public:
     RegistrationRequest():InputRequest() {
         std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
     }
-//    RegistrationRequest(const char* login, const char* password):InputRequest() {
-//        std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
-//        std::snprintf(__data, Block::LoginName, "%s", login);
-//        std::snprintf(__data+Block::LoginName, Block::Password, "%s", password);
-//    }
+
     RegistrationRequest(const std::string& login, const std::string& password):InputRequest() {
         std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
         std::snprintf(__data, Block::LoginName, "%s", login.data());
@@ -93,7 +89,7 @@ private:
 
 // *************************************************************************************************
 
-using input_req_ptr = std::shared_ptr<InputRequest>;
+using input_request_ptr = std::shared_ptr<InputRequest>;
 using registr_req_ptr = std::shared_ptr<RegistrationRequest>;
 using autor_req_ptr = std::shared_ptr<AutorisationRequest>;
 

@@ -15,7 +15,7 @@ public:
         return __data;
     }
 
-    virtual int32_t get_roomid() const {
+    virtual identifier_t get_roomid() const {
         return *(int32_t *)(__data+Block::LoginName);
     }
 

@@ -15,7 +15,7 @@ public:
         return __data;
     }
 
-    virtual int32_t get_roomid() const {
+    virtual identifier_t get_roomid() const {
         return 0;
     }
 
@@ -42,8 +42,6 @@ public:
 
     TextResponse(response_ptr response) {
         std::memcpy(header, response->get_header(), Block::Header);
-//        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
-//        std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
     }
 
     const char* get_message() const {

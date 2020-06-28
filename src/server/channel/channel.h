@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <mutex>
+#include <deque>
 #include <server/channel/iroom.h>
 
 
@@ -16,15 +17,16 @@ public:
 
     virtual void join(subscriber_ptr) override;
     virtual void leave(subscriber_ptr) override;
-    virtual void notification(const std::string&, const std::string&) override;
-    virtual void notification(transport_response_ptr response) override;
+    virtual void notification(text_response_ptr response) override;
 
     virtual identifier_t get_room_id() const override { return channel_id; }
 
 private:
     std::mutex mutex_subs;
-    std::unordered_map<int32_t, subscriber_ptr> subscribers;
+    std::unordered_map<identifier_t, subscriber_ptr> subscribers;
     const identifier_t channel_id;
+
+    std::deque<text_response_ptr> history_room;
 };
 
 using channel_ptr = std::shared_ptr<Channel>;

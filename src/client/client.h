@@ -22,34 +22,32 @@ public:
             sock.close();
         });
     }
-    void set_login_id(int id)   { client_id = id;}
+    void set_login_id(identifier_t id)   { client_id = id;}
     const char* get_login() const { return login; }
 
 private:
     boost::asio::io_service &io_service;
     boost::asio::ip::tcp::socket sock;
 
-    Message receiving_message;
-    std::deque<Message> sending_message;
-
     std::deque<packet_ptr> packets_to_server;
 
     char login[Block::LoginName];
     char password[Block::Password];
-    int32_t client_id;
-    int32_t room_id;
+    identifier_t client_id;
+    identifier_t room_id;
 
 private:
-    input_req_ptr logon();
+    input_request_ptr logon();
     void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
 
     void send_login_packet(packet_ptr packet);
-    void read_response_header();
-    void read_response_data(response_ptr);
-    void read_response_text_data(text_response_ptr packet);
 
-    void start_sending();
-    void send_data();
+    void read_response_header();
+    void read_response_data(autor_response_ptr);
+    void read_response_data(text_response_ptr);
+
+    void send_request_header();
+    void send_request_data();
 };
 
 #endif // CLIENT_H
