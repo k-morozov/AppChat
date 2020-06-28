@@ -16,6 +16,8 @@ public:
     }
 
     void write(const std::string& message);
+    void write(text_request_ptr);
+    void write(join_room_request_ptr);
 
     void close() {
         boost::asio::post(io_service, [this]() {

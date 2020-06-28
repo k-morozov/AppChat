@@ -11,6 +11,23 @@ void Client::write(const std::string& message) {
     }
 }
 
+void Client::write(text_request_ptr request) {
+    bool process_write = !packets_to_server.empty();
+    packets_to_server.push_back(request);
+
+    if (!process_write) {
+        send_request_header();
+    }
+}
+void Client::write(join_room_request_ptr request) {
+    bool process_write = !packets_to_server.empty();
+    packets_to_server.push_back(request);
+
+    if (!process_write) {
+        send_request_header();
+    }
+}
+
 void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps) {
     auto input_request = logon();
 
@@ -22,13 +39,16 @@ void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps)
     });
 }
 
+// @todo very bad
 input_request_ptr Client::logon() {
     std::cout << "Enter your login: ";
     std::cin.getline(login, Block::LoginName);
     std::cout << "Enter your password: ";
     std::cin.getline(password, Block::Password);
-//        std::cout << "Enter room_id: ";
-//        std::cin >> room_id;
+    std::cout << "enter room_id=";
+    std::string room;
+    std::cin.getline(room.data(), Block::Password);
+    room_id = std::stoi(room);
     std::cout << "************************************" << std::endl;
 
     return std::make_shared<AutorisationRequest>(login, password);
@@ -63,7 +83,16 @@ void Client::send_login_packet(packet_ptr packet) {
         set_login_id(response->get_loginid());
 
         std::cout << "logon: OK" << std::endl;
-        read_response_header();
+
+        join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
+        write(request);
+        std::cout << "room_id=" << request->get_roomid() << std::endl;
+
+        std::cout << "**********************************************" << std::endl;
+        if (!error_code) {
+            read_response_header();
+        }
+
     }
     else {
         std::cout << " No response from server" << std::endl;

@@ -36,7 +36,7 @@ enum class TypeCommand : uint16_t {
     EchoResponse                = 0x0006,
     JoinRoomRequest             = 0x0007,
     JoinRoomResponse            = 0x0008,
-    LeaveRoomRequest            = 0x000A,
+    LeaveRoomRequest            = 0x0009,
 };
 
 static const std::unordered_map< TypeCommand, std::string> type_command_str = {
@@ -46,6 +46,7 @@ static const std::unordered_map< TypeCommand, std::string> type_command_str = {
     {TypeCommand::AutorisationResponse, "AutorisationResponse"},
     {TypeCommand::EchoRequest, "EchoRequest"},
     {TypeCommand::EchoResponse, "EchoResponse"},
+    {TypeCommand::JoinRoomRequest, "JoinRoomRequest"},
 
     {TypeCommand::Unknown, "Unknown"},
 };

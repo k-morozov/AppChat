@@ -16,7 +16,7 @@ public:
     }
 
     virtual identifier_t get_roomid() const {
-        return *(int32_t *)(__data+Block::LoginName);
+        return *(identifier_t *)(__data+Block::LoginName);
     }
 
     virtual uint32_t get_length_data() const override { return LengthRequest;}
@@ -29,12 +29,12 @@ protected:
 class TextRequest : public TransportRequest {
 public:
     TextRequest() {
-        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+//        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
     }
 
-    TextRequest(const std::string& login, int32_t roomid, const std::string& text) {
-        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+    TextRequest(const std::string& login, identifier_t roomid, const std::string& text) {
+//        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
         std::snprintf(__data, Block::LoginName, "%s", login.data());
         std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
@@ -55,4 +55,5 @@ private:
 };
 
 using text_request_ptr = std::shared_ptr<TextRequest>;
+
 #endif // TRANSPORTREQUEST_H

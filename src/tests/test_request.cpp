@@ -177,7 +177,7 @@ TEST_F(request, autorisation_basic_ptr) {
     std::string login = "vasiliy";
     std::string password = "a1s22g_1";
 
-    autor_req_ptr request;
+    autor_request_ptr request;
     request = std::make_shared<AutorisationRequest>(login.data(), password.data());
 
     EXPECT_EQ(request->get_protocol_version(), PROTOCOL_VERS);
@@ -195,7 +195,7 @@ TEST_F(request, input_basic_empty_ptr) {
 }
 
 TEST_F(request, autorisation_basic_empty_ptr) {
-    autor_req_ptr request;
+    autor_request_ptr request;
     request = std::make_shared<AutorisationRequest>();
 
     EXPECT_EQ(request->get_protocol_version(), PROTOCOL_VERS);

@@ -18,7 +18,7 @@ void Connection::read_request_header() {
                     break;
                 case TypeCommand::RegistrationRequest:
                     std::cout << get_command_str(request->get_type_data()) << "--> ";
-                    read_request_body(std::make_shared<RegistrationRequest>(request));
+                    //read_request_body(std::make_shared<RegistrationRequest>(request));
                     break;
                 case TypeCommand::RegistrationResponse:
                 case TypeCommand::AuthorisationRequest:
@@ -32,6 +32,9 @@ void Connection::read_request_header() {
                     break;
                 case TypeCommand::EchoResponse:
                 case TypeCommand::JoinRoomRequest:
+                    std::cout << get_command_str(request->get_type_data()) << "--> ";
+                    read_request_body(std::make_shared<JoinRoomRequest>(request));
+                    break;
                 case TypeCommand::JoinRoomResponse:
                 case TypeCommand::LeaveRoomRequest:
                 default:
@@ -44,10 +47,9 @@ void Connection::read_request_header() {
         }
     });
 
-
 }
 
-void Connection::read_request_body(input_request_ptr request) {
+void Connection::read_request_body(autor_request_ptr request) {
     auto self(shared_from_this());
     boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
         [this, self, request](boost::system::error_code error, std::size_t) {
@@ -63,7 +65,8 @@ void Connection::read_request_body(input_request_ptr request) {
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
 
-                ChannelsManager::Instance().join(self, 0);
+
+                //ChannelsManager::Instance().join(self, 0);
                 read_request_header();
             }
             else {
@@ -83,7 +86,7 @@ void Connection::read_request_body(text_request_ptr request) {
                 auto text = request->get_message();
                 std::cout << "login=" << login << ", roomid=" << roomid << ", text="<<text << std::endl;
 
-                text_response_ptr response = std::make_shared<TextResponse>(login, text);
+                text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
                 ChannelsManager::Instance().send(response);
 
                 read_request_header();
@@ -96,6 +99,27 @@ void Connection::read_request_body(text_request_ptr request) {
 
 }
 
+void Connection::read_request_body(join_room_request_ptr request) {
+    auto self(shared_from_this());
+    boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
+        [this, self, request](boost::system::error_code error, std::size_t) {
+            if (!error) {
+                auto roomid = request->get_roomid();
+                std::cout << "roomid=" << roomid << std::endl;
+
+//                text_response_ptr response = std::make_shared<TextResponse>(login, text);
+//                ChannelsManager::Instance().send(response);
+                ChannelsManager::Instance().join(self, roomid);
+
+                read_request_header();
+            }
+            else {
+                ChannelsManager::Instance().leave(shared_from_this());
+                socket.close();
+            }
+    });
+
+}
 void Connection::send_response_header() {
     auto self(shared_from_this());
     boost::asio::async_write(socket,

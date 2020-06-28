@@ -38,9 +38,12 @@ set(PROTOCOL
     ${Protocol}request/input_request.cpp
     ${Protocol}request/transport_request.h
     ${Protocol}request/transport_request.cpp
+    ${Protocol}request/control_request.h
+
     ${Protocol}response/input_response.h
     ${Protocol}response/input_response.cpp
     ${Protocol}response/transport_response.h
+
     )
 set(CHANNELS
     ${Channel}iroom.h ${Channel}iroom.cpp
