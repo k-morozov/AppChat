@@ -23,6 +23,8 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
             std::cout << "Non add subsciber" << std::endl;
         }
     }
+
+    clientid_to_login.try_emplace(new_sub->get_client_id(), new_sub->get_login());
 }
 
 void ChannelsManager::send(text_response_ptr response) {

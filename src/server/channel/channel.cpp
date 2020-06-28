@@ -7,13 +7,13 @@ void Channel::join(subscriber_ptr new_subsciber) {
 
     std::string message("joined to room_id=" + std::to_string(channel_id));
 
-    notification(new_subsciber->get_login(), message);
+    text_response_ptr response = std::make_shared<TextResponse>(new_subsciber->get_login(), message);
+    notification(response);
     std::cout << new_subsciber->get_login() << ": " << message << std::endl;
 
-
-//    for(const auto& message:history) {
-//        new_subsciber->send(message);
-//    }
+    for(const auto& response:history_room) {
+        new_subsciber->sendme(response);
+    }
 }
 
 void Channel::leave(subscriber_ptr subsciber) {
@@ -21,25 +21,16 @@ void Channel::leave(subscriber_ptr subsciber) {
     subscribers.erase(subsciber->get_client_id());
     mutex_subs.unlock();
 
-    std::string message(subsciber->get_login() + " leave from Chat_room");
+    std::string message(subsciber->get_login() + " leave from roomdid=" + std::to_string(channel_id));
 
-    notification("server", message);
+    text_response_ptr response = std::make_shared<TextResponse>("server", message);
+    notification(response);
 }
 
-void Channel::notification(const std::string& from, const std::string& message) {
-    if(!message.empty()) {
-        mutex_subs.lock();
-        for(auto [id, sub]:subscribers) {
-                sub->sendme(from, message);
-        }
-        mutex_subs.unlock();
+void Channel::notification(text_response_ptr response) {
+    history_room.push_back(response);
+    for(auto [id, sub]:subscribers) {
+        // @todo add to respose field clientid. now compare string -> will compare int
+        if (response->get_login() != sub->get_login()) sub->sendme(response);
     }
-}
-
-// @todo update
-void Channel::notification(transport_response_ptr response) {
-        for(auto [id, sub]:subscribers) {
-                sub->sendme(response->get_login(),
-                            std::dynamic_pointer_cast<TextResponse>(response)->get_message());
-        }
 }

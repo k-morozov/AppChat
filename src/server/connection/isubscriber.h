@@ -6,13 +6,13 @@
 #include <string>
 #include <protocol/protocol.h>
 
-using identifier_t = int32_t;
+
 
 class ISubscriber
 {
 public:
     virtual void start() = 0;
-    virtual void sendme(const std::string&, const std::string&) = 0;
+    virtual void sendme(text_response_ptr response) = 0;
     virtual identifier_t get_client_id() const = 0;
     virtual const std::string& get_login() const = 0;
 

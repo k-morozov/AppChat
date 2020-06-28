@@ -13,11 +13,11 @@ public:
     virtual const void* get_data() const  override { return __data; }
     virtual void* get_data()  override { return __data; }
 
-    virtual int32_t get_loginid() const {
-        return *(int32_t *)(__data);
+    virtual identifier_t get_loginid() const {
+        return *(identifier_t *)(__data);
     }
     virtual uint32_t get_length_data() const override { return LengthResponse;}
-    virtual void set_loginid(int32_t id = 0) {
+    virtual void set_loginid(identifier_t id = 0) {
         std::memcpy(__data, &id, Block::LoginId);
     }
 protected:
@@ -37,7 +37,7 @@ public:
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_response, Block::Command);
     }
-    RegistrationResponse(int32_t id) {
+    RegistrationResponse(identifier_t id) {
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_response, Block::Command);
         std::memcpy(__data, &id, Block::LoginId);
@@ -56,7 +56,7 @@ public:
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_response, Block::Command);
     }
-    AutorisationResponse(int32_t id) {
+    AutorisationResponse(identifier_t id) {
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_response, Block::Command);
         std::memcpy(__data, &id, Block::LoginId);
@@ -74,7 +74,7 @@ private:
 using response_ptr = std::shared_ptr<Response>;
 using input_res_ptr = std::shared_ptr<InputResponse>;
 using reg_res_ptr = std::shared_ptr<RegistrationResponse>;
-using autor_res_ptr = std::shared_ptr<AutorisationResponse>;
+using autor_response_ptr = std::shared_ptr<AutorisationResponse>;
 
 
 #endif // CONTROLRESPONSE_H

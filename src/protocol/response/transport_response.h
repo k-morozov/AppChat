@@ -15,39 +15,43 @@ public:
         return __data;
     }
 
-    virtual int32_t get_roomid() const {
-        return 0;
+    virtual identifier_t get_roomid() const {
+        return *(identifier_t *)(__data+Block::LoginName);
     }
 
     virtual uint32_t get_length_data() const override { return LengthResponse;}
 
 protected:
-    static constexpr auto LengthResponse = Block::LoginName + Block::TextMessage;
+    static constexpr auto LengthResponse = Block::LoginName + Block::RoomId + Block::TextMessage;
     char __data[LengthResponse];
 };
 
 class TextResponse : public TransportResponse {
 public:
-    TextResponse() {
+    TextResponse(identifier_t roomid = 0) {
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
+
+        std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
+
     }
 
-    TextResponse(const std::string& login, const std::string& text) {
+    TextResponse(const std::string& login, const std::string& text, identifier_t roomid = 0) {
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
         std::snprintf(__data, Block::LoginName, "%s", login.data());
-        std::snprintf(__data+Block::LoginName, Block::TextMessage, "%s", text.data());
+        std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
+        std::snprintf(__data+Block::LoginName + Block::LoginId, Block::TextMessage, "%s", text.data());
     }
 
     TextResponse(response_ptr response) {
         std::memcpy(header, response->get_header(), Block::Header);
-//        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
-//        std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
+
+        std::memset(__data+Block::LoginName, 0, Block::RoomId);
     }
 
     const char* get_message() const {
-        return __data+Block::LoginName;
+        return __data+Block::LoginName+Block::RoomId;
     }
 private:
     const TypeCommand type_Response = TypeCommand::EchoResponse;
