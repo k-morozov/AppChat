@@ -8,6 +8,7 @@
 #include <protocol/protocol.h>
 
 
+
 class IRoom
 {
 public:

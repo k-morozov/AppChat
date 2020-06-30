@@ -49,6 +49,7 @@ set(CHANNELS
     ${Channel}iroom.h ${Channel}iroom.cpp
     ${Channel}channels_manager.h ${Channel}channels_manager.cpp
     ${Channel}channel.h ${Channel}channel.cpp
+    ${SRC}database/database.h ${SRC}database/database.cpp
     )
 set(CONNECTION
     ${Connection}isubscriber.h ${Connection}isubscriber.cpp
@@ -108,12 +109,13 @@ include_directories(${GTEST_INCLUDE_DIR})
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
 find_package(GTest REQUIRED)
+find_package(SQLite3 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_library(UnitTests gtest)
 find_library(LOGGER log4cplus)
 
-target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} )
+target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} ${SQLite3_LIBRARIES})
 target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} Qt5::Widgets)
 target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
 
