@@ -47,3 +47,4 @@ void ChannelsManager::leave(subscriber_ptr sub) {
         std::cerr << "no room room_id=" << room_id << std::endl;
     }
 }
+

@@ -5,7 +5,7 @@
 #include <mutex>
 #include <deque>
 #include <server/channel/iroom.h>
-
+#include <database/database.h>
 
 class Channel : public IRoom
 {
@@ -19,11 +19,14 @@ public:
     virtual void leave(subscriber_ptr) override;
     virtual void notification(text_response_ptr response) override;
 
+
     virtual identifier_t get_room_id() const override { return channel_id; }
 
 private:
     std::mutex mutex_subs;
     std::unordered_map<identifier_t, subscriber_ptr> subscribers;
+
+
     const identifier_t channel_id;
 
     std::deque<text_response_ptr> history_room;

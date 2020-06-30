@@ -52,8 +52,8 @@ TEST_F(request, registration_empty_password) {
 }
 
 TEST_F(request, registration_over_login) {
-    std::string fake_login = "vasiliyaaa";
-    std::string login = "vasiliy";
+    std::string fake_login = "vasiliyaaaaaaaaBBBB";
+    std::string login = "vasiliyaaaaaaaa";
     std::string passsword = "a1s22g";
     RegistrationRequest  request(fake_login.data(),passsword.data());
 
@@ -131,8 +131,8 @@ TEST_F(request, autorisation_empty_password) {
 }
 
 TEST_F(request, autorisation_over_login) {
-    std::string fake_login = "vasiliyaaa";
-    std::string login = "vasiliy";
+    std::string fake_login      = "vasiliyaaaaaaaaBBBB";
+    std::string login           = "vasiliyaaaaaaaa";
     std::string passsword = "a1s22g";
     AutorisationRequest  request(fake_login.data(),passsword.data());
 
