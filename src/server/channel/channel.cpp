@@ -31,7 +31,6 @@ void Channel::leave(subscriber_ptr subsciber) {
 
 void Channel::notification(text_response_ptr response) {
     history_room.push_back(response);
-    Database::Instance().save_to_db(response);
     for(auto [id, sub]:subscribers) {
         // @todo add to respose field clientid. now compare string -> will compare int
         if (response->get_login() != sub->get_login()) sub->sendme(response);
