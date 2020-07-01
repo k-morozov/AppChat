@@ -48,11 +48,13 @@ input_request_ptr Client::logon() {
     std::cout << "enter room_id=";
     std::string room;
     std::cin.getline(room.data(), Block::Password);
-    if(auto [p, ec] = std::from_chars(room.data(), room.data()+room.size(), room_id);
-           ec == std::errc())
-    {
+    room_id = std::stoi(room);
+//    if(auto [p, ec] = std::from_chars(room.data(), room.data()+room.size(), room_id);
+//           ec == std::errc())
+//    {
+//        std::cout << room << " vs " << room_id << std::endl;
         std::cout << "************************************" << std::endl;
-    }
+//    }
     return std::make_shared<AutorisationRequest>(login, password);
 }
 

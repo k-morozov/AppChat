@@ -5,13 +5,14 @@
 #include <mutex>
 #include <deque>
 #include <server/channel/iroom.h>
-#include <database/database.h>
+#include <storage/database.h>
 
 class Channel : public IRoom
 {
 public:
     Channel(identifier_t room = 0) : channel_id(room)
     {
+        history_room = Database::Instance().load_history();
         std::cout << "Create channel_id=" << channel_id << std::endl;
     }
 

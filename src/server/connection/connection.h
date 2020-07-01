@@ -12,7 +12,7 @@
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
 public:
-    Connection(boost::asio::ip::tcp::socket&& _socket):
+    explicit Connection(boost::asio::ip::tcp::socket&& _socket):
         socket(std::move(_socket)), client_id(generate_client_id())
     {
         std::cout << "new connection from " << socket.remote_endpoint() .address().to_string()

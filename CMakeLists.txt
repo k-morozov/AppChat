@@ -17,45 +17,52 @@ set(CLIENT client)
 set(TESTS tests)
 
 set(SRC src/)
-set(Server ${SRC}server/)
-set(Client ${SRC}client/)
-set(Tests ${SRC}tests/)
+set(Server  ${SRC}server/)
+set(Client  ${SRC}client/)
+set(Tests   ${SRC}tests/)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(Connection ${Server}connection/)
-set(Channel ${Server}channel/)
-set(Protocol ${SRC}protocol/)
+set(Connection ${Server}connection)
+set(Channel ${Server}channel)
+set(Protocol ${SRC}protocol)
+set(Storage ${SRC}storage)
+set(Logger ${SRC}log)
 
 set(PROTOCOL
-    ${Protocol}protocol.h ${Protocol}protocol.cpp
-    ${Protocol}command_table.h
-    ${Protocol}request/request.h
-    ${Protocol}response/response.h
-    ${Protocol}request/input_request.h
-    ${Protocol}request/input_request.cpp
-    ${Protocol}request/transport_request.h
-    ${Protocol}request/transport_request.cpp
-    ${Protocol}request/control_request.h
+    ${Protocol}/protocol.h ${Protocol}/protocol.cpp
+    ${Protocol}/command_table.h
+    ${Protocol}/request/request.h
+    ${Protocol}/response/response.h
+    ${Protocol}/request/input_request.h
+    ${Protocol}/request/input_request.cpp
+    ${Protocol}/request/transport_request.h
+    ${Protocol}/request/transport_request.cpp
+    ${Protocol}/request/control_request.h
 
-    ${Protocol}response/input_response.h
-    ${Protocol}response/input_response.cpp
-    ${Protocol}response/transport_response.h
+    ${Protocol}/response/input_response.h
+    ${Protocol}/response/input_response.cpp
+    ${Protocol}/response/transport_response.h
 
     )
 set(CHANNELS
-    ${Channel}iroom.h ${Channel}iroom.cpp
-    ${Channel}channels_manager.h ${Channel}channels_manager.cpp
-    ${Channel}channel.h ${Channel}channel.cpp
-    ${SRC}database/database.h ${SRC}database/database.cpp
+    ${Channel}/iroom.h ${Channel}/iroom.cpp
+    ${Channel}/channels_manager.h ${Channel}/channels_manager.cpp
+    ${Channel}/channel.h ${Channel}/channel.cpp
     )
 set(CONNECTION
-    ${Connection}isubscriber.h ${Connection}isubscriber.cpp
-    ${Connection}connection.h ${Connection}connection.cpp
+    ${Connection}/isubscriber.h ${Connection}/isubscriber.cpp
+    ${Connection}/connection.h ${Connection}/connection.cpp
 )
-set(Logger ${SRC}log/)
+
+set(STORAGE
+     ${Storage}/database.h ${Storage}/database.cpp
+)
+set(LOGEGR
+    ${Logger}/logger.h ${Logger}/logger.cpp
+)
 
 project(${PROJECT} LANGUAGES CXX)
 
@@ -63,35 +70,35 @@ include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
 
 #****************************************************************************************************
 set(SERVER_SOURCES
-    ${Server}startup_server.cpp
-    ${Server}server.h
+    ${Server}/startup_server.cpp
+    ${Server}/server.h
 
     ${CONNECTION}
     ${CHANNELS}
     ${PROTOCOL}
-
-    ${Logger}logger.h ${Logger}logger.cpp
+    ${STORAGE}
+    ${LOGEGR}
 )
 
 set(CLIENT_SOURCES
-    ${Client}startup_client.cpp
-    ${Client}client.h  ${Client}client.cpp
+    ${Client}/startup_client.cpp
+    ${Client}/client.h  ${Client}/client.cpp
     ${PROTOCOL}
 )
 
 set(TESTS_SOURSES
-    ${Tests}startup_tests.cpp
-    ${Tests}test_request.cpp
-    ${Tests}test_response.cpp
+    ${Tests}/startup_tests.cpp
+    ${Tests}/test_request.cpp
+    ${Tests}/test_response.cpp
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
 # add projects
-add_executable(${SERVER} ${SERVER_SOURCES})
-add_executable(${CLIENT} ${CLIENT_SOURCES})
-add_executable(${TESTS} ${TESTS_SOURSES})
+add_executable(${SERVER}    ${SERVER_SOURCES})
+add_executable(${CLIENT}    ${CLIENT_SOURCES})
+add_executable(${TESTS}     ${TESTS_SOURSES})
 
 set_target_properties(${SERVER} #${CLIENT}
     ${TESTS} PROPERTIES

@@ -33,7 +33,6 @@ public:
         std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
 
         std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
-
     }
 
     TextResponse(const std::string& login, const std::string& text, identifier_t roomid = 0) {

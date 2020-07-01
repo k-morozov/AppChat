@@ -85,9 +85,9 @@ void Connection::read_request_body(text_request_ptr request) {
                 auto roomid = request->get_roomid();
                 auto text = request->get_message();
                 std::cout << "login=" << login << ", roomid=" << roomid << ", text="<<text << std::endl;
-
                 text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
                 ChannelsManager::Instance().send(response);
+                Database::Instance().save_text_message(request);
 
                 read_request_header();
             }
@@ -106,9 +106,6 @@ void Connection::read_request_body(join_room_request_ptr request) {
             if (!error) {
                 auto roomid = request->get_roomid();
                 std::cout << "roomid=" << roomid << std::endl;
-
-//                text_response_ptr response = std::make_shared<TextResponse>(login, text);
-//                ChannelsManager::Instance().send(response);
                 ChannelsManager::Instance().join(self, roomid);
 
                 read_request_header();
