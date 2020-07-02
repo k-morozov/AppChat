@@ -14,7 +14,7 @@ public:
     }
 
     void save_text_message(text_request_ptr message);
-    std::deque<text_response_ptr> load_history();
+    std::deque<text_response_ptr> load_history(identifier_t roomid);
 
     ~Database();
 private:

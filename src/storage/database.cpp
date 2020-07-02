@@ -51,12 +51,15 @@ void Database::save_text_message(text_request_ptr message) {
 //    sqlite3_close(db_ptr);
 }
 
-std::deque<text_response_ptr> Database::load_history() {
+std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
     std::deque<text_response_ptr> history_room;
     bool found = false;
 //    sqlite3* db;
     sqlite3_stmt* stmt;
-    std::string sql = "select * from history;";
+
+    std::string sql = std::string("select * from history where room_id==")
+            + std::to_string(roomid)
+            + std::string(";");
 //    if (sqlite3_open("data/test.db", &db) != SQLITE_OK) {
 //        printf("ERROR: can't open database: %s\n", sqlite3_errmsg(db));
 //        sqlite3_close(db);
