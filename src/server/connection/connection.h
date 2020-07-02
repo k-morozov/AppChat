@@ -13,7 +13,7 @@ class Connection : public ISubscriber, public std::enable_shared_from_this<Conne
 {
 public:
     explicit Connection(boost::asio::ip::tcp::socket&& _socket):
-        socket(std::move(_socket)), client_id(generate_client_id())
+        socket(std::move(_socket))
     {
         std::cout << "new connection from " << socket.remote_endpoint() .address().to_string()
                   << ":" << socket.remote_endpoint() .port() << std::endl;
@@ -34,7 +34,7 @@ private:
     boost::asio::ip::tcp::socket socket;
     std::deque<response_ptr> packets_to_client;
 
-    const identifier_t client_id;
+    identifier_t client_id;
     std::string login;
     std::string password;
 
