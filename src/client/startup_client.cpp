@@ -5,6 +5,7 @@
 
 #include <protocol/protocol.h>
 #include <client/client.h>
+#include <gui/mainwindow.h>
 
 void run_client() {
     boost::asio::io_service io_service;
@@ -24,9 +25,12 @@ void run_client() {
 }
 
 int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
-    std::cout << "start client..." << std::endl;
+//    run_client();
 
-    run_client();
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 
     return 0;
 }

@@ -11,12 +11,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 set(PROJECT Chat)
 set(SERVER server)
 set(CLIENT client)
 set(TESTS tests)
 
-set(SRC src/)
+set(SRC     src/)
 set(Server  ${SRC}server/)
 set(Client  ${SRC}client/)
 set(Tests   ${SRC}tests/)
@@ -83,6 +87,8 @@ set(SERVER_SOURCES
 set(CLIENT_SOURCES
     ${Client}/startup_client.cpp
     ${Client}/client.h  ${Client}/client.cpp
+    ${SRC}/gui/mainwindow.h ${SRC}/gui/mainwindow.cpp
+    ${SRC}/gui/mainwindow.ui
     ${PROTOCOL}
 )
 
