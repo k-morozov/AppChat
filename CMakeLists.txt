@@ -89,6 +89,7 @@ set(CLIENT_SOURCES
     ${Client}/client.h  ${Client}/client.cpp
     ${SRC}/gui/mainwindow.h ${SRC}/gui/mainwindow.cpp
     ${SRC}/gui/mainwindow.ui
+    ${Client}/control.h ${Client}/control.cpp
     ${PROTOCOL}
 )
 

@@ -8,6 +8,8 @@
 #include <QtWidgets>
 #include <QtCore>
 
+#include <client/client.h>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,8 +22,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    //void print_message(const std::string&);
+    std::string get_message();
+
+signals:
+    void send_input_data(const std::string&, const std::string&, int);
+
 private slots:
-    void on_pushButton_clicked();
+    void on_push_autorisation_clicked();
+    void on_push_send_clicked();
+
+    void print_text(const std::string&, const std::string&);
 
 private:
     Ui::MainWindow *ui;
