@@ -22,11 +22,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    //void print_message(const std::string&);
     std::string get_message();
 
 signals:
     void send_input_data(const std::string&, const std::string&, int);
+    void send_text_data(const std::string&, const std::string&, int);
 
 private slots:
     void on_push_autorisation_clicked();
@@ -36,5 +36,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    QString logon;
+    QString password;
+    QString roomid;
 };
 #endif // MAINWINDOW_H

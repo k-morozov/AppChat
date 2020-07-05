@@ -40,7 +40,7 @@ private:
     char login[Block::LoginName];
     char password[Block::Password];
     identifier_t client_id;
-    identifier_t room_id;
+    identifier_t room_id = 1;
 
 private:
     input_request_ptr logon();

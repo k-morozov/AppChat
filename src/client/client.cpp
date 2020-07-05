@@ -23,7 +23,6 @@ void Client::write(text_request_ptr request) {
 void Client::write(join_room_request_ptr request) {
     bool process_write = !packets_to_server.empty();
     packets_to_server.push_back(request);
-
     if (!process_write) {
         send_request_header();
     }
@@ -53,11 +52,7 @@ input_request_ptr Client::logon() {
 }
 
 void Client::send_login_packet(packet_ptr packet) {
-    std::thread th([this]() {
-        this->send_text("server", "send_login_packet");
-    });
-    th.detach();
-    std::cout << "send_login_packet" << std::endl;
+//    send_text("server", "Client::send_login_packet");
 
     boost::system::error_code error_code;
     boost::asio::write(sock, boost::asio::buffer(packet->get_header(),
@@ -87,12 +82,13 @@ void Client::send_login_packet(packet_ptr packet) {
                                                     response->get_length_data()), error_code);
         set_login_id(response->get_loginid());
 
-        std::cout << "logon: OK" << std::endl;
-        send_text("server", "logon: OK");
+//        std::cout << "logon: OK" << std::endl;
+        emit send_text("server", "logon: OK");
 
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
+
         write(request);
-        std::cout << "room_id=" << request->get_roomid() << std::endl;
+//        std::cout << "room_id=" << request->get_roomid() << std::endl;
 
         std::cout << "**********************************************" << std::endl;
         if (!error_code) {
@@ -150,7 +146,7 @@ void Client::read_response_data(autor_response_ptr packet) {
     boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
-                std::cout << "read_response_data" << std::endl;
+//                std::cout << "read_response_data" << std::endl;
                 read_response_header();
             }
             else {
@@ -166,6 +162,8 @@ void Client::read_response_data(text_response_ptr packet) {
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
                 std::cout << packet->get_login() << ": " << packet->get_message() << std::endl;
+                send_text(packet->get_login(), packet->get_message());
+
                 read_response_header();
             }
             else {
