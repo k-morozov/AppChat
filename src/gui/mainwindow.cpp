@@ -19,20 +19,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_push_autorisation_clicked()
 {
+    logon = ui->logon->text();
+    password = ui->password->text();
+    roomid = ui->room_id->text();
+
+    if (logon.isEmpty() || password.isEmpty() || roomid.isEmpty()) return;
+
     ui->logon->setReadOnly(true);
     ui->password->setReadOnly(true);
     ui->room_id->setReadOnly(true);
     ui->push_autorisation->setHidden(true);
 
     ui->text_input->setReadOnly(false);
-    ui->text_output->setReadOnly(false);
-
-    logon = ui->logon->text();
-    password = ui->password->text();
-    roomid = ui->room_id->text();
-    ui->text_output->append("send: login=" + logon + ", password=" + roomid + ", room_id=" +roomid);
 
     send_input_data(logon.toStdString(), password.toStdString(), roomid.toUInt());
+
+    ui->text_output->append(logon + " is autorisation");
 }
 
 void MainWindow::on_push_send_clicked()
