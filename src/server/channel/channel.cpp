@@ -23,7 +23,7 @@ void Channel::leave(subscriber_ptr subsciber) {
         subscribers.erase(subsciber->get_client_id());
     mutex_subs.unlock();
 
-    std::string message(subsciber->get_login() + " leave from roomdid=" + std::to_string(channel_id));
+    std::string message(subsciber->get_login() + " leave from room_id=" + std::to_string(channel_id));
 
     text_response_ptr response = std::make_shared<TextResponse>("server", message);
     notification(response);
