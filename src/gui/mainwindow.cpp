@@ -6,6 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->password->setEchoMode(QLineEdit::Password);
+    ui->text_input->setReadOnly(true);
+    ui->text_output->setReadOnly(true);
 }
 
 MainWindow::~MainWindow()
@@ -15,6 +19,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_push_autorisation_clicked()
 {
+    ui->logon->setReadOnly(true);
+    ui->password->setReadOnly(true);
+    ui->room_id->setReadOnly(true);
+    ui->push_autorisation->setHidden(true);
+
+    ui->text_input->setReadOnly(false);
+    ui->text_output->setReadOnly(false);
+
     logon = ui->logon->text();
     password = ui->password->text();
     roomid = ui->room_id->text();

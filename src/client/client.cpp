@@ -52,8 +52,6 @@ input_request_ptr Client::logon() {
 }
 
 void Client::send_login_packet(packet_ptr packet) {
-//    send_text("server", "Client::send_login_packet");
-
     boost::system::error_code error_code;
     boost::asio::write(sock, boost::asio::buffer(packet->get_header(),
                                                  Block::Header), error_code);
@@ -82,15 +80,9 @@ void Client::send_login_packet(packet_ptr packet) {
                                                     response->get_length_data()), error_code);
         set_login_id(response->get_loginid());
 
-//        std::cout << "logon: OK" << std::endl;
-        emit send_text("server", "logon: OK");
-
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
 
         write(request);
-//        std::cout << "room_id=" << request->get_roomid() << std::endl;
-
-        std::cout << "**********************************************" << std::endl;
         if (!error_code) {
             read_response_header();
         }

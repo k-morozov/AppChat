@@ -18,36 +18,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
-      <width>361</width>
-      <height>281</height>
+      <y>130</y>
+      <width>311</width>
+      <height>251</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="push_autorisation">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>40</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>autorisation</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="room_id">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>10</y>
-      <width>41</width>
-      <height>25</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -69,23 +46,60 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>144</width>
-      <height>58</height>
+      <width>261</width>
+      <height>89</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLineEdit" name="logon"/>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>login</string>
+       </property>
+      </widget>
      </item>
-     <item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
       <widget class="QLineEdit" name="password"/>
      </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="logon"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>channel ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="room_id"/>
+     </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="push_autorisation">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>111</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>autorisation</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -97,6 +111,12 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuBroChat">
+    <property name="title">
+     <string>BroChat</string>
+    </property>
+   </widget>
+   <addaction name="menuBroChat"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

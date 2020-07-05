@@ -36,7 +36,9 @@ public:
         client->close();
     }
 
-    ~Control() {}
+    ~Control() {
+        client->close();
+    }
 
 signals:
     void send_text_to_gui(const std::string&, const std::string&);
@@ -47,9 +49,6 @@ public slots:
             work_client(login, password);
         });
         th.detach();
-
-//        th.join();
-//        client.close();
     }
 
     void get_text_from_gui(const std::string& login, const std::string& text, int room_id) {
@@ -58,7 +57,7 @@ public slots:
     }
 
     void text_from_client(const std::string& from, const std::string& text) {
-        std::cout << "text_from_client" << from << " " << text << std::endl;
+//        std::cout << "text_from_client" << from << " " << text << std::endl;
         send_text_to_gui(from, text);
     }
 
