@@ -6,13 +6,16 @@
 #include <deque>
 #include <boost/asio.hpp>
 #include <protocol/protocol.h>
+#include <QWidget>
 
-class Client {
+class Client: public QObject {
+   Q_OBJECT
+
 public:
-    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps)
-        : io_service(io), sock(io)
+    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps, input_request_ptr request)
+        : io_service(io), sock(io), eps(eps)
     {
-        do_connect(eps);
+        do_connect(eps, request);
     }
 
     void write(const std::string& message);
@@ -30,17 +33,18 @@ public:
 private:
     boost::asio::io_service &io_service;
     boost::asio::ip::tcp::socket sock;
+    const boost::asio::ip::tcp::resolver::results_type& eps;
 
     std::deque<packet_ptr> packets_to_server;
 
     char login[Block::LoginName];
     char password[Block::Password];
     identifier_t client_id;
-    identifier_t room_id;
+    identifier_t room_id = 1;
 
 private:
     input_request_ptr logon();
-    void do_connect(const boost::asio::ip::tcp::resolver::results_type& eps);
+    void do_connect(const boost::asio::ip::tcp::resolver::results_type&, input_request_ptr);
 
     void send_login_packet(packet_ptr packet);
 
@@ -50,6 +54,10 @@ private:
 
     void send_request_header();
     void send_request_data();
+
+
+signals:
+    void send_text(const std::string& from, const std::string& text);
 };
 
 #endif // CLIENT_H

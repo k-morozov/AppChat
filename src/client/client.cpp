@@ -1,5 +1,6 @@
 #include <client/client.h>
 #include <charconv>
+
 void Client::write(const std::string& message) {
     text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
 
@@ -22,24 +23,20 @@ void Client::write(text_request_ptr request) {
 void Client::write(join_room_request_ptr request) {
     bool process_write = !packets_to_server.empty();
     packets_to_server.push_back(request);
-
     if (!process_write) {
         send_request_header();
     }
 }
 
-void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps) {
-    auto input_request = logon();
-
+void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps, input_request_ptr request) {
     boost::asio::async_connect(sock, eps,
-        [this, input_request](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
+        [this, request](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
            if (!ec) {
-               send_login_packet(input_request);
+               send_login_packet(request);
            }
     });
 }
 
-// @todo very bad
 input_request_ptr Client::logon() {
     std::cout << "Enter your login: ";
     std::cin.getline(login, Block::LoginName);
@@ -49,22 +46,19 @@ input_request_ptr Client::logon() {
     std::string room;
     std::cin.getline(room.data(), Block::Password);
     room_id = std::stoi(room);
-//    if(auto [p, ec] = std::from_chars(room.data(), room.data()+room.size(), room_id);
-//           ec == std::errc())
-//    {
-//        std::cout << room << " vs " << room_id << std::endl;
-        std::cout << "************************************" << std::endl;
+    std::cout << "************************************" << std::endl;
 //    }
     return std::make_shared<AutorisationRequest>(login, password);
 }
 
 void Client::send_login_packet(packet_ptr packet) {
     boost::system::error_code error_code;
-
     boost::asio::write(sock, boost::asio::buffer(packet->get_header(),
                                                  Block::Header), error_code);
+
     boost::asio::write(sock, boost::asio::buffer(packet->get_data(),
                                                  packet->get_length_data()), error_code);
+
     if (error_code) {
         sock.close();
         std::cout << "error when send login" << std::endl;
@@ -86,13 +80,9 @@ void Client::send_login_packet(packet_ptr packet) {
                                                     response->get_length_data()), error_code);
         set_login_id(response->get_loginid());
 
-        std::cout << "logon: OK" << std::endl;
-
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
-        write(request);
-        std::cout << "room_id=" << request->get_roomid() << std::endl;
 
-        std::cout << "**********************************************" << std::endl;
+        write(request);
         if (!error_code) {
             read_response_header();
         }
@@ -148,7 +138,7 @@ void Client::read_response_data(autor_response_ptr packet) {
     boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
-                std::cout << "read_response_data" << std::endl;
+//                std::cout << "read_response_data" << std::endl;
                 read_response_header();
             }
             else {
@@ -164,6 +154,8 @@ void Client::read_response_data(text_response_ptr packet) {
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
                 std::cout << packet->get_login() << ": " << packet->get_message() << std::endl;
+                send_text(packet->get_login(), packet->get_message());
+
                 read_response_header();
             }
             else {
