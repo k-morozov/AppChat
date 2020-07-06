@@ -73,7 +73,7 @@ private:
 
 using response_ptr = std::shared_ptr<Response>;
 using input_res_ptr = std::shared_ptr<InputResponse>;
-using reg_res_ptr = std::shared_ptr<RegistrationResponse>;
+using registr_response_ptr = std::shared_ptr<RegistrationResponse>;
 using autor_response_ptr = std::shared_ptr<AutorisationResponse>;
 
 

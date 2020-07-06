@@ -54,6 +54,7 @@ private:
     void send_login_packet(packet_ptr packet);
 
     void read_response_header();
+    void read_response_data(registr_response_ptr);
     void read_response_data(autor_response_ptr);
     void read_response_data(text_response_ptr);
 
@@ -63,6 +64,8 @@ private:
 
 signals:
     void send_text(const std::string& from, const std::string& text);
+
+    void good_input();
 };
 
 #endif // CLIENT_H

@@ -78,6 +78,13 @@ void Client::send_login_packet(packet_ptr packet) {
     {
         boost::asio::read(sock, boost::asio::buffer(response->get_data(),
                                                     response->get_length_data()), error_code);
+
+        if (response->get_type_data()==TypeCommand::RegistrationResponse && response->get_loginid()==-1) {
+//            std::cout << "incorrect login" << std::endl;
+            emit send_text("server", "incorrect login");
+            return;
+        }
+        emit good_input();
         set_login_id(response->get_loginid());
 
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
@@ -104,7 +111,8 @@ void Client::read_response_header() {
                     break;
                     case TypeCommand::RegistrationResponse:
                         std::cout << "RegistrationResponse" << std::endl;
-                    break;
+//                        read_response_data(std::make_shared<RegistrationResponse>(packet));
+                        break;
                     case TypeCommand::AuthorisationRequest:
                         std::cout << "AuthorisationRequest not been here" << std::endl;
                         break;
@@ -124,6 +132,21 @@ void Client::read_response_header() {
                         std::cout << "Unknown command " << packet->get_protocol_version() << std::endl;
                         break;
                 }
+            }
+            else {
+                sock.close();
+            }
+    });
+}
+
+void Client::read_response_data(registr_response_ptr packet) {
+    std::cout << get_command_str(packet->get_type_data()) << ": ";
+
+    boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
+        [this, packet](boost::system::error_code error, std::size_t) {
+            if (!error) {
+//                std::cout << "read_response_data" << std::endl;
+                read_response_header();
             }
             else {
                 sock.close();

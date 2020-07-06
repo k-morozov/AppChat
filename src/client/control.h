@@ -9,11 +9,10 @@ class Control: public QObject
 {
     Q_OBJECT
 public:
-    Control(MainWindow& w);
-
+    Control();
 
     // @todo noreturn???
-    void work_client(const std::string&, const std::string&);
+    void connect_to_server(const std::string&, const std::string&, TypeCommand command);
 
     ~Control() {
         client->close();
@@ -25,7 +24,14 @@ signals:
 public slots:
     void autorisation(const std::string& login, const std::string& password) {
         std::thread th([this, login, password]() {
-            work_client(login, password);
+            connect_to_server(login, password, TypeCommand::AuthorisationRequest);
+        });
+        th.detach();
+    }
+
+    void registration(const std::string& login, const std::string& password) {
+        std::thread th([this, login, password]() {
+            connect_to_server(login, password, TypeCommand::RegistrationRequest);
         });
         th.detach();
     }
@@ -46,7 +52,7 @@ public slots:
 
 private:
     std::unique_ptr<Client> client;
-    MainWindow &w;
+    MainWindow w;
 };
 
 #endif // CONTROL_H

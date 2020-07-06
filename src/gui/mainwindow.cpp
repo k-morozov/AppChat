@@ -26,39 +26,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_push_autorisation_clicked()
 {
-    ui->text_input->show();
-    ui->text_output->show();
-    ui->room_id->show();
-    ui->label_channel_id->show();
-    ui->push_send->show();
-    ui->push_change_room_id->show();
-
-    ui->room_id->setReadOnly(false);
-
     logon = ui->logon->text();
     password = ui->password->text();
-//    roomid = ui->room_id->text();
+    if (logon.isEmpty() || password.isEmpty()) return;
 
-    if (logon.isEmpty() || password.isEmpty() /*|| roomid.isEmpty()*/) return;
-
-    ui->logon->setReadOnly(true);
-    ui->password->setReadOnly(true);
-//    ui->room_id->setReadOnly(true);
-    ui->label_login->setHidden(true);
-    ui->label_password->setHidden(true);
-
-    ui->logon->setHidden(true);
-    ui->password->setHidden(true);
-//    ui->room_id->setHidden(true);
-
-    ui->push_autorisation->setHidden(true);
-    ui->push_registration->setHidden(true);
-
-    ui->text_input->setReadOnly(false);
-
-    send_input_data(logon.toStdString(), password.toStdString());
-
-    ui->text_output->append("you is autorisation");
+    send_autorisation_info(logon.toStdString(), password.toStdString());
 }
 
 void MainWindow::on_push_send_clicked()
@@ -89,20 +61,29 @@ void MainWindow::print_text(const std::string& from, const std::string& text) {
 
 void MainWindow::on_push_registration_clicked()
 {
+    logon = ui->logon->text();
+    password = ui->password->text();
+    if (logon.isEmpty() || password.isEmpty()) return;
+    send_registration_info(logon.toStdString(), password.toStdString());
+}
+
+void MainWindow::on_push_change_room_id_clicked()
+{
+    auto new_roomid = ui->room_id->text();
+    if (new_roomid.isEmpty()) return;
+    roomid = new_roomid;
+    ui->text_output->clear();
+    emit send_change_room(roomid.toInt());
+}
+
+void MainWindow::good_input() {
     ui->text_input->show();
     ui->text_output->show();
     ui->room_id->show();
     ui->label_channel_id->show();
     ui->push_send->show();
     ui->push_change_room_id->show();
-
     ui->room_id->setReadOnly(false);
-
-    logon = ui->logon->text();
-    password = ui->password->text();
-//    roomid = ui->room_id->text();
-
-    if (logon.isEmpty() || password.isEmpty() /*|| roomid.isEmpty()*/) return;
 
     ui->logon->setReadOnly(true);
     ui->password->setReadOnly(true);
@@ -119,16 +100,5 @@ void MainWindow::on_push_registration_clicked()
 
     ui->text_input->setReadOnly(false);
 
-    send_input_data(logon.toStdString(), password.toStdString());
-
-    ui->text_output->append("you is registration");
-}
-
-void MainWindow::on_push_change_room_id_clicked()
-{
-    auto new_roomid = ui->room_id->text();
-    if (new_roomid.isEmpty()) return;
-    roomid = new_roomid;
-    ui->text_output->clear();
-    emit send_change_room(roomid.toInt());
+    ui->text_output->append("welcome");
 }

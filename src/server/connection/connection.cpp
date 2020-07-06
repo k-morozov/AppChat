@@ -10,15 +10,17 @@ void Connection::sendme(text_response_ptr response) {
 
 void Connection::read_request_header() {
     request_ptr request = std::make_shared<Request>();
+
     boost::asio::async_read(socket, boost::asio::buffer(request->get_header(), Block::Header),
                             [this, request](boost::system::error_code error, std::size_t) {
         if (!error) {
             switch (request->get_type_data()) {
                 case TypeCommand::Unknown:
+                    std::cout << get_command_str(request->get_type_data()) << "--> " <<std::endl;;
                     break;
                 case TypeCommand::RegistrationRequest:
                     std::cout << get_command_str(request->get_type_data()) << "--> ";
-                    //read_request_body(std::make_shared<RegistrationRequest>(request));
+                    read_request_body(std::make_shared<RegistrationRequest>(request));
                     break;
                 case TypeCommand::RegistrationResponse:
                 case TypeCommand::AuthorisationRequest:
@@ -49,6 +51,43 @@ void Connection::read_request_header() {
 
 }
 
+void Connection::read_request_body(registr_request_ptr request) {
+    auto self(shared_from_this());
+    boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
+        [this, self, request](boost::system::error_code error, std::size_t) {
+            if (!error) {
+                login = request->get_login();
+                password = request->get_password();
+                std::cout << "login=" << request->get_login() << ", pwd=" << request->get_password() << std::endl;
+
+                // @todo new generation login_id and check password
+                client_id = Database::Instance().get_loginid(login);
+                if (client_id==-1) {
+                    client_id = generate_client_id();
+                    Database::Instance().add_logins(login, client_id, password);
+                }
+                else {
+                    std::cout << "this client was add to db early" << std::endl;
+                    client_id=-1;
+                }
+
+                input_res_ptr response = std::make_shared<RegistrationResponse>(client_id);
+                std::cout << "RegistrationResponse: vers=" << response->get_protocol_version() << ", command="
+                          << get_command_str(response->get_type_data())
+                          << ", logid=" << response->get_loginid() << std::endl;
+
+                boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
+                boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
+
+                read_request_header();
+            }
+            else {
+                ChannelsManager::Instance().leave(shared_from_this());
+                socket.close();
+            }
+    });
+}
+
 void Connection::read_request_body(autor_request_ptr request) {
     auto self(shared_from_this());
     boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
@@ -72,8 +111,6 @@ void Connection::read_request_body(autor_request_ptr request) {
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
 
-
-                //ChannelsManager::Instance().join(self, 0);
                 read_request_header();
             }
             else {
@@ -126,6 +163,7 @@ void Connection::read_request_body(join_room_request_ptr request) {
     });
 
 }
+
 void Connection::send_response_header() {
     auto self(shared_from_this());
     boost::asio::async_write(socket,

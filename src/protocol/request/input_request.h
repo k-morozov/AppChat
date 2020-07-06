@@ -90,7 +90,7 @@ private:
 // *************************************************************************************************
 
 using input_request_ptr = std::shared_ptr<InputRequest>;
-using registr_req_ptr = std::shared_ptr<RegistrationRequest>;
+using registr_request_ptr = std::shared_ptr<RegistrationRequest>;
 using autor_request_ptr = std::shared_ptr<AutorisationRequest>;
 
 std::ostream& operator<<(std::ostream& os, const RegistrationRequest& request);
