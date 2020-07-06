@@ -9,7 +9,7 @@
 #include <memory>
 #include <unordered_map>
 #include <cassert>
-constexpr uint32_t PROTOCOL_VERS = 23;
+constexpr uint32_t PROTOCOL_VERS = 2;
 
 using identifier_t = int32_t;
 

@@ -79,9 +79,8 @@ void Client::send_login_packet(packet_ptr packet) {
         boost::asio::read(sock, boost::asio::buffer(response->get_data(),
                                                     response->get_length_data()), error_code);
         set_login_id(response->get_loginid());
-
+        send_text("server", "login_id=" + std::to_string(response->get_loginid()));
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
-
         write(request);
         if (!error_code) {
             read_response_header();
