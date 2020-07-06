@@ -27,12 +27,13 @@ public:
 signals:
     void send_input_data(const std::string&, const std::string&, int);
     void send_text_data(const std::string&, const std::string&, int);
-
+    void send_change_room(int);
 private slots:
     void on_push_autorisation_clicked();
     void on_push_send_clicked();
-
     void print_text(const std::string&, const std::string&);
+    void on_push_registration_clicked();
+    void on_push_change_room_id_clicked();
 
 private:
     Ui::MainWindow *ui;

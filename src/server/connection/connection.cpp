@@ -111,9 +111,11 @@ void Connection::read_request_body(join_room_request_ptr request) {
     boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
         [this, self, request](boost::system::error_code error, std::size_t) {
             if (!error) {
-                auto roomid = request->get_roomid();
-                std::cout << "roomid=" << roomid << std::endl;
-                ChannelsManager::Instance().join(self, roomid);
+                ChannelsManager::Instance().leave(shared_from_this());
+
+                auto new_roomid = request->get_roomid();
+                std::cout << "roomid=" << new_roomid << std::endl;
+                ChannelsManager::Instance().join(self, new_roomid);
 
                 read_request_header();
             }

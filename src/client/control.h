@@ -38,6 +38,11 @@ public slots:
         send_text_to_gui(from, text);
     }
 
+    void change_room(int new_room_id) {
+//        emit send_text_to_gui("server", "получил запрос на смену комнаты");
+        client->write(std::make_shared<JoinRoomRequest>(new_room_id));
+    }
+
 
 private:
     std::unique_ptr<Client> client;

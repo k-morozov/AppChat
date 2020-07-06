@@ -18,9 +18,14 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
         // add check
         new_it->second->join(new_sub);
 
-        auto [it2, error] = clinets_in_room.try_emplace(new_sub->get_client_id(), room_id);
+        auto [it2, error] = clinets_in_room.emplace(new_sub->get_client_id(), room_id);
         if (!error) {
-            std::cout << "Non add subsciber" << std::endl;
+            std::cout << "Non add subsciber client_id="<< it2->first
+                                  << " in room_id=" << it2->second << std::endl;
+        }
+        else {
+            std::cout << "New subsciber client_id="<< it2->first
+                      << "in room_id=" << it2->second << std::endl;
         }
     }
 
@@ -42,6 +47,8 @@ void ChannelsManager::leave(subscriber_ptr sub) {
               << " is leave from " << room_id << std::endl;
     if (auto it=channels.find(room_id); it!=channels.end()) {
         it->second->leave(sub);
+        clinets_in_room.erase(sub->get_client_id());
+        clientid_to_login.erase(sub->get_client_id());
     }
     else {
         std::cerr << "no room room_id=" << room_id << std::endl;

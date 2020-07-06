@@ -80,6 +80,7 @@ void Client::send_login_packet(packet_ptr packet) {
                                                     response->get_length_data()), error_code);
         set_login_id(response->get_loginid());
         send_text("server", "login_id=" + std::to_string(response->get_loginid()));
+
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
         write(request);
         if (!error_code) {
@@ -163,6 +164,9 @@ void Client::read_response_data(text_response_ptr packet) {
     });
 }
 
+//void Client::read_response_join_room(join_room_request_ptr) {
+
+//}
 void Client::send_request_header() {
     boost::asio::async_write(sock, boost::asio::buffer(packets_to_server.front()->get_header(), Block::Header),
         [this](boost::system::error_code ec, std::size_t) {
