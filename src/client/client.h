@@ -12,8 +12,9 @@ class Client: public QObject {
    Q_OBJECT
 
 public:
-    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps, input_request_ptr request)
-        : io_service(io), sock(io), eps(eps)
+    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps,
+           input_request_ptr request, int room_id)
+        : io_service(io), sock(io), eps(eps), room_id(room_id)
     {
         do_connect(eps, request);
     }
@@ -40,7 +41,7 @@ private:
     char login[Block::LoginName];
     char password[Block::Password];
     identifier_t client_id;
-    identifier_t room_id = 1;
+    identifier_t room_id = -1;
 
 private:
     input_request_ptr logon();
