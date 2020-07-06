@@ -137,6 +137,20 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+<<<<<<< HEAD
+=======
+ <tabstops>
+  <tabstop>logon</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>push_autorisation</tabstop>
+  <tabstop>push_change_room_id</tabstop>
+  <tabstop>text_output</tabstop>
+  <tabstop>text_input</tabstop>
+  <tabstop>push_send</tabstop>
+  <tabstop>room_id</tabstop>
+  <tabstop>push_registration</tabstop>
+ </tabstops>
+>>>>>>> dev
  <resources/>
  <connections/>
 </ui>

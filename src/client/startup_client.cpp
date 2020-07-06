@@ -14,8 +14,13 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
     w.show();
 
     Control control(w);
+<<<<<<< HEAD
     QObject::connect(&w, SIGNAL(send_input_data(const std::string&, const std::string&, int)),
                      &control, SLOT(autorisation(const std::string&, const std::string&, int)));
+=======
+    QObject::connect(&w, SIGNAL(send_input_data(const std::string&, const std::string&)),
+                     &control, SLOT(autorisation(const std::string&, const std::string&)));
+>>>>>>> dev
     QObject::connect(&w, SIGNAL(send_change_room(int)),
                      &control, SLOT(change_room(int)));
 

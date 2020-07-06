@@ -6,7 +6,11 @@ ChannelsManager::ChannelsManager()
 
 void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
     if (auto it=channels.find(room_id); it!=channels.end()) {
+<<<<<<< HEAD
         clinets_in_room.emplace(new_sub->get_client_id(), room_id);
+=======
+        clients_in_room.emplace(new_sub->get_client_id(), room_id);
+>>>>>>> dev
         it->second->join(new_sub);
     }
     else {
@@ -18,7 +22,11 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
         // add check
         new_it->second->join(new_sub);
 
+<<<<<<< HEAD
         auto [it2, error] = clinets_in_room.emplace(new_sub->get_client_id(), room_id);
+=======
+        auto [it2, error] = clients_in_room.emplace(new_sub->get_client_id(), room_id);
+>>>>>>> dev
         if (!error) {
             std::cout << "Non add subsciber client_id="<< it2->first
                                   << " in room_id=" << it2->second << std::endl;
@@ -42,6 +50,7 @@ void ChannelsManager::send(text_response_ptr response) {
 }
 
 void ChannelsManager::leave(subscriber_ptr sub) {
+<<<<<<< HEAD
     auto room_id = clinets_in_room[sub->get_client_id()];
     std::cout << "client_id=" << sub->get_client_id()
               << " is leave from " << room_id << std::endl;
@@ -49,6 +58,17 @@ void ChannelsManager::leave(subscriber_ptr sub) {
         it->second->leave(sub);
         clinets_in_room.erase(sub->get_client_id());
         clientid_to_login.erase(sub->get_client_id());
+=======
+    auto it = clients_in_room.find(sub->get_client_id());
+    if (it==clients_in_room.end()) return;
+    auto room_id = it->second;
+    if (auto it=channels.find(room_id); it!=channels.end()) {
+        it->second->leave(sub);
+        clients_in_room.erase(sub->get_client_id());
+        clientid_to_login.erase(sub->get_client_id());
+        std::cout << "client_id=" << sub->get_client_id()
+                  << " is leave from room_id=" << room_id << std::endl;
+>>>>>>> dev
     }
     else {
         std::cerr << "no room room_id=" << room_id << std::endl;
