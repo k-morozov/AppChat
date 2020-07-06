@@ -39,6 +39,7 @@ private slots:
     void print_text(const std::string&, const std::string&);
     void on_push_change_room_id_clicked();
     void good_input();
+    void bad_input();
 private:
     Ui::MainWindow *ui;
 

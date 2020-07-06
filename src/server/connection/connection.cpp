@@ -76,6 +76,7 @@ void Connection::read_request_body(registr_request_ptr request) {
                           << get_command_str(response->get_type_data())
                           << ", logid=" << response->get_loginid() << std::endl;
 
+                // @todo replace to write
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
 

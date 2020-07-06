@@ -66,6 +66,7 @@ signals:
     void send_text(const std::string& from, const std::string& text);
 
     void good_input();
+    void bad_input();
 };
 
 #endif // CLIENT_H

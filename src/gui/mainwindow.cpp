@@ -1,5 +1,6 @@
 #include <gui/mainwindow.h>
 #include "./ui_mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,7 +30,6 @@ void MainWindow::on_push_autorisation_clicked()
     logon = ui->logon->text();
     password = ui->password->text();
     if (logon.isEmpty() || password.isEmpty()) return;
-
     send_autorisation_info(logon.toStdString(), password.toStdString());
 }
 
@@ -101,4 +101,9 @@ void MainWindow::good_input() {
     ui->text_input->setReadOnly(false);
 
     ui->text_output->append("welcome");
+}
+void MainWindow::bad_input() {
+    ui->logon->clear();
+    ui->password->clear();
+    QMessageBox::information(this, "error from server", "incorrect login/password");
 }

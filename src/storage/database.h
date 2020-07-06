@@ -19,7 +19,7 @@ public:
     void add_logins(std::string login, identifier_t logi_id, std::string password);
 
     identifier_t get_loginid(std::string login) const;
-    identifier_t registration(std::string login, std::string password);
+//    identifier_t registration(std::string login, std::string password);
 
     ~Database();
 private:

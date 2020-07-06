@@ -34,6 +34,7 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
     QObject::connect(client.get(), SIGNAL(good_input()), &w, SLOT(good_input()));
+    QObject::connect(client.get(), SIGNAL(bad_input()), &w, SLOT(bad_input()));
 
     std::thread th([&io_service]() {
         io_service.run();

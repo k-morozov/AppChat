@@ -79,9 +79,11 @@ void Client::send_login_packet(packet_ptr packet) {
         boost::asio::read(sock, boost::asio::buffer(response->get_data(),
                                                     response->get_length_data()), error_code);
 
-        if (response->get_type_data()==TypeCommand::RegistrationResponse && response->get_loginid()==-1) {
+        if (response->get_loginid()==-1) {
 //            std::cout << "incorrect login" << std::endl;
-            emit send_text("server", "incorrect login");
+//            emit send_text("server", "incorrect login");
+            emit bad_input();
+            this->close();
             return;
         }
         emit good_input();
@@ -146,6 +148,7 @@ void Client::read_response_data(registr_response_ptr packet) {
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
 //                std::cout << "read_response_data" << std::endl;
+
                 read_response_header();
             }
             else {
