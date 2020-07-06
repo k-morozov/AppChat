@@ -40,42 +40,26 @@ void MainWindow::on_push_autorisation_clicked()
 
     ui->text_input->setReadOnly(false);
 
-<<<<<<< HEAD
-    send_input_data(logon.toStdString(), password.toStdString(), 0);
-
-    ui->text_output->append(logon + " is autorisation");
-=======
     send_input_data(logon.toStdString(), password.toStdString());
 
     ui->text_output->append("you is autorisation");
->>>>>>> dev
 }
 
 void MainWindow::on_push_send_clicked()
 {
     auto message = ui->text_input->text();
-<<<<<<< HEAD
-    ui->text_input->clear();
-    ui->text_output->append(message);
-
-    send_text_data(logon.toStdString(), message.toStdString(), roomid.toUInt());
-=======
     send_text_data(logon.toStdString(), message.toStdString(), roomid.toUInt());
 
     ui->text_input->clear();
     ui->text_output->setTextColor(QColor(50,205,50));
     ui->text_output->append(logon + ": " + message);
     ui->text_output->setTextColor(QColor(0,0,0));
->>>>>>> dev
 }
 
 
 void MainWindow::print_text(const std::string& from, const std::string& text) {
     std::string s(from + ": " + text);
     QString message(s.data());
-<<<<<<< HEAD
-    ui->text_output->append(message);
-=======
     if (from=="server") {
         ui->text_output->setTextColor(QColor(255,0,0));
         ui->text_output->append(message);
@@ -85,7 +69,6 @@ void MainWindow::print_text(const std::string& from, const std::string& text) {
     else {
         ui->text_output->append(message);
     }
->>>>>>> dev
 }
 
 void MainWindow::on_push_registration_clicked()
@@ -111,15 +94,9 @@ void MainWindow::on_push_registration_clicked()
 
     ui->text_input->setReadOnly(false);
 
-<<<<<<< HEAD
-    send_input_data(logon.toStdString(), password.toStdString(), 0);
-
-    ui->text_output->append(logon + " is registration");
-=======
     send_input_data(logon.toStdString(), password.toStdString());
 
     ui->text_output->append("you is registration");
->>>>>>> dev
 }
 
 void MainWindow::on_push_change_room_id_clicked()

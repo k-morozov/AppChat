@@ -13,13 +13,8 @@ class Client: public QObject {
 
 public:
     Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps,
-<<<<<<< HEAD
-           input_request_ptr request, int room_id)
-        : io_service(io), sock(io), eps(eps), room_id(room_id)
-=======
            input_request_ptr request)
         : io_service(io), sock(io), eps(eps)
->>>>>>> dev
     {
         do_connect(eps, request);
     }
@@ -36,12 +31,9 @@ public:
     void set_login_id(identifier_t id)   { client_id = id;}
     const char* get_login() const { return login; }
 
-<<<<<<< HEAD
-=======
     ~Client() {
 
     }
->>>>>>> dev
 private:
     boost::asio::io_service &io_service;
     boost::asio::ip::tcp::socket sock;
@@ -52,11 +44,8 @@ private:
     char login[Block::LoginName];
     char password[Block::Password];
     identifier_t client_id;
-<<<<<<< HEAD
-    identifier_t room_id = -1;
-=======
+
     identifier_t room_id = 0;
->>>>>>> dev
 
 private:
     input_request_ptr logon();

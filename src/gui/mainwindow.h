@@ -25,11 +25,7 @@ public:
     std::string get_message();
 
 signals:
-<<<<<<< HEAD
-    void send_input_data(const std::string&, const std::string&, int);
-=======
     void send_input_data(const std::string&, const std::string&);
->>>>>>> dev
     void send_text_data(const std::string&, const std::string&, int);
     void send_change_room(int);
 private slots:
