@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>251</width>
-    <height>538</height>
+    <width>259</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Chat</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="layoutWidget">
@@ -124,16 +124,10 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>251</width>
+     <width>259</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuBroChat">
-    <property name="title">
-     <string>BroChat</string>
-    </property>
-   </widget>
-   <addaction name="menuBroChat"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

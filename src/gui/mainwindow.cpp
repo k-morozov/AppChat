@@ -10,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->password->setEchoMode(QLineEdit::Password);
     ui->text_input->setReadOnly(true);
     ui->text_output->setReadOnly(true);
+    ui->text_input->hide();
+    ui->text_output->hide();
+    ui->room_id->hide();
+    ui->room_id->setReadOnly(true);
+    ui->label_channel_id->hide();
+    ui->push_send->hide();
+    ui->push_change_room_id->hide();
 }
 
 MainWindow::~MainWindow()
@@ -19,6 +26,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_push_autorisation_clicked()
 {
+    ui->text_input->show();
+    ui->text_output->show();
+    ui->room_id->show();
+    ui->label_channel_id->show();
+    ui->push_send->show();
+    ui->push_change_room_id->show();
+
+    ui->room_id->setReadOnly(false);
+
     logon = ui->logon->text();
     password = ui->password->text();
 //    roomid = ui->room_id->text();
@@ -73,11 +89,20 @@ void MainWindow::print_text(const std::string& from, const std::string& text) {
 
 void MainWindow::on_push_registration_clicked()
 {
+    ui->text_input->show();
+    ui->text_output->show();
+    ui->room_id->show();
+    ui->label_channel_id->show();
+    ui->push_send->show();
+    ui->push_change_room_id->show();
+
+    ui->room_id->setReadOnly(false);
+
     logon = ui->logon->text();
     password = ui->password->text();
-    roomid = ui->room_id->text();
+//    roomid = ui->room_id->text();
 
-    if (logon.isEmpty() || password.isEmpty() || roomid.isEmpty()) return;
+    if (logon.isEmpty() || password.isEmpty() /*|| roomid.isEmpty()*/) return;
 
     ui->logon->setReadOnly(true);
     ui->password->setReadOnly(true);
