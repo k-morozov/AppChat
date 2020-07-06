@@ -19,7 +19,7 @@ private:
     ChannelsManager();
 
     std::unordered_map<identifier_t, iroom_ptr> channels;
-    std::unordered_map<identifier_t, identifier_t> clinets_in_room;
+    std::unordered_map<identifier_t, identifier_t> clients_in_room;
     std::unordered_map<identifier_t, std::string> clientid_to_login;
 };
 

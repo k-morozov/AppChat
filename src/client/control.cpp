@@ -10,13 +10,13 @@ Control::Control(MainWindow& w) : w(w) {
                      this, SLOT(get_text_from_gui(const std::string&, const std::string&, int)));
 }
 
-void Control::work_client(const std::string& login, const std::string& password, int room_id) {
+void Control::work_client(const std::string& login, const std::string& password) {
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::resolver resolver(io_service);
     auto endpoints = resolver.resolve("127.0.0.1", "7777");
 
     input_request_ptr request  = std::make_shared<AutorisationRequest>(login, password);
-    client = std::make_unique<Client>(io_service, endpoints, request, room_id);
+    client = std::make_unique<Client>(io_service, endpoints, request);
     QObject::connect(client.get(), SIGNAL(send_text(const std::string&, const std::string&)),
                      this, SLOT(text_from_client(const std::string&, const std::string&)));
 

@@ -25,10 +25,6 @@ set(Server  ${SRC}server/)
 set(Client  ${SRC}client/)
 set(Tests   ${SRC}tests/)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-
 set(Connection ${Server}connection)
 set(Channel ${Server}channel)
 set(Protocol ${SRC}protocol)

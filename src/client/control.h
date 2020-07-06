@@ -13,7 +13,7 @@ public:
 
 
     // @todo noreturn???
-    void work_client(const std::string&, const std::string&, int);
+    void work_client(const std::string&, const std::string&);
 
     ~Control() {
         client->close();
@@ -23,9 +23,9 @@ signals:
     void send_text_to_gui(const std::string&, const std::string&);
 
 public slots:
-    void autorisation(const std::string& login, const std::string& password, int room_id) {
-        std::thread th([this, login, password, room_id]() {
-            work_client(login, password, room_id);
+    void autorisation(const std::string& login, const std::string& password) {
+        std::thread th([this, login, password]() {
+            work_client(login, password);
         });
         th.detach();
     }
