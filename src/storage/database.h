@@ -15,8 +15,14 @@ public:
 
     void save_text_message(text_request_ptr message);
     std::deque<text_response_ptr> load_history(identifier_t roomid);
+
     void add_logins(std::string login, identifier_t logi_id, std::string password);
+
     identifier_t get_loginid(std::string login) const;
+//    identifier_t registration(std::string login, std::string password);
+
+    identifier_t check_client(std::string login, std::string password) const;
+
     ~Database();
 private:
     Database();

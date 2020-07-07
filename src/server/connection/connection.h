@@ -40,6 +40,8 @@ private:
 
 private:
     void read_request_header();
+
+    void read_request_body(registr_request_ptr);
     void read_request_body(autor_request_ptr);
     void read_request_body(text_request_ptr);
     void read_request_body(join_room_request_ptr);

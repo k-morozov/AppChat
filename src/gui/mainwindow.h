@@ -25,16 +25,22 @@ public:
     std::string get_message();
 
 signals:
-    void send_input_data(const std::string&, const std::string&);
+    void send_autorisation_info(const std::string&, const std::string&);
+    void send_registration_info(const std::string&, const std::string&);
+
     void send_text_data(const std::string&, const std::string&, int);
     void send_change_room(int);
+
 private slots:
     void on_push_autorisation_clicked();
+    void on_push_registration_clicked();
+
     void on_push_send_clicked();
     void print_text(const std::string&, const std::string&);
-    void on_push_registration_clicked();
     void on_push_change_room_id_clicked();
+    void good_input();
 
+    void handler_input_code(InputCode);
 private:
     Ui::MainWindow *ui;
 

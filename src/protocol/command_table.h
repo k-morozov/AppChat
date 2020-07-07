@@ -58,6 +58,13 @@ inline const std::string& get_command_str(TypeCommand command) {
     return type_command_str.at(TypeCommand::Unknown);
 }
 
+enum class InputCode : int {
+    RegistrOK = 1,
+    AutorOK,
+    BusyRegistr,
+    IncorrectAutor
+};
+
 class IPacket {
 public:
     virtual ~IPacket() {}
