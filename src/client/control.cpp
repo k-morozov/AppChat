@@ -34,7 +34,10 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
     QObject::connect(client.get(), SIGNAL(good_input()), &w, SLOT(good_input()));
-    QObject::connect(client.get(), SIGNAL(bad_input()), &w, SLOT(bad_input()));
+    QObject::connect(client.get(), SIGNAL(good_client_is_registred()), &w, SLOT(good_client_is_registred()));
+    QObject::connect(client.get(), SIGNAL(bad_client_is_registred()), &w, SLOT(bad_client_is_registred()));
+    QObject::connect(client.get(), SIGNAL(good_client_is_autorisation()), &w, SLOT(good_client_is_autorisation()));
+    QObject::connect(client.get(), SIGNAL(bad_client_is_autorisation()), &w, SLOT(bad_client_is_autorisation()));
 
     std::thread th([&io_service]() {
         io_service.run();

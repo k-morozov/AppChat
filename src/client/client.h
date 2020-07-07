@@ -66,7 +66,11 @@ signals:
     void send_text(const std::string& from, const std::string& text);
 
     void good_input();
-    void bad_input();
+    void good_client_is_registred();
+    void bad_client_is_registred();
+
+    void good_client_is_autorisation();
+    void bad_client_is_autorisation();
 };
 
 #endif // CLIENT_H

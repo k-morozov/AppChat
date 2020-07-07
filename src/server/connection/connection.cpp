@@ -98,17 +98,16 @@ void Connection::read_request_body(autor_request_ptr request) {
                 password = request->get_password();
                 std::cout << "login=" << request->get_login() << ", pwd=" << request->get_password() << std::endl;
 
-                client_id = Database::Instance().get_loginid(login);
-                if (client_id==-1) {
-                    client_id = generate_client_id();
-                }
+                client_id = Database::Instance().check_client(login, password);
 
                 input_res_ptr response = std::make_shared<AutorisationResponse>(client_id);
                 std::cout << "AutorisationResponse: vers=" << response->get_protocol_version() << ", command="
                           << get_command_str(response->get_type_data())
                           << ", logid=" << response->get_loginid() << std::endl;
 
-                Database::Instance().add_logins(login, response->get_loginid(), password);
+                if (client_id!=-1) {
+                    Database::Instance().add_logins(login, response->get_loginid(), password);
+                }
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
 

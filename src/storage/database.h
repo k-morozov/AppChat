@@ -21,6 +21,8 @@ public:
     identifier_t get_loginid(std::string login) const;
 //    identifier_t registration(std::string login, std::string password);
 
+    identifier_t check_client(std::string login, std::string password) const;
+
     ~Database();
 private:
     Database();

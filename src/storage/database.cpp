@@ -154,3 +154,39 @@ identifier_t Database::get_loginid(std::string login) const {
 
     return result;
 }
+
+identifier_t Database::check_client(std::string login, std::string password) const {
+    identifier_t result = -1;
+    bool found = false;
+    sqlite3_stmt* stmt;
+
+    std::string sql = std::string("select * from logins where login=='")
+            + login
+            + std::string("';");
+
+    if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
+        printf("ERROR: while compiling sql: %s\n", sqlite3_errmsg(db_ptr));
+        sqlite3_close(db_ptr);
+        sqlite3_finalize(stmt);
+    }
+    int ret_code = 0;
+
+    while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
+        std::cout << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
+                  << (const char *)sqlite3_column_blob(stmt, 2) << std::endl;
+        if ( password == (const char*)sqlite3_column_blob(stmt, 2)) {
+            result = sqlite3_column_int(stmt, 1);
+        }
+        found = true;
+    }
+    if(ret_code != SQLITE_DONE) {
+        printf("ERROR: while performing sql: %s\n", sqlite3_errmsg(db_ptr));
+        printf("ret_code = %d\n", ret_code);
+    }
+
+    printf("login %s\n", found ? "found client" : "not found client");
+
+    sqlite3_finalize(stmt);
+
+    return result;
+}

@@ -99,11 +99,30 @@ void MainWindow::good_input() {
     ui->push_registration->setHidden(true);
 
     ui->text_input->setReadOnly(false);
-
-    ui->text_output->append("welcome");
 }
-void MainWindow::bad_input() {
+
+void MainWindow::good_client_is_registred() {
     ui->logon->clear();
     ui->password->clear();
-    QMessageBox::information(this, "error from server", "incorrect login/password");
+    QMessageBox::information(this, "registration", "You successfully registered.");
+
+    good_input();
+}
+void MainWindow::bad_client_is_registred() {
+    ui->logon->clear();
+    ui->password->clear();
+    QMessageBox::information(this, "error from server", "this login is already registered.");
+}
+
+void MainWindow::good_client_is_autorisation() {
+    ui->logon->clear();
+    ui->password->clear();
+//    QMessageBox::information(this, "registration", "You successfully autorisation.");
+    good_input();
+}
+
+void MainWindow::bad_client_is_autorisation() {
+    ui->logon->clear();
+    ui->password->clear();
+    QMessageBox::information(this, "error from server", "check login/password");
 }

@@ -39,7 +39,12 @@ private slots:
     void print_text(const std::string&, const std::string&);
     void on_push_change_room_id_clicked();
     void good_input();
-    void bad_input();
+
+    // @todo add code error
+    void good_client_is_registred();
+    void bad_client_is_registred();
+    void good_client_is_autorisation();
+    void bad_client_is_autorisation();
 private:
     Ui::MainWindow *ui;
 

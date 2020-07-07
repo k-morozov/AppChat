@@ -79,16 +79,30 @@ void Client::send_login_packet(packet_ptr packet) {
         boost::asio::read(sock, boost::asio::buffer(response->get_data(),
                                                     response->get_length_data()), error_code);
 
-        if (response->get_loginid()==-1) {
-//            std::cout << "incorrect login" << std::endl;
-//            emit send_text("server", "incorrect login");
-            emit bad_input();
-            this->close();
-            return;
-        }
-        emit good_input();
-        set_login_id(response->get_loginid());
 
+        if (response->get_type_data()==TypeCommand::RegistrationResponse)
+            if (response->get_loginid()==-1) {
+                emit bad_client_is_registred();
+                this->close();
+                return;
+            }
+            else
+            {
+                good_client_is_registred();
+            }
+        else {
+            if (response->get_loginid()==-1) {
+                emit bad_client_is_autorisation();
+                this->close();
+                return;
+            }
+            else
+            {
+                good_client_is_autorisation();
+            }
+        }
+
+        set_login_id(response->get_loginid());
         join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
         write(request);
         if (!error_code) {
