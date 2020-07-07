@@ -1,0 +1,26 @@
+dist: xenial
+language: cpp
+compiler: clang
+before_script:
+- sudo apt-get update
+- sudo apt-get install libboost-all-dev
+- sudo apt-get install libgtest-dev
+-  sudo apt-get install cmake # install cmake
+- cd /usr/src/gtest
+- sudo cmake CMakeLists.txt
+- sudo make
+- sudo cp *.a /usr/lib
+- sudo ln -s /usr/lib/libgtest.a /usr/local/lib/gtest/libgtest.a
+ - sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/gtest/libgtest_main.a
+- sudo apt-get install sqlite3 libsqlite3-dev
+script:
+- cmake .
+- cmake --build .
+#- cmake --build . --target test
+- cmake --build . --target package
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+  - curl -T allocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -ucot-xolod:$BINTRAY_API_KEY "https://api.bintray.com/content/cot-xolod/OTUS/homework/$TRAVIS_BUILD_NUMBER/allocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=xenial;deb_component=main;deb_architecture=amd64;publish=1"
+
