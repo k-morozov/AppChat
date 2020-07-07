@@ -82,23 +82,27 @@ void Client::send_login_packet(packet_ptr packet) {
 
         if (response->get_type_data()==TypeCommand::RegistrationResponse)
             if (response->get_loginid()==-1) {
-                emit bad_client_is_registred();
+//                emit bad_client_is_registred();
+                emit send_input_code(InputCode::BusyRegistr);
                 this->close();
                 return;
             }
             else
             {
-                good_client_is_registred();
+//                good_client_is_registred();
+                emit send_input_code(InputCode::RegistrOK);
             }
         else {
             if (response->get_loginid()==-1) {
-                emit bad_client_is_autorisation();
+//                emit bad_client_is_autorisation();
+                emit send_input_code(InputCode::IncorrectAutor);
                 this->close();
                 return;
             }
             else
             {
-                good_client_is_autorisation();
+//                good_client_is_autorisation();
+                emit send_input_code(InputCode::AutorOK);
             }
         }
 

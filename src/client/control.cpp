@@ -5,6 +5,7 @@ Control::Control() {
 
     qRegisterMetaType<std::string>("std::string");
     qRegisterMetaType<QTextCursor>("QTextCursor");
+    qRegisterMetaType<InputCode>("InputCode");
 
     QObject::connect(&w, &MainWindow::send_autorisation_info, this, &Control::autorisation);
     QObject::connect(&w, &MainWindow::send_registration_info, this, &Control::registration);
@@ -33,11 +34,8 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
     client = std::make_unique<Client>(io_service, endpoints, request);
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
-    QObject::connect(client.get(), SIGNAL(good_input()), &w, SLOT(good_input()));
-    QObject::connect(client.get(), SIGNAL(good_client_is_registred()), &w, SLOT(good_client_is_registred()));
-    QObject::connect(client.get(), SIGNAL(bad_client_is_registred()), &w, SLOT(bad_client_is_registred()));
-    QObject::connect(client.get(), SIGNAL(good_client_is_autorisation()), &w, SLOT(good_client_is_autorisation()));
-    QObject::connect(client.get(), SIGNAL(bad_client_is_autorisation()), &w, SLOT(bad_client_is_autorisation()));
+
+    QObject::connect(client.get(), SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));
 
     std::thread th([&io_service]() {
         io_service.run();

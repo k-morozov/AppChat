@@ -101,28 +101,28 @@ void MainWindow::good_input() {
     ui->text_input->setReadOnly(false);
 }
 
-void MainWindow::good_client_is_registred() {
+void MainWindow::handler_input_code(InputCode code) {
     ui->logon->clear();
     ui->password->clear();
-    QMessageBox::information(this, "registration", "You successfully registered.");
 
-    good_input();
-}
-void MainWindow::bad_client_is_registred() {
-    ui->logon->clear();
-    ui->password->clear();
-    QMessageBox::information(this, "error from server", "this login is already registered.");
-}
+    switch (code) {
+        case InputCode::RegistrOK:
+            QMessageBox::information(this, "registration", "You successfully registered.");
+            good_input();
+        break;
 
-void MainWindow::good_client_is_autorisation() {
-    ui->logon->clear();
-    ui->password->clear();
-//    QMessageBox::information(this, "registration", "You successfully autorisation.");
-    good_input();
-}
+        case InputCode::BusyRegistr:
+            QMessageBox::information(this, "error from server", "this login is already registered.");
+        break;
 
-void MainWindow::bad_client_is_autorisation() {
-    ui->logon->clear();
-    ui->password->clear();
-    QMessageBox::information(this, "error from server", "check login/password");
+        case InputCode::AutorOK:
+            good_input();
+        break;
+
+        case InputCode::IncorrectAutor:
+            QMessageBox::information(this, "error from server", "check login/password");
+        break;
+    default:
+        break;
+    }
 }

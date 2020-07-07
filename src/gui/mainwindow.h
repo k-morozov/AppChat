@@ -40,11 +40,7 @@ private slots:
     void on_push_change_room_id_clicked();
     void good_input();
 
-    // @todo add code error
-    void good_client_is_registred();
-    void bad_client_is_registred();
-    void good_client_is_autorisation();
-    void bad_client_is_autorisation();
+    void handler_input_code(InputCode);
 private:
     Ui::MainWindow *ui;
 
