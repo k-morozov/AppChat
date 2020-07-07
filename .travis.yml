@@ -5,6 +5,15 @@ before_script:
 - sudo apt-get update
 - sudo apt-get install libboost-all-dev
 - sudo apt-get install libgtest-dev
+#gtest
+- sudo apt-get install libgtest-dev -y 
+- sudo chmod 777 /usr/src/gtest
+- cd /usr/src/gtest 
+- cmake .
+- make
+- sudo cp *.a /usr/lib/
+- cd "${TRAVIS_BUILD_DIR}"
+# end gtest
 - sudo apt-get install sqlite3 libsqlite3-dev
 - sudo apt install qt5-default
 script:
