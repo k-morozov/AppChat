@@ -124,7 +124,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_library(UnitTests gtest)
 find_library(LOGGER log4cplus)
-
+include_directories(${SQLite3_INCLUDE_DIRS})
 target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} ${SQLite3_LIBRARIES})
 target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} Qt5::Widgets)
 target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
