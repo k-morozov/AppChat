@@ -64,10 +64,6 @@ set(LOGEGR
     ${Logger}/logger.h ${Logger}/logger.cpp
 )
 
-project(${PROJECT} LANGUAGES CXX)
-
-include_directories(${SRC}) #CMAKE_CURRENT_SOURCE_DIRECTORY
-
 #****************************************************************************************************
 set(SERVER_SOURCES
     ${Server}/startup_server.cpp
@@ -102,6 +98,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 add_executable(${SERVER}    ${SERVER_SOURCES})
 add_executable(${CLIENT}    ${CLIENT_SOURCES})
 add_executable(${TESTS}     ${TESTS_SOURSES})
+
+target_include_directories(${SERVER} PUBLIC ${SRC})
+target_include_directories(${CLIENT} PUBLIC ${SRC})
+target_include_directories(${TESTS} PUBLIC ${SRC})
 
 set_target_properties(${SERVER} #${CLIENT}
     ${TESTS} PROPERTIES
