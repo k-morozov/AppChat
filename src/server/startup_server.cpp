@@ -1,4 +1,4 @@
-#include <server/server.h>
+#include <server.h>
 #include "logger.h"
 
 int main() {

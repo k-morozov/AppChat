@@ -1,5 +1,4 @@
-#include <server/storage/database.h>
-
+#include "database.h"
 
 std::string Database::create_table_history = std::string("create table if not exists history ")
         + std::string("(author varchar[") + std::to_string(Block::LoginName) + std::string("], ")

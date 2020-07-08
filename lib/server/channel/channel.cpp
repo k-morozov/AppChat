@@ -1,4 +1,4 @@
-#include <server/channel/channel.h>
+#include <channel/channel.h>
 #include <sstream>
 
 
