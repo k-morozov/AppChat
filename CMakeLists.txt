@@ -23,10 +23,12 @@ set(Tests   ${SRC}tests/)
 set(Server_lib_dir      ${LIB}server/)
 set(Protocol_lib_dir    ${LIB}protocol)
 set(Logger_lib_dir      ${LIB}log)
+set(Storage_lib_dir     ${LIB}/storage)
 
 set(SERVER_LIB_NAME     server_lib)
 set(PROTOCOL_LIB_NAME   protocol_lib)
 set(LOGGER_LIB_NAME     logger_lib)
+set(STORAGE_LIB_NAME    sqlite_db)
 #****************************************************************************************************
 set(SERVER_SOURCES
     ${SRC}server/startup_server.cpp
@@ -73,7 +75,7 @@ include_directories(${GTEST_INCLUDE_DIR})
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
 find_package(GTest REQUIRED)
-find_package(SQLite3 REQUIRED)
+#find_package(SQLite3 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_library(UnitTests gtest)
@@ -81,6 +83,7 @@ find_library(UnitTests gtest)
 add_subdirectory(${Server_lib_dir})
 add_subdirectory(${Protocol_lib_dir})
 add_subdirectory(${Logger_lib_dir})
+add_subdirectory(${Storage_lib_dir})
 
 target_link_libraries (${SERVER_BIN} ${SERVER_LIB_NAME})
 target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})

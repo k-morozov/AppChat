@@ -6,12 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 
-
 set(Connection_dir          connection)
 set(Channel_dir             channel)
-set(Storage_dir             storage)
 
 # set(SERVER_LIB_NAME     server_lib)
+
 #****************************************************************************************************
 set(CHANNELS_SRC
     ${Channel_dir}/iroom.h ${Channel_dir}/iroom.cpp
@@ -22,16 +21,12 @@ set(CONNECTIONS_SRC
     ${Connection_dir}/isubscriber.h ${Connection_dir}/isubscriber.cpp
     ${Connection_dir}/connection.h ${Connection_dir}/connection.cpp
 )
-set(STORAGE_SRC
-     ${Storage_dir}/database.h ${Storage_dir}/database.cpp
-)
 
 #****************************************************************************************************
 set(SERVER_SOURCES
     server.h
     ${CONNECTIONS_SRC}
     ${CHANNELS_SRC}
-    ${STORAGE_SRC}
 )
 
 # add projects
@@ -39,8 +34,6 @@ add_library(${SERVER_LIB_NAME} ${SERVER_SOURCES})
 target_include_directories(${SERVER_LIB_NAME} PUBLIC .)
 
 #****************************************************************************************************
-
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
-find_package(SQLite3 REQUIRED)
 
-target_link_libraries (${SERVER_LIB_NAME} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${SQLite3_LIBRARIES} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})
+target_link_libraries (${SERVER_LIB_NAME} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})
