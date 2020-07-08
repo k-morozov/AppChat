@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <mutex>
 #include <deque>
-#include <server/channel/iroom.h>
-#include <server/storage/database.h>
+#include <channel/iroom.h>
+#include <storage/database.h>
 
 class Channel : public IRoom
 {

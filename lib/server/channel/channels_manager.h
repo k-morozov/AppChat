@@ -1,7 +1,7 @@
 #ifndef CHANNELSMANAGER_H
 #define CHANNELSMANAGER_H
 
-#include <server/channel/channel.h>
+#include <channel/channel.h>
 
 class ChannelsManager
 {

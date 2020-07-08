@@ -4,7 +4,7 @@
 #include <boost/asio.hpp>
 #include <memory>
 
-#include <server/connection/connection.h>
+#include <connection/connection.h>
 
 using boost::asio::ip::tcp;
 

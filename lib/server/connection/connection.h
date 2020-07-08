@@ -5,8 +5,8 @@
 #include <memory>
 #include <deque>
 
-#include <server/connection/isubscriber.h>
-#include <server/channel/channels_manager.h>
+#include <connection/isubscriber.h>
+#include <channel/channels_manager.h>
 #include <protocol.h>
 
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>

@@ -6,8 +6,6 @@
 #include <string>
 #include <protocol.h>
 
-
-
 class ISubscriber
 {
 public:
