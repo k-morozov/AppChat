@@ -9,8 +9,6 @@ set (Boost_USE_MULTITHREADED ON)
 set(Connection_dir          connection)
 set(Channel_dir             channel)
 
-# set(SERVER_LIB_NAME     server_lib)
-
 #****************************************************************************************************
 set(CHANNELS_SRC
     ${Channel_dir}/iroom.h ${Channel_dir}/iroom.cpp
@@ -24,16 +22,13 @@ set(CONNECTIONS_SRC
 
 #****************************************************************************************************
 set(SERVER_SOURCES
+    startup_server.cpp
     server.h
     ${CONNECTIONS_SRC}
     ${CHANNELS_SRC}
 )
-
-# add projects
-add_library(${SERVER_LIB_NAME} ${SERVER_SOURCES})
-target_include_directories(${SERVER_LIB_NAME} PUBLIC .)
-
+add_executable(${SERVER_BIN}  ${SERVER_SOURCES})
+target_include_directories(${SERVER_BIN} PUBLIC .)
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
-
-target_link_libraries (${SERVER_LIB_NAME} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})
+target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})

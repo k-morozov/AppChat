@@ -1,5 +1,5 @@
 #include <server.h>
-#include "logger.h"
+#include <logger.h>
 
 int main() {
     init_logger();
