@@ -20,11 +20,11 @@ set(Server  ${SRC}server/)
 set(Client  ${SRC}client/)
 set(Tests   ${SRC}tests/)
 
-set(Connection ${Server}connection)
-set(Channel ${Server}channel)
-set(Protocol ${LIB}protocol)
-set(Storage ${SRC}storage)
-set(Logger ${SRC}log)
+set(Connection  ${Server}connection)
+set(Channel     ${Server}channel)
+set(Protocol_dir    ${LIB}protocol)
+set(Storage     ${Server}storage)
+set(Log_dir     ${LIB}log)
 
 set(CHANNELS
     ${Channel}/iroom.h ${Channel}/iroom.cpp
@@ -39,9 +39,6 @@ set(CONNECTION
 set(STORAGE
      ${Storage}/database.h ${Storage}/database.cpp
 )
-set(LOGEGR
-    ${Logger}/logger.h ${Logger}/logger.cpp
-)
 
 #****************************************************************************************************
 set(SERVER_SOURCES
@@ -51,7 +48,7 @@ set(SERVER_SOURCES
     ${CONNECTION}
     ${CHANNELS}
     ${STORAGE}
-    ${LOGEGR}
+
 )
 
 set(CLIENT_SOURCES
@@ -76,13 +73,13 @@ add_executable(${SERVER}    ${SERVER_SOURCES})
 add_executable(${CLIENT}    ${CLIENT_SOURCES})
 add_executable(${TESTS}     ${TESTS_SOURSES})
 
-target_include_directories(${SERVER} PUBLIC ${SRC})
-target_include_directories(${CLIENT} PUBLIC ${SRC})
-target_include_directories(${TESTS} PUBLIC ${SRC})
+target_include_directories(${SERVER}    PUBLIC ${SRC})
+target_include_directories(${CLIENT}    PUBLIC ${SRC})
+target_include_directories(${TESTS}     PUBLIC ${SRC})
 
 set_target_properties(${SERVER} #${CLIENT}
     ${TESTS} PROPERTIES
-        CXX_STANDARD 20
+        CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
         COMPILE_OPTIONS "-std=c++2a;-O2;-Wall;-Wextra;-Wpedantic"
@@ -99,12 +96,12 @@ find_package(SQLite3 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_library(UnitTests gtest)
-find_library(LOGGER log4cplus)
 
-add_subdirectory(${Protocol})
+add_subdirectory(${Protocol_dir})
+add_subdirectory(${Log_dir})
 
-target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} ${SQLite3_LIBRARIES} protocol)
-target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} Qt5::Widgets protocol)
+target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${SQLite3_LIBRARIES} protocol logger_lib)
+target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets protocol)
 target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests} protocol)
 
 if(Boost_FOUND)

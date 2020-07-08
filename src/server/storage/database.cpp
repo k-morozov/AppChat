@@ -1,4 +1,4 @@
-#include <storage/database.h>
+#include <server/storage/database.h>
 
 
 std::string Database::create_table_history = std::string("create table if not exists history ")
