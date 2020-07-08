@@ -6,29 +6,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 
-set(Connection_dir          connection)
-set(Channel_dir             channel)
+#****************************************************************************************************
+set(Control_dir control)
+set(Client_dir client)
+set(GUI_dir gui)
+#****************************************************************************************************
+set(CLIENT_SOURCES
+    startup_client.cpp
+    ${Client_dir}/client.h  ${Client_dir}/client.cpp
+    ${GUI_dir}/mainwindow.h ${GUI_dir}/mainwindow.cpp
+    ${GUI_dir}/mainwindow.ui
+    ${Control_dir}/control.h ${Control_dir}/control.cpp
+)
 
 #****************************************************************************************************
-set(CHANNELS_SRC
-    ${Channel_dir}/iroom.h ${Channel_dir}/iroom.cpp
-    ${Channel_dir}/channels_manager.h ${Channel_dir}/channels_manager.cpp
-    ${Channel_dir}/channel.h ${Channel_dir}/channel.cpp
-)
-set(CONNECTIONS_SRC
-    ${Connection_dir}/isubscriber.h ${Connection_dir}/isubscriber.cpp
-    ${Connection_dir}/connection.h ${Connection_dir}/connection.cpp
-)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package (Threads)
 
-#****************************************************************************************************
-set(SERVER_SOURCES
-    startup_server.cpp
-    server.h
-    ${CONNECTIONS_SRC}
-    ${CHANNELS_SRC}
-)
-add_executable(${CLIENT_BIN}  ${SERVER_SOURCES})
+add_executable(${CLIENT_BIN}  ${CLIENT_SOURCES})
 target_include_directories(${CLIENT_BIN} PUBLIC .)
+
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
-target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})
+target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})
+

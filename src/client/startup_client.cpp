@@ -4,7 +4,7 @@
 #include <QApplication>
 
 #include <protocol.h>
-#include <client/control.h>
+#include <control/control.h>
 #include <gui/mainwindow.h>
 
 

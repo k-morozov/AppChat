@@ -1,4 +1,4 @@
-#include <client/control.h>
+#include <control/control.h>
 
 Control::Control() {
     w.show();
