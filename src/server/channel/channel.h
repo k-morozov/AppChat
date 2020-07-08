@@ -5,7 +5,7 @@
 #include <mutex>
 #include <deque>
 #include <channel/iroom.h>
-#include <storage/database.h>
+#include <database.h>
 
 class Channel : public IRoom
 {
