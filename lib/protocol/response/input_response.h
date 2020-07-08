@@ -1,7 +1,7 @@
 #ifndef CONTROLRESPONSE_H
 #define CONTROLRESPONSE_H
 
-#include <protocol/response/response.h>
+#include <response/response.h>
 
 class InputResponse : public Response {
 public:

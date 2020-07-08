@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <protocol/protocol.h>
+#include <protocol.h>
 #include <memory>
 
 class request: public ::testing::Test {

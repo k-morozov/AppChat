@@ -1,14 +1,12 @@
-#ifndef IRESPONSE_H
-#define IRESPONSE_H
+#ifndef IREQUEST_H
+#define IREQUEST_H
 
-#include <protocol/command_table.h>
+#include <memory>
+#include <command_table.h>
 
-class Response: public IPacket
-{
+class Request : public IPacket {
 public:
-    virtual ~Response() {}
-
-    Response() {
+    Request() {
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
     }
 
@@ -20,7 +18,7 @@ public:
     virtual uint16_t get_protocol_version() const override { return *(uint16_t*)header; }
 
     virtual TypeCommand get_type() const override { return TypeCommand::Unknown; }
-    virtual TypeCommand get_type_data() const override { return (TypeCommand) *(header + Block::VersionProtocol); }
+    virtual TypeCommand get_type_data() const override { return (TypeCommand) *(header + Block::VersionProtocol) ; }
 
     virtual uint32_t get_length_data() const override { return 0; }
 
@@ -28,6 +26,6 @@ protected:
     char header[Block::Header];
 };
 
-using response_ptr = std::shared_ptr<Response>;
+using request_ptr = std::shared_ptr<Request>;
 
-#endif // IRESPONSE_H
+#endif // IREQUEST_H

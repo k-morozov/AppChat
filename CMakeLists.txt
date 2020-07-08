@@ -1,12 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
-if(COMPILER_SUPPORTS_CXX17)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-else()
-    #message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} doesn't have C++17 support.")
-endif()
-message(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+project(AppChat)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
@@ -15,38 +10,22 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(PROJECT Chat)
 set(SERVER server)
 set(CLIENT client)
 set(TESTS tests)
 
 set(SRC     src/)
+set(LIB     lib/)
 set(Server  ${SRC}server/)
 set(Client  ${SRC}client/)
 set(Tests   ${SRC}tests/)
 
 set(Connection ${Server}connection)
 set(Channel ${Server}channel)
-set(Protocol ${SRC}protocol)
+set(Protocol ${LIB}protocol)
 set(Storage ${SRC}storage)
 set(Logger ${SRC}log)
 
-set(PROTOCOL
-    ${Protocol}/protocol.h ${Protocol}/protocol.cpp
-    ${Protocol}/command_table.h
-    ${Protocol}/request/request.h
-    ${Protocol}/response/response.h
-    ${Protocol}/request/input_request.h
-    ${Protocol}/request/input_request.cpp
-    ${Protocol}/request/transport_request.h
-    ${Protocol}/request/transport_request.cpp
-    ${Protocol}/request/control_request.h
-
-    ${Protocol}/response/input_response.h
-    ${Protocol}/response/input_response.cpp
-    ${Protocol}/response/transport_response.h
-
-    )
 set(CHANNELS
     ${Channel}/iroom.h ${Channel}/iroom.cpp
     ${Channel}/channels_manager.h ${Channel}/channels_manager.cpp
@@ -71,7 +50,6 @@ set(SERVER_SOURCES
 
     ${CONNECTION}
     ${CHANNELS}
-    ${PROTOCOL}
     ${STORAGE}
     ${LOGEGR}
 )
@@ -82,7 +60,6 @@ set(CLIENT_SOURCES
     ${SRC}/gui/mainwindow.h ${SRC}/gui/mainwindow.cpp
     ${SRC}/gui/mainwindow.ui
     ${Client}/control.h ${Client}/control.cpp
-    ${PROTOCOL}
 )
 
 set(TESTS_SOURSES
@@ -115,7 +92,6 @@ set_target_properties(${SERVER} #${CLIENT}
 enable_testing()
 include_directories(${GTEST_INCLUDE_DIR})
 
-
 find_package(Boost COMPONENTS system date_time filesystem program_options regex thread graph REQUIRED)
 find_package (Threads)
 find_package(GTest REQUIRED)
@@ -125,9 +101,11 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_library(UnitTests gtest)
 find_library(LOGGER log4cplus)
 
-target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} ${SQLite3_LIBRARIES})
-target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} Qt5::Widgets)
-target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests})
+add_subdirectory(${Protocol})
+
+target_link_libraries (${SERVER} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} ${SQLite3_LIBRARIES} protocol)
+target_link_libraries (${CLIENT} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${LOGGER} Qt5::Widgets protocol)
+target_link_libraries (${TESTS} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests} protocol)
 
 if(Boost_FOUND)
     include_directories(${BOOST_INCLUDE_DIRS})

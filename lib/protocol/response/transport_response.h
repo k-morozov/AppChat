@@ -1,7 +1,7 @@
 #ifndef TRANSPORT_RESPONSE_H
 #define TRANSPORT_RESPONSE_H
 
-#include <protocol/response/response.h>
+#include <response/response.h>
 
 class TransportResponse : public Response {
 public:

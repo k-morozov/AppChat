@@ -5,7 +5,7 @@
 #include <string>
 #include <deque>
 #include <boost/asio.hpp>
-#include <protocol/protocol.h>
+#include <protocol.h>
 #include <QWidget>
 
 class Client: public QObject {

@@ -1,7 +1,7 @@
 #ifndef TRANSPORTREQUEST_H
 #define TRANSPORTREQUEST_H
 
-#include <protocol/request/request.h>
+#include <request/request.h>
 
 class TransportRequest : public Request {
 public:

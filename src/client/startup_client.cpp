@@ -3,7 +3,7 @@
 #include <boost/asio.hpp>
 #include <QApplication>
 
-#include <protocol/protocol.h>
+#include <protocol.h>
 #include <client/control.h>
 #include <gui/mainwindow.h>
 
