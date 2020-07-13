@@ -14,7 +14,6 @@ void Connection::read_request_header() {
     boost::asio::async_read(socket, boost::asio::buffer(request->get_header(), Block::Header),
                             [this, request](boost::system::error_code error, std::size_t) {
         if (!error) {
-            auto logger = LOGGER("Connection");
             switch (request->get_type_data()) {
                 case TypeCommand::Unknown:
                     LOG4CPLUS_INFO(logger, get_command_str(request->get_type_data()) << "--> ");
@@ -60,7 +59,6 @@ void Connection::read_request_body(registr_request_ptr request) {
                 login = request->get_login();
                 password = request->get_password();
 
-                auto logger = LOGGER("Connection");
                 LOG4CPLUS_INFO(logger, "login=" << request->get_login() << ", pwd=" << request->get_password());
 
                 // @todo new generation login_id and check password
@@ -101,7 +99,6 @@ void Connection::read_request_body(autor_request_ptr request) {
                 login = request->get_login();
                 password = request->get_password();
 
-                auto logger = LOGGER("Connection");
                 LOG4CPLUS_INFO(logger, "login=" << request->get_login() << ", pwd=" << request->get_password());
 
                 client_id = Database::Instance().check_client(login, password);
@@ -135,7 +132,7 @@ void Connection::read_request_body(text_request_ptr request) {
                 login = request->get_login();
                 auto roomid = request->get_roomid();
                 auto text = request->get_message();
-                auto logger = LOGGER("Connection");
+
                 LOG4CPLUS_INFO(logger, "login=" << login << ", roomid=" << roomid << ", text="<<text);
                 text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
                 ChannelsManager::Instance().send(response);
@@ -160,7 +157,6 @@ void Connection::read_request_body(join_room_request_ptr request) {
 
                 auto new_roomid = request->get_roomid();
 
-                auto logger = LOGGER("Connection");
                 LOG4CPLUS_INFO(logger, "roomid=" << new_roomid);
                 ChannelsManager::Instance().join(self, new_roomid);
 
@@ -183,7 +179,6 @@ void Connection::send_response_header() {
                 if (!error) {
                     send_response_data();
                 } else {
-                    auto logger = LOGGER("Connection");
                     LOG4CPLUS_ERROR(logger, "error send_response_header()");
                     ChannelsManager::Instance().leave(self);
                 }
@@ -203,7 +198,6 @@ void Connection::send_response_data() {
                         send_response_header();
                     }
                 } else {
-                    auto logger = LOGGER("Connection");
                     LOG4CPLUS_ERROR(logger, "error send_response_data()");
                     ChannelsManager::Instance().leave(self);
                 }

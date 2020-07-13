@@ -16,7 +16,6 @@ public:
     explicit Connection(boost::asio::ip::tcp::socket&& _socket):
         socket(std::move(_socket))
     {
-        auto logger = LOGGER("Connection");
         LOG4CPLUS_INFO(logger,
                        "new connection from " << socket.remote_endpoint().address().to_string()
                        << ":" << socket.remote_endpoint().port()
@@ -41,6 +40,8 @@ private:
     identifier_t client_id;
     std::string login;
     std::string password;
+
+    log4cplus::Logger logger = LOGGER("Connection");
 
 private:
     void read_request_header();

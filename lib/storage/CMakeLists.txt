@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(Storage_dir             storage)
 
+include_directories(../log)
+
 #****************************************************************************************************
 set(STORAGE_SRC
      database.h

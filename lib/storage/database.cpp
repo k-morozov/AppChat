@@ -17,7 +17,6 @@ std::string Database::create_table_logins = std::string("create table if not exi
 Database::Database()
 {
     int rc = sqlite3_open(db_name.c_str(), &db_ptr);
-    auto logger = LOGGER("Database");
     if(rc) {
         LOG4CPLUS_ERROR(logger, "Cannot open database " << sqlite3_errmsg(db_ptr));
         sqlite3_close(db_ptr);
@@ -60,7 +59,6 @@ void Database::save_text_message(text_request_ptr message) {
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
-        auto logger = LOGGER("Database");
         LOG4CPLUS_ERROR(logger, "SQL error " << err_msg2);
         sqlite3_free(err_msg2);
         sqlite3_close(db_ptr);
@@ -78,7 +76,6 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
             + std::to_string(roomid)
             + std::string(";");
 
-    auto logger = LOGGER("Database");
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
         LOG4CPLUS_ERROR(logger, "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr));
         sqlite3_close(db_ptr);
@@ -117,7 +114,6 @@ void Database::add_logins(std::string login, identifier_t login_id, std::string 
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
-        auto logger = LOGGER("Database");
         LOG4CPLUS_ERROR(logger, "SQL error " << err_msg2);
         sqlite3_free(err_msg2);
         sqlite3_close(db_ptr);
@@ -134,7 +130,6 @@ identifier_t Database::get_loginid(std::string login) const {
             + login
             + std::string("';");
 
-    auto logger = LOGGER("Database");
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
         LOG4CPLUS_ERROR(logger, "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr));
         sqlite3_close(db_ptr);
@@ -169,7 +164,6 @@ identifier_t Database::check_client(std::string login, std::string password) con
             + login
             + std::string("';");
 
-    auto logger = LOGGER("Database");
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
         LOG4CPLUS_ERROR(logger, "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr));
         sqlite3_close(db_ptr);

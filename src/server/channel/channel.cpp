@@ -4,7 +4,6 @@
 
 void Channel::join(subscriber_ptr new_subsciber) {
     std::string message(new_subsciber->get_login() + " joined to room_id=" + std::to_string(channel_id));
-    auto logger = LOGGER("Channel");
     LOG4CPLUS_INFO(logger, new_subsciber->get_login() << ": " << message);
     text_response_ptr response = std::make_shared<TextResponse>("server", message);
     notification(response);

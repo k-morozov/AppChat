@@ -10,7 +10,6 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
         it->second->join(new_sub);
     }
     else {
-        auto logger = LOGGER("ChannelsManager");
         LOG4CPLUS_INFO(logger, "ChannelsManager::join");
         auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id));
         if (!flag) {
@@ -40,7 +39,6 @@ void ChannelsManager::send(text_response_ptr response) {
         it->second->notification(response);
     }
     else {
-        auto logger = LOGGER("ChannelsManager");
         LOG4CPLUS_ERROR(logger, "no room room_id=" << response->get_roomid());
     }
 }
@@ -49,7 +47,6 @@ void ChannelsManager::leave(subscriber_ptr sub) {
     auto it = clients_in_room.find(sub->get_client_id());
     if (it==clients_in_room.end()) return;
     auto room_id = it->second;
-    auto logger = LOGGER("ChannelsManager");
     if (auto it=channels.find(room_id); it!=channels.end()) {
         it->second->leave(sub);
         clients_in_room.erase(sub->get_client_id());
