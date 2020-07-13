@@ -35,7 +35,7 @@ set(TESTS_SOURSES
     ${Tests}/test_response.cpp
 )
 #****************************************************************************************************
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 #****************************************************************************************************
 add_executable(${TESTS_BIN}     ${TESTS_SOURSES})
