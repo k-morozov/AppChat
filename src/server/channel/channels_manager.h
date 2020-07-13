@@ -2,6 +2,7 @@
 #define CHANNELSMANAGER_H
 
 #include <channel/channel.h>
+#include <logger.h>
 
 class ChannelsManager
 {

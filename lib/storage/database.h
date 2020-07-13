@@ -4,6 +4,7 @@
 #include <protocol.h>
 #include <deque>
 #include <sqlite3.h>
+#include <../log/logger.h>
 
 class Database
 {
