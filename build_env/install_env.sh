@@ -1,4 +1,4 @@
-#! /bin/bash
+#! bin/bash
 
 # install boost
 BOOST_VER=73
