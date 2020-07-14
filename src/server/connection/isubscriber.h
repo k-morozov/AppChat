@@ -6,6 +6,9 @@
 #include <string>
 #include <protocol.h>
 
+/**
+ * @brief Subscriber Interface 
+ */
 class ISubscriber
 {
 public:

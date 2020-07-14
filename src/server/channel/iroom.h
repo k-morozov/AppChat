@@ -7,6 +7,10 @@
 #include <connection/isubscriber.h>
 #include <protocol.h>
 
+/**
+ * @brief Room interface
+ * 
+ */
 class IRoom
 {
 public:
