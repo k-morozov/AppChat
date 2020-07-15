@@ -11,6 +11,8 @@
  * @brief Channel class
  * 
  * @details Implement IRoom interface
+ * 
+ * @todo override virtual destructor to avoid potential problems in further
  */
 class Channel : public IRoom
 {
@@ -29,13 +31,17 @@ public:
 
     /**
      * @brief Join a user to channel
+     * 
+     * @param subscriber sbscriber who is joining this channel
      */
-    virtual void join(subscriber_ptr) override;
+    virtual void join(subscriber_ptr subscriber) override;
     
     /**
      * @brief Leave a user from channel
+     * 
+     * @param subscriber sbscriber who is leaving this channel
      */
-    virtual void leave(subscriber_ptr) override;
+    virtual void leave(subscriber_ptr subscriber) override;
     
     /**
      * @brief Notify all channel subscribers about new message

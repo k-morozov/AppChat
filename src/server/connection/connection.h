@@ -30,16 +30,18 @@ public:
     }
 
     /**
-     * @brief Entry point to handle incoming request
+     * @brief Entry point to handle incoming requests
      */
     virtual void start() override {
         read_request_header();
     }
 
     /**
-     * @brief Send response to the client
+     * @brief Send response message to the client
+     * 
+     * @param response response needs to be sent
      */
-    virtual void sendme(text_response_ptr) override;
+    virtual void sendme(text_response_ptr response) override;
 
     /**
      * @brief Get the client id object
