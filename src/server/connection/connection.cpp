@@ -55,17 +55,17 @@ void Connection::read_request_body(registr_request_ptr request) {
     auto self(shared_from_this());
     boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
         [this, self, request](boost::system::error_code error, std::size_t) {
-            if (!error) {
+            if (!error && db != nullptr) {
                 login = request->get_login();
                 password = request->get_password();
 
                 LOG4CPLUS_INFO(logger, "login=" << request->get_login() << ", pwd=" << request->get_password());
 
                 // @todo new generation login_id and check password
-                client_id = Database::Instance().get_loginid(login);
+                client_id = db->get_loginid(login);
                 if (client_id==-1) {
                     client_id = generate_client_id();
-                    Database::Instance().add_logins(login, client_id, password);
+                    db->add_logins(login, client_id, password);
                 }
                 else {
                     LOG4CPLUS_WARN(logger, "this client was add to db early");
@@ -95,13 +95,13 @@ void Connection::read_request_body(autor_request_ptr request) {
     auto self(shared_from_this());
     boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
         [this, self, request](boost::system::error_code error, std::size_t) {
-            if (!error) {
+            if (!error && db != nullptr) {
                 login = request->get_login();
                 password = request->get_password();
 
                 LOG4CPLUS_INFO(logger, "login=" << request->get_login() << ", pwd=" << request->get_password());
 
-                client_id = Database::Instance().check_client(login, password);
+                client_id = db->check_client(login, password);
 
                 input_res_ptr response = std::make_shared<AutorisationResponse>(client_id);
                 LOG4CPLUS_INFO(logger,
@@ -110,7 +110,7 @@ void Connection::read_request_body(autor_request_ptr request) {
                                << ", logid=" << response->get_loginid());
 
                 if (client_id!=-1) {
-                    Database::Instance().add_logins(login, response->get_loginid(), password);
+                    db->add_logins(login, response->get_loginid(), password);
                 }
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
@@ -128,7 +128,7 @@ void Connection::read_request_body(text_request_ptr request) {
     auto self(shared_from_this());
     boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
         [this, self, request](boost::system::error_code error, std::size_t) {
-            if (!error) {
+            if (!error && db != nullptr) {
                 login = request->get_login();
                 auto roomid = request->get_roomid();
                 auto text = request->get_message();
@@ -136,7 +136,7 @@ void Connection::read_request_body(text_request_ptr request) {
                 LOG4CPLUS_INFO(logger, "login=" << login << ", roomid=" << roomid << ", text="<<text);
                 text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
                 ChannelsManager::Instance().send(response);
-                Database::Instance().save_text_message(request);
+                db->save_text_message(request);
 
                 read_request_header();
             }
@@ -158,7 +158,7 @@ void Connection::read_request_body(join_room_request_ptr request) {
                 auto new_roomid = request->get_roomid();
 
                 LOG4CPLUS_INFO(logger, "roomid=" << new_roomid);
-                ChannelsManager::Instance().join(self, new_roomid);
+                ChannelsManager::Instance().join(self, new_roomid, db);
 
                 read_request_header();
             }

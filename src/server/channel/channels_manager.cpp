@@ -4,14 +4,15 @@ ChannelsManager::ChannelsManager()
 {
 }
 
-void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
+void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, database_ptr db) {
     if (auto it=channels.find(room_id); it!=channels.end()) {
         clients_in_room.emplace(new_sub->get_client_id(), room_id);
         it->second->join(new_sub);
     }
     else {
         LOG4CPLUS_INFO(logger, "ChannelsManager::join");
-        auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id));
+        auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id, db));
+        
         if (!flag) {
             LOG4CPLUS_WARN(logger, "Non create");
         }

@@ -12,7 +12,7 @@ public:
         return manager;
     }
 
-    void join(subscriber_ptr, identifier_t room_id);
+    void join(subscriber_ptr, identifier_t room_id, database_ptr db);
     void send(text_response_ptr);
     void leave(subscriber_ptr);
 

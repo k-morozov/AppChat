@@ -13,8 +13,9 @@
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
 public:
-    explicit Connection(boost::asio::ip::tcp::socket&& _socket):
-        socket(std::move(_socket))
+    explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
+        socket(std::move(_socket)),
+        db(_db)
     {
         LOG4CPLUS_INFO(logger,
                        "new connection from " << socket.remote_endpoint().address().to_string()
@@ -24,7 +25,7 @@ public:
 
     virtual void start() override {
         read_request_header();
-    }
+   }
 
     virtual void sendme(text_response_ptr) override;
 
@@ -40,6 +41,8 @@ private:
     identifier_t client_id;
     std::string login;
     std::string password;
+
+    database_ptr db;
 
     log4cplus::Logger logger = LOGGER("Connection");
 

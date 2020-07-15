@@ -11,10 +11,14 @@
 class Channel : public IRoom
 {
 public:
-    Channel(identifier_t room = 0) : channel_id(room)
+    Channel(identifier_t room, database_ptr db) : channel_id(room)
     {
-        history_room = Database::Instance().load_history(channel_id);
-        LOG4CPLUS_INFO(logger, "Create channel_id=" << channel_id);
+        if (db == nullptr) {
+            LOG4CPLUS_ERROR(logger, "Failed to load history. Database pointer is nullptr.");
+        } else {
+            history_room = db->load_history(channel_id);
+            LOG4CPLUS_INFO(logger, "Create channel_id=" << channel_id);
+        }
     }
 
     virtual void join(subscriber_ptr) override;
