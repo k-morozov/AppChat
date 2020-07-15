@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(Storage_dir             storage)
 
-include_directories(../log)
-
 #****************************************************************************************************
 set(STORAGE_SRC
      database.h
@@ -22,4 +20,4 @@ target_include_directories(${STORAGE_LIB_NAME} PUBLIC .)
 #****************************************************************************************************
 find_package(SQLite3 REQUIRED)
 
-target_link_libraries (${STORAGE_LIB_NAME} ${SQLite3_LIBRARIES} ${PROTOCOL_LIB_NAME})
+target_link_libraries (${STORAGE_LIB_NAME} ${SQLite3_LIBRARIES} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})
