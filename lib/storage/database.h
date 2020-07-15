@@ -4,7 +4,6 @@
 #include <protocol.h>
 #include <deque>
 #include <sqlite3.h>
-#include <logger.h>
 
 class Database
 {
@@ -32,8 +31,6 @@ private:
     sqlite3* db_ptr;
     static std::string create_table_history;
     static std::string create_table_logins;
-
-    log4cplus::Logger logger = LOGGER("Database");
 };
 
 #endif // DATABASE_H

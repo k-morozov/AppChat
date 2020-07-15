@@ -10,24 +10,22 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id) {
         it->second->join(new_sub);
     }
     else {
-        LOG4CPLUS_INFO(logger, "ChannelsManager::join");
+        std::cout << "ChannelsManager::join" << std::endl;
         auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id));
         if (!flag) {
-            LOG4CPLUS_WARN(logger, "Non create");
+            std::cout << "Non create" << std::endl;
         }
         // add check
         new_it->second->join(new_sub);
 
         auto [it2, error] = clients_in_room.emplace(new_sub->get_client_id(), room_id);
         if (!error) {
-            LOG4CPLUS_INFO(logger,
-                           "Non add subsciber client_id="<< it2->first
-                           << " in room_id=" << it2->second);
+            std::cout << "Non add subsciber client_id="<< it2->first
+                                  << " in room_id=" << it2->second << std::endl;
         }
         else {
-            LOG4CPLUS_INFO(logger,
-                            "New subsciber client_id="<< it2->first
-                            << "in room_id=" << it2->second);
+            std::cout << "New subsciber client_id="<< it2->first
+                      << "in room_id=" << it2->second << std::endl;
         }
     }
 
@@ -39,7 +37,7 @@ void ChannelsManager::send(text_response_ptr response) {
         it->second->notification(response);
     }
     else {
-        LOG4CPLUS_ERROR(logger, "no room room_id=" << response->get_roomid());
+        std::cerr << "no room room_id=" << response->get_roomid() << std::endl;
     }
 }
 
@@ -51,13 +49,11 @@ void ChannelsManager::leave(subscriber_ptr sub) {
         it->second->leave(sub);
         clients_in_room.erase(sub->get_client_id());
         clientid_to_login.erase(sub->get_client_id());
-
-        LOG4CPLUS_INFO(logger,
-                       "client_id=" << sub->get_client_id()
-                       << " is leave from room_id=" << room_id);
+        std::cout << "client_id=" << sub->get_client_id()
+                  << " is leave from room_id=" << room_id << std::endl;
     }
     else {
-        LOG4CPLUS_ERROR(logger, "no room room_id=" << room_id);
+        std::cerr << "no room room_id=" << room_id << std::endl;
     }
 }
 

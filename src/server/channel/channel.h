@@ -6,7 +6,6 @@
 #include <deque>
 #include <channel/iroom.h>
 #include <database.h>
-#include <logger.h>
 
 class Channel : public IRoom
 {
@@ -14,7 +13,7 @@ public:
     Channel(identifier_t room = 0) : channel_id(room)
     {
         history_room = Database::Instance().load_history(channel_id);
-        LOG4CPLUS_INFO(logger, "Create channel_id=" << channel_id);
+        std::cout << "Create channel_id=" << channel_id << std::endl;
     }
 
     virtual void join(subscriber_ptr) override;
@@ -32,7 +31,6 @@ private:
     const identifier_t channel_id;
 
     std::deque<text_response_ptr> history_room;
-    log4cplus::Logger logger = LOGGER("Channel");
 };
 
 using channel_ptr = std::shared_ptr<Channel>;
