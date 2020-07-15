@@ -8,6 +8,7 @@
 #include <connection/isubscriber.h>
 #include <channel/channels_manager.h>
 #include <protocol.h>
+#include <logger.h>
 
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
@@ -15,8 +16,10 @@ public:
     explicit Connection(boost::asio::ip::tcp::socket&& _socket):
         socket(std::move(_socket))
     {
-        std::cout << "new connection from " << socket.remote_endpoint() .address().to_string()
-                  << ":" << socket.remote_endpoint() .port() << std::endl;
+        LOG4CPLUS_INFO(logger,
+                       "new connection from " << socket.remote_endpoint().address().to_string()
+                       << ":" << socket.remote_endpoint().port()
+                       );
     }
 
     virtual void start() override {
@@ -37,6 +40,8 @@ private:
     identifier_t client_id;
     std::string login;
     std::string password;
+
+    log4cplus::Logger logger = LOGGER("Connection");
 
 private:
     void read_request_header();
