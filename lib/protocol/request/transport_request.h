@@ -22,7 +22,7 @@ public:
     virtual uint32_t get_length_data() const override { return LengthRequest;}
 
 protected:
-    static constexpr auto LengthRequest = Block::LoginName + Block::RoomId + Block::TextMessage;
+    static constexpr auto LengthRequest = Block::LoginName + Block::RoomId + Block::DateTime + Block::TextMessage;
     char __data[LengthRequest];
 };
 
@@ -38,7 +38,16 @@ public:
         std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
         std::snprintf(__data, Block::LoginName, "%s", login.data());
         std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
-        std::snprintf(__data+Block::LoginName+Block::RoomId, Block::TextMessage, "%s", text.data());
+        std::snprintf(__data+Block::LoginName+Block::RoomId+Block::DateTime, Block::TextMessage, "%s", text.data());
+    }
+
+    TextRequest(const std::string& login, identifier_t roomid, const std::string& datetime, const std::string& text) {
+//        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
+        std::snprintf(__data, Block::LoginName, "%s", login.data());
+        std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
+        std::snprintf(__data+Block::LoginName+Block::RoomId, Block::DateTime, "%s", datetime.data());
+        std::snprintf(__data+Block::LoginName+Block::RoomId+Block::DateTime, Block::TextMessage, "%s", text.data());
     }
 
     TextRequest(request_ptr request) {
@@ -47,8 +56,12 @@ public:
         std::memcpy(header+Block::VersionProtocol, &type_request, Block::Command);
     }
 
-    const char* get_message() const {
+    const char* get_datetime() const {
         return __data+Block::LoginName+Block::RoomId;
+    }
+
+    const char* get_message() const {
+        return __data+Block::LoginName+Block::RoomId+Block::DateTime;
     }
 private:
     const TypeCommand type_request = TypeCommand::EchoRequest;

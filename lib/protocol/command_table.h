@@ -21,6 +21,7 @@ namespace Block {
     constexpr uint8_t Password          = 32;
     constexpr uint8_t LoginId           = sizeof(identifier_t);
     constexpr uint8_t RoomId            = sizeof(identifier_t);
+    constexpr uint8_t DateTime          = 16;
     constexpr uint8_t TextMessage       = 255;
 
     constexpr uint8_t Header            = VersionProtocol + Command;
