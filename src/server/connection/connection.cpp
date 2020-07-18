@@ -138,7 +138,6 @@ void Connection::read_request_body(text_request_ptr request) {
 
                 LOG4CPLUS_INFO(logger, "login=" << login << ", roomid=" << roomid << ", datetime=" << datetime << ", text="<<text);
                 text_response_ptr response = std::make_shared<TextResponse>(login, datetime, text, roomid);
-                LOG4CPLUS_INFO(logger, "response get datetime" << response->get_datetime());
                 ChannelsManager::Instance().send(response);
                 Database::Instance().save_text_message(request);
 
