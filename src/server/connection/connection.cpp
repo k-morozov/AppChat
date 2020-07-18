@@ -1,5 +1,7 @@
 #include <connection/connection.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 void Connection::sendme(text_response_ptr response) {
     bool write_in_progress = !packets_to_client.empty();
     packets_to_client.push_back(response);
@@ -131,10 +133,12 @@ void Connection::read_request_body(text_request_ptr request) {
             if (!error) {
                 login = request->get_login();
                 auto roomid = request->get_roomid();
+                auto datetime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::universal_time());
                 auto text = request->get_message();
 
-                LOG4CPLUS_INFO(logger, "login=" << login << ", roomid=" << roomid << ", text="<<text);
-                text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
+                LOG4CPLUS_INFO(logger, "login=" << login << ", roomid=" << roomid << ", datetime=" << datetime << ", text="<<text);
+                text_response_ptr response = std::make_shared<TextResponse>(login, datetime, text, roomid);
+                LOG4CPLUS_INFO(logger, "response get datetime" << response->get_datetime());
                 ChannelsManager::Instance().send(response);
                 Database::Instance().save_text_message(request);
 

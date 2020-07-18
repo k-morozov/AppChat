@@ -12,12 +12,9 @@ Control::Control() {
 
     QObject::connect(&w, &MainWindow::send_change_room, this, &Control::change_room);
 
-    QObject::connect(this, SIGNAL(send_text_to_gui(const std::string&, const std::string&)),
-                     &w, SLOT(print_text(const std::string&, const std::string&)));
+    QObject::connect(this, &Control::send_text_to_gui, &w, &MainWindow::print_text);
 
     QObject::connect(&w, &MainWindow::send_text_data, this, &Control::get_text_from_gui);
-
-
 }
 
 void Control::connect_to_server(const std::string& login, const std::string& password, TypeCommand command) {

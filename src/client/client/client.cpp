@@ -1,6 +1,17 @@
 #include <client/client.h>
 //#include <charconv>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/c_local_time_adjustor.hpp>
+
+constexpr auto utc_to_local = [](const std::string& datetime) {
+    return boost::posix_time::to_simple_string(
+        boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local(
+            boost::posix_time::from_iso_string(datetime)
+        )
+    );
+};
+
 void Client::write(const std::string& message) {
     text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
 
@@ -196,8 +207,10 @@ void Client::read_response_data(text_response_ptr packet) {
     boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
-                std::cout << packet->get_login() << ": " << packet->get_message() << std::endl;
-                send_text(packet->get_login(), packet->get_message());
+                auto local_datetime = utc_to_local(packet->get_datetime());
+
+                std::cout << "[" << local_datetime << "] " << packet->get_login() << ": " << packet->get_message() << std::endl;
+                send_text(packet->get_login(), local_datetime, packet->get_message());
 
                 read_response_header();
             }

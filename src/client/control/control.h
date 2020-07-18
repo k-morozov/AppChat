@@ -19,7 +19,7 @@ public:
     }
 
 signals:
-    void send_text_to_gui(const std::string&, const std::string&);
+    void send_text_to_gui(const std::string&, const std::string&, const std::string&);
 
 public slots:
     void autorisation(const std::string& login, const std::string& password) {
@@ -40,8 +40,8 @@ public slots:
         client->write(std::make_shared<TextRequest>(login, room_id, text));
     }
 
-    void text_from_client(const std::string& from, const std::string& text) {
-        send_text_to_gui(from, text);
+    void text_from_client(const std::string& from, const std::string& datetime, const std::string& text) {
+        send_text_to_gui(from, datetime, text);
     }
 
     void change_room(int new_room_id) {

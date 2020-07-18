@@ -63,7 +63,7 @@ private:
 
 
 signals:
-    void send_text(const std::string& from, const std::string& text);
+    void send_text(const std::string& from, const std::string& datetime , const std::string& text);
 
     void send_input_code(InputCode);
 //    void good_input();
