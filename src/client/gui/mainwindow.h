@@ -14,34 +14,112 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+/**
+ * @brief MainWindow
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
+    /**
+     * @brief Construct ManWindow
+     * 
+     * @param parent QObejct parent that is neccessary to support Qt memory system
+     */
     MainWindow(QWidget *parent = nullptr);
+
+    /**
+     * @brief Destroy the Main Window object
+     * 
+     */
     ~MainWindow();
 
+    /**
+     * @brief Get message from UI
+     * 
+     * @return std::string 
+     */
     std::string get_message();
 
 signals:
-    void send_autorisation_info(const std::string&, const std::string&);
-    void send_registration_info(const std::string&, const std::string&);
+    /**
+     * @brief Notify user is authorizing on the server
+     * 
+     * @param login user's login
+     * @param password user's password
+     */
+    void send_autorisation_info(const std::string& login, const std::string& password);
 
-    void send_text_data(const std::string&, const std::string&, int);
-    void send_change_room(int);
+    /**
+     * @brief Notify user is registering on the server
+     * 
+     * @param login user's login
+     * @param password user's password
+     */
+    void send_registration_info(const std::string& login, const std::string& password);
+
+    /**
+     * @brief Notify user is sending message
+     * 
+     * @param login user's login
+     * @param text message's content
+     * @param room_id room where user is subscriber
+     */
+    void send_text_data(const std::string& login, const std::string& text, int room_id);
+
+    /**
+     * @brief Change the room
+     * 
+     * @param new_room_id id of the room user wants to join
+     */
+    void send_change_room(int new_room_id);
 
 public slots:
-    void print_text(const std::string&, const std::string&, const std::string&);
+    /**
+     * @brief show incoming message
+     * 
+     * @param from sender's login
+     * @param datetime 
+     * @param message message's content
+     */
+    void print_text(const std::string& login, const std::string& datetime, const std::string& message);
 
 private slots:
+    /**
+     * @brief Handle user pressed "Authorize"
+     */
     void on_push_autorisation_clicked();
+
+    /**
+     * @brief Handle user pressed "Register"
+     */
     void on_push_registration_clicked();
 
+    /**
+     * @brief Handle user pressed "Clicked"
+     */
     void on_push_send_clicked();
+    
+    /**
+     * @brief Handle user clicked change room
+     */
     void on_push_change_room_id_clicked();
+
+
+    /**
+     * @brief Handle correct input
+     */
     void good_input();
+    
     void handler_input_code(InputCode);
+
+    /**
+     * @brief Handle received input
+     * 
+     * @param input_code
+     */
+    void handler_input_code(InputCode input_code);
 private:
     Ui::MainWindow *ui;
 

@@ -49,6 +49,7 @@ private:
 
 /**
  * @brief The AutorisationResponse class
+ * @todo fix typo: Autorisation -> Authorization
  */
 class AutorisationResponse : public InputResponse {
 public:
@@ -75,6 +76,5 @@ using response_ptr = std::shared_ptr<Response>;
 using input_res_ptr = std::shared_ptr<InputResponse>;
 using registr_response_ptr = std::shared_ptr<RegistrationResponse>;
 using autor_response_ptr = std::shared_ptr<AutorisationResponse>;
-
 
 #endif // CONTROLRESPONSE_H
