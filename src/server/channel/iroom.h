@@ -7,16 +7,46 @@
 #include <connection/isubscriber.h>
 #include <protocol.h>
 
+/**
+ * @brief Room interface
+ * 
+ */
 class IRoom
 {
 public:
-    virtual ~IRoom() {}
+    
+    /**
+     * @brief Join a user to channel
+     * 
+     * @param subcriber sbscriber who is joining this room
+     */
+    virtual void join(subscriber_ptr subcriber) = 0;
 
-    virtual void join(subscriber_ptr) = 0;
-    virtual void leave(subscriber_ptr) = 0;
-    virtual void notification(text_response_ptr) = 0;
+    /**
+     * @brief Leave a user from channel
+     * 
+     * @param subscriber sbscriber who is leaving this room
+     */
+    virtual void leave(subscriber_ptr subscriber) = 0;
 
+    /**
+     * @brief Notify all room's subscribers about new message
+     * @param subscriber
+     */
+    virtual void notification(text_response_ptr subscriber) = 0;
+    
+    /**
+     * @brief Get the room id object
+     * 
+     * @return identifier_t 
+     */
     virtual identifier_t get_room_id() const = 0;
+
+    /**
+     * @brief Default virtual destructor
+     * 
+     */
+    virtual ~IRoom() = default;
 };
 
 using iroom_ptr = std::shared_ptr<IRoom>;
