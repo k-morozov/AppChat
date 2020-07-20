@@ -70,3 +70,15 @@ find_library(UnitTests gtest)
 
 target_link_libraries (${TESTS_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${UnitTests} ${PROTOCOL_LIB_NAME})
 #****************************************************************************************************
+
+##### Documentation
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+    set(DOXYFILE ${CMAKE_SOURCE_DIR}/Doxyfile)
+    add_custom_target(doc_doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen")
+    unset(DOXYFILE)
+endif()
+####

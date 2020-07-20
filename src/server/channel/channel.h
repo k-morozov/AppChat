@@ -8,10 +8,27 @@
 #include <database.h>
 #include <logger.h>
 
+/**
+ * @brief Channel class
+ * 
+ * @details Implement IRoom interface
+ * 
+ * @todo override virtual destructor to avoid potential problems in further
+ */
 class Channel : public IRoom
 {
 public:
+<<<<<<< HEAD
     Channel(identifier_t room, database_ptr db) : channel_id(room)
+=======
+
+    /**
+     * @brief Construct a new Channel
+     * 
+     * @param room 
+     */
+    Channel(identifier_t room = 0) : channel_id(room)
+>>>>>>> origin/master
     {
         if (db == nullptr) {
             LOG4CPLUS_ERROR(logger, "Failed to load history. Database pointer is nullptr.");
@@ -21,11 +38,32 @@ public:
         }
     }
 
-    virtual void join(subscriber_ptr) override;
-    virtual void leave(subscriber_ptr) override;
+    /**
+     * @brief Join a user to channel
+     * 
+     * @param subscriber sbscriber who is joining this channel
+     */
+    virtual void join(subscriber_ptr subscriber) override;
+    
+    /**
+     * @brief Leave a user from channel
+     * 
+     * @param subscriber sbscriber who is leaving this channel
+     */
+    virtual void leave(subscriber_ptr subscriber) override;
+    
+    /**
+     * @brief Notify all channel subscribers about new message
+     * @param response 
+     */
     virtual void notification(text_response_ptr response) override;
 
 
+    /**
+     * @brief Get the room id object
+     * 
+     * @return identifier_t 
+     */
     virtual identifier_t get_room_id() const override { return channel_id; }
 
 private:

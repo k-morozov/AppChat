@@ -10,6 +10,6 @@ void init_logger() {
 
     log4cplus::SharedAppenderPtr file_appender(new log4cplus::RollingFileAppender(LOG4CPLUS_TEXT("Server.log"), 5 * 1024 * 1024, 5));
     file_appender->setName(LOG4CPLUS_TEXT("File_appender"));
-    file_appender->setLayout(std::auto_ptr<log4cplus::Layout>(new log4cplus::PatternLayout(LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} [%-5p] <%x> %c - %m%n"))));
+    file_appender->setLayout(std::unique_ptr<log4cplus::Layout>(new log4cplus::PatternLayout(LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} [%-5p] <%x> %c - %m%n"))));
     log4cplus::Logger::getRoot().addAppender(file_appender);
 }

@@ -8,8 +8,16 @@
 
 using boost::asio::ip::tcp;
 
+/**
+ * @brief Async TCP Server.
+ * 
+ * @details Async TCP Server handling incoming tcp conntection on port 7777.
+ */
 class Server {
 public:
+    /**
+     * @brief Construct a new Server object.
+     */
     Server():
         endpoint(boost::asio::ip::tcp::v4(), 7777),
         acceptor(io_service, endpoint),
@@ -18,6 +26,9 @@ public:
         scan_acception();
     }
 
+    /**
+     * @brief Run server.
+     */
     void run() {
         io_service.run();
     }
@@ -31,6 +42,12 @@ private:
     std::vector<connection_ptr> server_connections;
 
 private:
+    /**
+     * @brief Handle new connected clint.
+     * 
+     * @details It handles client and after that call new acception recursively.
+     *
+     */
     void scan_acception() {
         acceptor.async_accept([this](const boost::system::error_code& error, tcp::socket sock) {
             if (!error) {

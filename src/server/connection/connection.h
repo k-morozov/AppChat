@@ -10,12 +10,27 @@
 #include <protocol.h>
 #include <logger.h>
 
+/**
+ * @brief Connection class
+ * 
+ * @details It serves connected tcp client
+ */
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
 public:
+<<<<<<< HEAD
     explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
         socket(std::move(_socket)),
         db(_db)
+=======
+    /**
+     * @brief Construct a new Connection object
+     * 
+     * @param _socket Accepted client socket.
+     */
+    explicit Connection(boost::asio::ip::tcp::socket&& _socket):
+        socket(std::move(_socket))
+>>>>>>> origin/master
     {
         LOG4CPLUS_INFO(logger,
                        "new connection from " << socket.remote_endpoint().address().to_string()
@@ -23,15 +38,38 @@ public:
                        );
     }
 
+    /**
+     * @brief Entry point to handle incoming requests
+     */
     virtual void start() override {
         read_request_header();
    }
 
-    virtual void sendme(text_response_ptr) override;
+    /**
+     * @brief Send response message to the client
+     * 
+     * @param response response needs to be sent
+     */
+    virtual void sendme(text_response_ptr response) override;
 
+    /**
+     * @brief Get the client id object
+     * 
+     * @details Returns current client id
+     * 
+     * @return identifier_t 
+     */
     virtual identifier_t get_client_id() const override {
         return client_id;
     }
+
+    /**
+     * @brief Get the login
+     * 
+     * @details Return client's login
+     * 
+     * @return const std::string& 
+     */
     virtual const std::string& get_login() const override { return login; }
 
 private:
@@ -47,16 +85,55 @@ private:
     log4cplus::Logger logger = LOGGER("Connection");
 
 private:
+    /**
+     * @brief Parse headers of request.
+     * 
+     * @details It parses requests headers and
+     * calls parsing methods for request body when it is neccessary.
+     */
     void read_request_header();
 
+
+    /**
+     * @brief Handle registration request.
+     */
     void read_request_body(registr_request_ptr);
+
+    /**
+     * @brief Handle author request.
+     */
     void read_request_body(autor_request_ptr);
+
+    /**
+     * @brief Handle incoming message request.
+     */
     void read_request_body(text_request_ptr);
+
+    /**
+     * @brief Handle room joining request.
+     */
     void read_request_body(join_room_request_ptr);
 
+    /**
+     * @brief Entry point for sending response.
+     * 
+     * @details It sends response headers and
+     * if successeed call sending response data.
+     */
     void send_response_header();
+
+    /**
+     * @brief Send response data.
+     */
     void send_response_data();
 
+    /**
+     * @brief Client id generator.
+     * 
+     * @details It is quite simple and return incremented integer value every time.
+     * 
+     * @return identifier_t 
+     */
     identifier_t generate_client_id() {
         static identifier_t id = 0;
         return ++id;
