@@ -28,3 +28,6 @@ sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/gtest/libgtest_main.a
 
 #sqlite
 sudo apt-get install sqlite3 libsqlite3-dev
+
+#doxygen
+sudo apt install doxygen
