@@ -15,7 +15,8 @@ std::string Database::create_table_logins = std::string("create table if not exi
 
 
 
-Database::Database()
+Database::Database(const std::string& _db_name)
+    : db_name(_db_name)
 {
     int rc = sqlite3_open(db_name.c_str(), &db_ptr);
     if(rc) {
