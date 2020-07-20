@@ -22,9 +22,11 @@ public:
      * @brief Construct a new Connection object
      * 
      * @param _socket Accepted client socket.
+     * @param _db
      */
-    explicit Connection(boost::asio::ip::tcp::socket&& _socket):
-        socket(std::move(_socket))
+    explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
+        socket(std::move(_socket)),
+        db(_db)
     {
         LOG4CPLUS_INFO(logger,
                        "new connection from " << socket.remote_endpoint().address().to_string()
@@ -37,7 +39,7 @@ public:
      */
     virtual void start() override {
         read_request_header();
-    }
+   }
 
     /**
      * @brief Send response message to the client
@@ -73,6 +75,8 @@ private:
     identifier_t client_id;
     std::string login;
     std::string password;
+
+    database_ptr db;
 
     log4cplus::Logger logger = LOGGER("Connection");
 
