@@ -112,8 +112,6 @@ private slots:
      */
     void good_input();
     
-    void handler_input_code(InputCode);
-
     /**
      * @brief Handle received input
      * 
