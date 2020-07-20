@@ -18,19 +18,15 @@
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
 public:
-<<<<<<< HEAD
-    explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
-        socket(std::move(_socket)),
-        db(_db)
-=======
     /**
      * @brief Construct a new Connection object
      * 
      * @param _socket Accepted client socket.
+     * @param _db
      */
-    explicit Connection(boost::asio::ip::tcp::socket&& _socket):
-        socket(std::move(_socket))
->>>>>>> origin/master
+    explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
+        socket(std::move(_socket)),
+        db(_db)
     {
         LOG4CPLUS_INFO(logger,
                        "new connection from " << socket.remote_endpoint().address().to_string()

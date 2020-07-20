@@ -21,23 +21,20 @@ public:
         static ChannelsManager manager;
         return manager;
     }
-
-<<<<<<< HEAD
-    void join(subscriber_ptr, identifier_t room_id, database_ptr db);
-=======
     /**
      * @brief Join user to room by room_id
      * 
      * @param subscriber room's subscriber
      * 
      * @param room_id room where subscriber joining
+     *
+     * @param db
      */
-    void join(subscriber_ptr subscriber, identifier_t room_id);
+    void join(subscriber_ptr, identifier_t room_id, database_ptr db);
 
     /**
      * @brief Send message to specific room and specific user
      */
->>>>>>> origin/master
     void send(text_response_ptr);
 
     /**
