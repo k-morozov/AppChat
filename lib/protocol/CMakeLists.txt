@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROTOCOL_SRC
     protocol.h protocol.cpp
     command_table.h
+    datetime.h
 
     request/request.h
     request/input_request.h request/input_request.cpp
