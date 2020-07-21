@@ -80,10 +80,10 @@ public slots:
      * @brief show incoming message
      * 
      * @param from sender's login
-     * @param datetime 
      * @param message message's content
+     * @param dt date and time of sending the text
      */
-    void print_text(const std::string& login, const std::string& datetime, const std::string& message);
+    void print_text(const std::string& login, const std::string& message, DateTime dt);
 
 private slots:
     /**

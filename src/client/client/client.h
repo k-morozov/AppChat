@@ -150,10 +150,10 @@ signals:
      * @brief 
      * 
      * @param from sender's login
-     * @param datetime
      * @param text 
+     * @param dt date and time of sending the text
      */
-    void send_text(const std::string& from, const std::string& datetime , const std::string& text);
+    void send_text(const std::string& from, const std::string& text, DateTime dt);
 
     /**
      * @brief send input code

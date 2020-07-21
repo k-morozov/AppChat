@@ -6,6 +6,7 @@ Control::Control() {
     qRegisterMetaType<std::string>("std::string");
     qRegisterMetaType<QTextCursor>("QTextCursor");
     qRegisterMetaType<InputCode>("InputCode");
+    qRegisterMetaType<DateTime>("DateTime");
 
     QObject::connect(&w, &MainWindow::send_autorisation_info, this, &Control::autorisation);
     QObject::connect(&w, &MainWindow::send_registration_info, this, &Control::registration);

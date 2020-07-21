@@ -1,13 +1,10 @@
 #include <channel/channel.h>
 #include <sstream>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 void Channel::join(subscriber_ptr new_subsciber) {
     std::string message(new_subsciber->get_login() + " joined to room_id=" + std::to_string(channel_id));
     LOG4CPLUS_INFO(logger, new_subsciber->get_login() << ": " << message);
-    auto datetime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::universal_time());
-    text_response_ptr response = std::make_shared<TextResponse>("server", datetime ,message);
+    text_response_ptr response = std::make_shared<TextResponse>("server", message);
     notification(response);
     for(const auto& response:history_room) {
         new_subsciber->sendme(response);
@@ -25,9 +22,7 @@ void Channel::leave(subscriber_ptr subsciber) {
 
     std::string message(subsciber->get_login() + " leave from room_id=" + std::to_string(channel_id));
 
-    auto datetime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::universal_time());
-
-    text_response_ptr response = std::make_shared<TextResponse>("server", datetime, message);
+    text_response_ptr response = std::make_shared<TextResponse>("server", message);
     notification(response);
 }
 
