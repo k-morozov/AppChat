@@ -8,6 +8,7 @@ public:
     TransportResponse() {
         std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
     }
+
     virtual const void* get_data() const  override { return __data; }
     virtual void* get_data()  override { return __data; }
 
@@ -29,18 +30,27 @@ protected:
 class TextResponse : public TransportResponse {
 public:
     TextResponse(identifier_t roomid = 0) {
-        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        //std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
 
         std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
     }
 
     TextResponse(const std::string& login, const std::string& text, identifier_t roomid = 0) {
-        std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        //std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
         std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
         std::snprintf(__data, Block::LoginName, "%s", login.data());
         std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
-        std::snprintf(__data+Block::LoginName + Block::LoginId, Block::TextMessage, "%s", text.data());
+        std::snprintf(__data+Block::LoginName + Block::RoomId, Block::TextMessage, "%s", text.data());
+    }
+
+    TextResponse(const std::string& login, DateTime dt, const std::string& text, identifier_t roomid = 0) {
+        //std::memcpy(header, &PROTOCOL_VERS, Block::VersionProtocol);
+        std::memcpy(header+Block::VersionProtocol, &type_Response, Block::Command);
+        std::memcpy(header+Block::VersionProtocol+Block::Command, &dt, Block::Datetime);
+        std::snprintf(__data, Block::LoginName, "%s", login.data());
+        std::memcpy(__data+Block::LoginName, &roomid, Block::RoomId);
+        std::snprintf(__data+Block::LoginName + Block::RoomId, Block::TextMessage, "%s", text.data());
     }
 
     TextResponse(response_ptr response) {

@@ -75,6 +75,16 @@ signals:
      */
     void send_change_room(int new_room_id);
 
+public slots:
+    /**
+     * @brief show incoming message
+     * 
+     * @param from sender's login
+     * @param message message's content
+     * @param dt date and time of sending the text
+     */
+    void print_text(const std::string& login, const std::string& message, DateTime dt);
+
 private slots:
     /**
      * @brief Handle user pressed "Authorize"
@@ -90,16 +100,7 @@ private slots:
      * @brief Handle user pressed "Clicked"
      */
     void on_push_send_clicked();
-
-    /**
-     * @brief show incoming message
-     * 
-     * @param from sender's login
-     * 
-     * @param message message's content
-     */
-    void print_text(const std::string& from, const std::string& message);
-
+    
     /**
      * @brief Handle user clicked change room
      */
@@ -110,7 +111,7 @@ private slots:
      * @brief Handle correct input
      */
     void good_input();
-
+    
     /**
      * @brief Handle received input
      * 

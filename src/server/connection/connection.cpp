@@ -14,6 +14,9 @@ void Connection::read_request_header() {
     boost::asio::async_read(socket, boost::asio::buffer(request->get_header(), Block::Header),
                             [this, request](boost::system::error_code error, std::size_t) {
         if (!error) {
+            auto dt = DateTime::from_universal_to_local(request->get_datetime());
+            std::cout << "[" << dt.to_simple_date() << " " << dt.to_simple_time() << "] New request.\n";
+
             switch (request->get_type_data()) {
                 case TypeCommand::Unknown:
                     LOG4CPLUS_INFO(logger, get_command_str(request->get_type_data()) << "--> ");
@@ -59,7 +62,7 @@ void Connection::read_request_body(registr_request_ptr request) {
                 login = request->get_login();
                 password = request->get_password();
 
-                LOG4CPLUS_INFO(logger, "login=" << request->get_login() << ", pwd=" << request->get_password());
+                LOG4CPLUS_INFO(logger, "login=" << login << ", pwd=" << password);
 
                 // @todo new generation login_id and check password
                 client_id = db->get_loginid(login);

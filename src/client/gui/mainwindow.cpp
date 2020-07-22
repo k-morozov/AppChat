@@ -2,6 +2,8 @@
 #include "./ui_mainwindow.h"
 #include <QMessageBox>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -35,24 +37,25 @@ void MainWindow::on_push_autorisation_clicked()
 
 void MainWindow::on_push_send_clicked()
 {
+    using namespace boost::posix_time;
+
     auto message = ui->text_input->text();
     send_text_data(logon.toStdString(), message.toStdString(), roomid.toUInt());
 
     ui->text_input->clear();
     ui->text_output->setTextColor(QColor(50,205,50));
-    ui->text_output->append(logon + ": " + message);
+    ui->text_output->append("[" + QString::fromUtf8(to_simple_string(second_clock::local_time().time_of_day()).c_str()) + "] " + logon + ": " + message);
     ui->text_output->setTextColor(QColor(0,0,0));
 }
 
 
-void MainWindow::print_text(const std::string& from, const std::string& text) {
-    std::string s(from + ": " + text);
+void MainWindow::print_text(const std::string& from, const std::string& text, DateTime dt) {
+    std::string s("[" + dt.to_simple_time() + "] " + from + ": " + text);
     QString message(s.data());
     if (from=="server") {
         ui->text_output->setTextColor(QColor(255,0,0));
         ui->text_output->append(message);
         ui->text_output->setTextColor(QColor(0,0,0));
-
     }
     else {
         ui->text_output->append(message);

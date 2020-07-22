@@ -37,10 +37,10 @@ signals:
      * @brief Show reveived message
      * 
      * @param login message sender's login
-     * 
      * @param text message content
+     * @param dt date and time of sending the text
      */
-    void send_text_to_gui(const std::string& login, const std::string& text);
+    void send_text_to_gui(const std::string& login, const std::string& text, DateTime dt);
 
 public slots:
     /**
@@ -88,9 +88,10 @@ public slots:
      * 
      * @param from sender's login
      * @param text message content
+     * @param dt date and time of sending the text
      */
-    void text_from_client(const std::string& from, const std::string& text) {
-        send_text_to_gui(from, text);
+    void text_from_client(const std::string& from, const std::string& text, DateTime dt) {
+        send_text_to_gui(from, text, dt);
     }
 
     /**

@@ -10,6 +10,8 @@
 #include <unordered_map>
 #include <cassert>
 
+#include "datetime.h"
+
 constexpr uint32_t PROTOCOL_VERS = 2;
 
 using identifier_t = int32_t;
@@ -17,13 +19,14 @@ using identifier_t = int32_t;
 namespace Block {
     constexpr uint8_t VersionProtocol   = 2;
     constexpr uint8_t Command           = 2;
+    constexpr uint8_t Datetime          = sizeof(DateTime);
     constexpr uint8_t LoginName         = 16;
     constexpr uint8_t Password          = 32;
     constexpr uint8_t LoginId           = sizeof(identifier_t);
     constexpr uint8_t RoomId            = sizeof(identifier_t);
     constexpr uint8_t TextMessage       = 255;
 
-    constexpr uint8_t Header            = VersionProtocol + Command;
+    constexpr uint8_t Header            = VersionProtocol + Command + Datetime;
     constexpr uint8_t InputOption       = LoginName + Password;
 }
 
@@ -79,6 +82,8 @@ public:
 
     virtual TypeCommand get_type() const = 0;
     virtual TypeCommand get_type_data() const = 0;
+
+    virtual DateTime get_datetime() const = 0;
 
     virtual uint32_t get_length_data() const = 0;
 };

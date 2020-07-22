@@ -196,8 +196,10 @@ void Client::read_response_data(text_response_ptr packet) {
     boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
+                auto local_time = DateTime::from_universal_to_local(packet->get_datetime());
+
                 std::cout << packet->get_login() << ": " << packet->get_message() << std::endl;
-                send_text(packet->get_login(), packet->get_message());
+                send_text(packet->get_login(), packet->get_message(), local_time);
 
                 read_response_header();
             }

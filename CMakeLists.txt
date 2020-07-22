@@ -33,6 +33,7 @@ set(TESTS_SOURSES
     ${Tests}/startup_tests.cpp
     ${Tests}/test_request.cpp
     ${Tests}/test_response.cpp
+    ${Tests}/test_datetime.cpp
 )
 #****************************************************************************************************
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")

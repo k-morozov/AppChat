@@ -4,6 +4,7 @@ std::string Database::create_table_history = std::string("create table if not ex
         + std::string("(author varchar[") + std::to_string(Block::LoginName) + std::string("], ")
 //        + std::string("client_id integer, ")
         + std::string("room_id integer, ")
+        + std::string("datetime integer, ")
         + std::string("message varchar[") + std::to_string(Block::TextMessage) + std::string("]);");
 
 
@@ -50,10 +51,14 @@ Database::~Database() {
 }
 
 void Database::save_text_message(text_request_ptr message) {
+    const auto dt = message->get_datetime();
+    const std::string str_datetime = std::to_string(dt.year + 2000) + "-" + std::to_string(dt.month) + "-" + std::to_string(dt.day)
+        + " " + std::to_string(dt.hours) + ":" + std::to_string(dt.minutes) + ":" + std::to_string(dt.seconds);
 
     const std::string insert_query = std::string("insert into history values('")
                                       + std::string(message->get_login()) + std::string("', ")
-                                      + std::to_string(message->get_roomid()) + std::string(", '")
+                                      + std::to_string(message->get_roomid()) + std::string(", strftime('%s','")
+                                      + str_datetime + std::string("'), '")
                                       + std::string(message->get_message()) + std::string("');");
     char* err_msg2 = 0;
     int rc = sqlite3_exec(db_ptr, insert_query.c_str(),
@@ -73,7 +78,7 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
     bool found = false;
     sqlite3_stmt* stmt;
 
-    std::string sql = std::string("select * from history where room_id==")
+    std::string sql = std::string("select author, room_id, datetime(datetime, 'unixepoch'), message from history where room_id==")
             + std::to_string(roomid)
             + std::string(";");
 
@@ -86,10 +91,11 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
         LOG4CPLUS_INFO(logger,
                        (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
-                       << (const char *)sqlite3_column_blob(stmt, 2));
+                       << (const char *)sqlite3_column_blob(stmt, 2) << " " << (const char *)sqlite3_column_blob(stmt, 3));
         text_response_ptr response = std::make_shared<TextResponse>(
                 (const char *)sqlite3_column_blob(stmt, 0),
-                (const char *)sqlite3_column_blob(stmt, 2),
+                DateTime(boost::posix_time::time_from_string( (const char *)sqlite3_column_blob(stmt, 2) )),
+                (const char *)sqlite3_column_blob(stmt, 3),
                 sqlite3_column_int(stmt, 1));
         history_room.push_back(response);
         found=true;
