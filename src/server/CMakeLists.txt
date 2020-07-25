@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 
+add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
+
 set(Connection_dir          connection)
 set(Channel_dir             channel)
 
@@ -31,4 +33,6 @@ add_executable(${SERVER_BIN}  ${SERVER_SOURCES})
 target_include_directories(${SERVER_BIN} PUBLIC .)
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
-target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME})
+
+target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
+    ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
