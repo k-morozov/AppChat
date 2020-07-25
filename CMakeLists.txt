@@ -6,28 +6,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 #****************************************************************************************************
 set(SERVER_BIN  server)
 set(CLIENT_BIN  client)
 set(TESTS_BIN   tests)
 
 set(SRC     src)
-set(LIB     lib/)
+set(LIB     lib)
 
 set(Tests   ${SRC}/tests/)
 
-set(Server_src_dir      ${SRC}/server)
-set(Client_src_dir      ${SRC}/client)
-set(Protocol_lib_dir    ${LIB}protocol)
-set(Logger_lib_dir      ${LIB}log)
-set(Storage_lib_dir     ${LIB}/storage)
+set(Server_src_dir          ${SRC}/server)
+set(Client_src_dir          ${SRC}/client)
+set(Protocol_lib_dir        ${LIB}/protocol)
+set(Logger_lib_dir          ${LIB}/log)
+set(Storage_lib_dir         ${LIB}/storage)
+set(Backtrace_lib_dir       ${LIB}/libbacktrace)
+set(Tracedexception_lib_dir ${LIB}/traced_exception)
 
-set(PROTOCOL_LIB_NAME   protocol_lib)
-set(LOGGER_LIB_NAME     logger_lib)
-set(STORAGE_LIB_NAME    sqlite_db)
+set(PROTOCOL_LIB_NAME        protocol_lib)
+set(LOGGER_LIB_NAME          logger_lib)
+set(STORAGE_LIB_NAME         sqlite_db)
+set(BACKTRACE_LIB_NAME       backtrace)
+set(TRACEDEXCEPTION_LIB_NAME tracedexception_lib)
 #****************************************************************************************************
 set(TESTS_SOURSES
     ${Tests}/startup_tests.cpp
@@ -46,6 +47,8 @@ add_subdirectory(${Client_src_dir})
 add_subdirectory(${Protocol_lib_dir})
 add_subdirectory(${Logger_lib_dir})
 add_subdirectory(${Storage_lib_dir})
+add_subdirectory(${Backtrace_lib_dir})
+add_subdirectory(${Tracedexception_lib_dir})
 
 target_include_directories(${SERVER_BIN}    PUBLIC ${Server_src_dir})
 target_include_directories(${CLIENT_BIN}    PUBLIC ${Client_src_dir})
