@@ -1,30 +1,23 @@
-dist: xenial
 language: cpp
-compiler: clang
+compiler:
+  - clang
+  - gcc
 before_script:
-- sudo apt-get update
-- sudo apt-get install sqlite3 libsqlite3-dev
-- sudo apt-get install sqlite
-- sudo apt-get install libboost-all-dev
-- sudo apt-get install libgtest-dev
+  - sudo apt-get update
+  - sudo apt-get install sqlite3 libsqlite3-dev
+  - sudo apt-get install sqlite
+  - sudo apt-get install libboost-all-dev
+  - sudo apt-get install libgtest-dev
+  - sudo apt install qt5-default
 #gtest
-- sudo apt-get install libgtest-dev -y 
-- sudo chmod 777 /usr/src/gtest
-- cd /usr/src/gtest 
-- cmake .
-- make
-- sudo cp *.a /usr/lib/
-- cd "${TRAVIS_BUILD_DIR}"
+  - sudo apt-get install libgtest-dev -y 
+  - sudo chmod 777 /usr/src/gtest
+  - cd /usr/src/gtest 
+  - cmake .
+  - make
+  - sudo cp *.a /usr/lib/
 # end gtest
-- sudo apt install qt5-default
+  - cd "${TRAVIS_BUILD_DIR}"
 script:
-- cmake .
-- cmake --build .
-#- cmake --build . --target test
-- cmake --build . --target package
-deploy:
-  provider: script
-  skip_cleanup: true
-  script:
-  - curl -T AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uKonstantin-Morozov:$BINTRAY_API_KEY "https://bintray.com/k-morozov/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=xenial;deb_component=main;deb_architecture=amd64;publish=1"
-
+  - cmake .
+  - cmake --build .
