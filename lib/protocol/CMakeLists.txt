@@ -21,8 +21,7 @@ set(PROTOCOL_SRC
 )
 #****************************************************************************************************
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fPIC")
 
 add_library(${PROTOCOL_LIB_NAME} ${PROTOCOL_SRC})
 target_include_directories(${PROTOCOL_LIB_NAME} PUBLIC .)
