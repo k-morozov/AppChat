@@ -18,5 +18,5 @@ before_script:
 # end gtest
   - cd "${TRAVIS_BUILD_DIR}"
 script:
-  - cmake CMakeLists.txt
+  - cmake -DLLVM_ENABLE_PROJECTS=clang .
   - cmake --build .
