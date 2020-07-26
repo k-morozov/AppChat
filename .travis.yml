@@ -1,20 +1,17 @@
 dist: bionic
 language: cpp
 compiler: gcc
-
-addons:
-  apt:
-    update: true
-    sources:
-      - sourceline: 'ppa:mhier/libboost-latest'
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-9
-      - boost1.73
-
 before_script:
+  - sudo apt-get update
   - sudo apt-get install sqlite3 libsqlite3-dev
-  - sudo apt-get install doxygen
+  - sudo apt-get install sqlite
+#boost 1.73.0
+  - wget -O boost_1_73_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.gz/download
+  - tar -xf boost_1_73_0.tar.gz
+  - cd boost_1_73_0
+  - sudo ./bootstrap.sh --prefix=/usr/local
+  - sudo ./b2 install -d0
+# end boost
 #gtest
   - sudo apt-get install libgtest-dev -y 
   - sudo chmod 777 /usr/src/gtest
@@ -35,4 +32,3 @@ deploy:
   skip_cleanup: true
   script:
   - curl -T AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uKonstantin-Morozov:$BINTRAY_API_KEY "https://bintray.com/k-morozov/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=xenial;deb_component=main;deb_architecture=amd64;publish=1"
-
