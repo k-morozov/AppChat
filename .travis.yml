@@ -1,4 +1,5 @@
 env:
+  - CXX=clang++
   - CXX_FOR_BUILD=clang++
 language: cpp
 compiler:
