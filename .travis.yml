@@ -14,7 +14,7 @@ addons:
 
 before_script:
   - sudo apt-get install sqlite3 libsqlite3-dev
-  - sudo apt-get install sqlite
+  - sudo apt-get install doxygen
 #gtest
   - sudo apt-get install libgtest-dev -y 
   - sudo chmod 777 /usr/src/gtest
