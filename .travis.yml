@@ -19,5 +19,5 @@ before_script:
 # end gtest
   - cd "${TRAVIS_BUILD_DIR}"
 script:
-  - cmake .
+  - cmake CMakeLists.txt
   - cmake --build .
