@@ -5,9 +5,14 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install sqlite3 libsqlite3-dev
   - sudo apt-get install sqlite
-  - sudo apt-get install libboost-all-dev
-  - sudo add-apt-repository ppa::mhier/libboost-latest
-  - sudo apt-get update
+#  - sudo apt-get install libboost-all-dev
+#boost 1.73.0
+  - wget -O boost_1_73_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.gz/download
+  - tag xzvf boost_1_73_0.tar.gz
+  - cd boost_1_73_0
+  - sudo ./bootstrap.sh --prefix=/usr/local
+  - sudo ./b2 install
+# end boost
 #gtest
   - sudo apt-get install libgtest-dev -y 
   - sudo chmod 777 /usr/src/gtest
