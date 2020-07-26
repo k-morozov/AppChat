@@ -8,6 +8,8 @@ before_script:
   - sudo apt-get install libboost-all-dev
   - sudo apt-get install libgtest-dev
   - sudo apt install qt5-default
+  - export CC=/usr/bin/clang
+  - export CXX=/usr/bin/clang++
 #gtest
   - sudo apt-get install libgtest-dev -y 
   - sudo chmod 777 /usr/src/gtest
