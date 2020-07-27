@@ -85,16 +85,4 @@ if (DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen")
     unset(DOXYFILE)
 endif()
-####
-
-### travis?
-set(CPACK_GENERATOR DEB)
-
-set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-
-set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
-
-include(CPack)
-### end
+#####
