@@ -39,9 +39,20 @@ target_include_directories(${SERVER_BIN} PUBLIC .)
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
 
+set_target_properties(${SERVER} PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        LINK_LIBRARIES pthread
+        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
+)
+
+add_dependencies(${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
+    ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
 target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
     ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
 
+# install to bin folder our binaries
+install(TARGETS ${SERVER} RUNTIME DESTINATION bin)
 
 # generate .deb package
 set(CPACK_GENERATOR DEB)

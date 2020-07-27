@@ -1,38 +1,30 @@
 dist: bionic
 language: cpp
-compiler: gcc
+sudo: required
+compiler:
+    - gcc
 os:
   - linux
 
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install sqlite3 libsqlite3-dev
-  - sudo apt-get install doxygen
-  - sudo apt-get install -qq doxygen graphviz
-#boost 1.73.0
-  - wget -O boost_1_73_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.gz/download
-  - tar -xf boost_1_73_0.tar.gz
-  - cd boost_1_73_0
-  - sudo ./bootstrap.sh --prefix=/usr/local
-  - sudo ./b2 link=static runtime-link=shared install
-# end boost
-#gtest
-  - sudo apt-get install libgtest-dev -y
-  - sudo chmod 777 /usr/src/gtest
-  - cd /usr/src/gtest
-  - cmake .
-  - make
-  - sudo cp *.a /usr/lib/
-  - cd "${TRAVIS_BUILD_DIR}"
-# end gtest
-  - sudo apt install qt5-default
+    - ls
+    - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
 script:
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make
-  - cd ${TRAVIS_BUILD_DIR}/bin
-  - jar cfe artefact.jar server client
+    - cmake --version
+    - cmake CMakeLists.txt
+    - cmake  --build . --target
+  #- mkdir build
+  #- cd build
+  #- cmake ..
+  # - make
+  # - cmake --build ..
+  #- cmake --build .. --server package
+  #- cd src/server
+  #- ls
+  #- make package
+  # - cd ${TRAVIS_BUILD_DIR}/bin
+  # - ls
+#  - jar cfe artefact.jar server client
 #  - cmake --build . --target test
 #  - cmake --build . --target package
 after_success:
@@ -48,8 +40,7 @@ deploy:
     provider: script
     skip_cleanup: true
     script:
-      - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server
-      && curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
+      - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server && curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
     
     #provider: pages
     #skip-cleanup: true

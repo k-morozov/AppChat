@@ -37,8 +37,8 @@ set(TESTS_SOURSES
     ${Tests}/test_datetime.cpp
 )
 #****************************************************************************************************
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #****************************************************************************************************
 add_executable(${TESTS_BIN}     ${TESTS_SOURSES})
 
@@ -54,8 +54,7 @@ target_include_directories(${SERVER_BIN}    PUBLIC ${Server_src_dir})
 target_include_directories(${CLIENT_BIN}    PUBLIC ${Client_src_dir})
 target_include_directories(${TESTS_BIN}     PUBLIC ${SRC})
 #****************************************************************************************************
-set_target_properties(${SERVER} #${CLIENT}
-    ${TESTS} PROPERTIES
+set_target_properties(${TESTS} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
