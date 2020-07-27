@@ -48,8 +48,7 @@ deploy:
     provider: script
     skip_cleanup: true
     script:
-      - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server
-      && curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
+      - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server && curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
     
     #provider: pages
     #skip-cleanup: true
