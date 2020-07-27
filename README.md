@@ -5,8 +5,8 @@
 ![GitHub issues](https://img.shields.io/github/issues-raw/k-morozov/AppChat)
 
 
-[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/Server/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Server/_latestVersion)
-[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/Client/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Client/_latestVersion)
+[ ![Download server](https://api.bintray.com/packages/k-morozov/AppChat/Server/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Server/_latestVersion)
+[ ![Download client](https://api.bintray.com/packages/k-morozov/AppChat/Client/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Client/_latestVersion)
 
 
 TCP client-server application.
