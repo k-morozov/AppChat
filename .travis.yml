@@ -32,7 +32,6 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/bin/
   - pwd
   - ls
-  - ll
 #  - cmake --build . --target test
 #  - cmake --build . --target package
 deploy:
