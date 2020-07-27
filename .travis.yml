@@ -34,4 +34,4 @@ deploy:
   provider: script
   skip_cleanup: true
   script:
-  - curl -T AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uKonstantin-Morozov:$BINTRAY_API_KEY "https://bintray.com/k-morozov/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=xenial;deb_component=main;deb_architecture=amd64;publish=1"
+  #- curl -T AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uKonstantin-Morozov:$BINTRAY_API_KEY "https://bintray.com/k-morozov/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=xenial;deb_component=main;deb_architecture=amd64;publish=1"
