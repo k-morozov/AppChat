@@ -1,22 +1,25 @@
 dist: bionic
 language: cpp
 compiler: gcc
+os:
+  - linux
 
 before_script:
   - sudo apt-get update
   - sudo apt-get install sqlite3 libsqlite3-dev
   - sudo apt-get install doxygen
+  - sudo apt-get install -qq doxygen graphviz
 #boost 1.73.0
   - wget -O boost_1_73_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.73.0/boost_1_73_0.tar.gz/download
-  - tar -xf boost_1_73_0.tar.gz 
+  - tar -xf boost_1_73_0.tar.gz
   - cd boost_1_73_0
   - sudo ./bootstrap.sh --prefix=/usr/local
   - sudo ./b2 link=static runtime-link=shared install
 # end boost
 #gtest
-  - sudo apt-get install libgtest-dev -y 
+  - sudo apt-get install libgtest-dev -y
   - sudo chmod 777 /usr/src/gtest
-  - cd /usr/src/gtest 
+  - cd /usr/src/gtest
   - cmake .
   - make
   - sudo cp *.a /usr/lib/
@@ -28,18 +31,33 @@ script:
   - cd build
   - cmake ..
   - make
-
-  - cd ${TRAVIS_BUILD_DIR}/bin/
-  - pwd
-  - ls
+  - cd ${TRAVIS_BUILD_DIR}/bin
+  - jar cfe artefact.jar server client
 #  - cmake --build . --target test
 #  - cmake --build . --target package
+
+after_success:
+  # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
+  - >-
+    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
+      cd $TRAVIS_BUILD_DIR
+      echo 'Generating Doxygen code documentation...'
+      # Redirect both stderr and stdout to the log file AND the console.
+      doxygen doc/Doxyfile 2>&1 | tee doxygen.log
+    fi
+
 deploy:
-  provider: script
-  skip_cleanup: true
-  script:
-  # ${TRAVIS_BUILD_DIR}/bin/server-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb
-  # "https://api.bintray.com/content/k-morozov/AppChat/Chat/$TRAVIS_BUILD_NUMBER/server-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
-  #${PROJECT_NAME}-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb
-  - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Chat/$TRAVIS_BUILD_NUMBER/server
-  #- curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/Chat/$TRAVIS_BUILD_NUMBER/client-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+    provider: script
+    skip_cleanup: true
+    script:
+        - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server
+        - curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
+
+
+    provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_API_KEY
+    keep-history: true
+    local-dir: doc/html
+    on:
+        branch: master

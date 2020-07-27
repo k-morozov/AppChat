@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
-project(Server)
+
+if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
+    project(Server VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+else ()
+    project(Server VERSION 0.0.1)
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,3 +41,17 @@ find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
 
 target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
     ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
+
+
+# generate .deb package
+set(CPACK_GENERATOR DEB)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+
+set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+# include will generate proper code for .deb generation
+include(CPack)
