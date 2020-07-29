@@ -7,26 +7,28 @@ os:
   - linux
 
 before_script:
-    - ls
     - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
+    #gtest
+    - sudo apt-get install libgtest-dev -y
+    - sudo chmod 777 /usr/src/gtest
+    - cd /usr/src/gtest
+    - cmake .
+    - make
+    - sudo cp *.a /usr/lib/
+    - cd "${TRAVIS_BUILD_DIR}"
+    # end gtest
+    - DIR_BUILD = ${TRAVIS_BUILD_DIR}/build
+    - DIR_BIN = ${DIR_BUILD}/bin
 script:
-    - cmake --version
-    - cmake CMakeLists.txt
-    - cmake  --build . --target
-  #- mkdir build
-  #- cd build
-  #- cmake ..
-  # - make
-  # - cmake --build ..
-  #- cmake --build .. --server package
-  #- cd src/server
-  #- ls
-  #- make package
-  # - cd ${TRAVIS_BUILD_DIR}/bin
-  # - ls
-#  - jar cfe artefact.jar server client
-#  - cmake --build . --target test
-#  - cmake --build . --target package
+  - mkdir ${DIR_BUILD}
+  - cd ${DIR_BUILD}
+  - cmake ..
+  - cmake --build .
+  #- cd lib/log/log4cplus
+  #- sudo make install
+  - cd ${DIR_BIN}
+  - jar cfe  AppChat.jar server client
+  #- cmake --build . --target package
 after_success:
   # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
@@ -40,7 +42,7 @@ deploy:
     provider: script
     skip_cleanup: true
     script:
-      - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server && curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
+      - curl -T ${DIR_BIN}/AppChat.jar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat.jar
     
     #provider: pages
     #skip-cleanup: true

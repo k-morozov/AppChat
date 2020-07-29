@@ -13,8 +13,9 @@ set (Boost_USE_MULTITHREADED ON)
 
 add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
 
-set(Connection_dir          connection)
-set(Channel_dir             channel)
+set(SERVER_BIN      server)
+set(Connection_dir  connection)
+set(Channel_dir     channel)
 
 #****************************************************************************************************
 set(CHANNELS_SRC
@@ -39,7 +40,7 @@ target_include_directories(${SERVER_BIN} PUBLIC .)
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
 
-set_target_properties(${SERVER} PROPERTIES
+set_target_properties(${SERVER_BIN} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
@@ -52,7 +53,7 @@ target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES
     ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
 
 # install to bin folder our binaries
-install(TARGETS ${SERVER} RUNTIME DESTINATION bin)
+install(TARGETS ${SERVER_BIN} RUNTIME DESTINATION bin)
 
 # generate .deb package
 set(CPACK_GENERATOR DEB)
@@ -66,3 +67,5 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
 # include will generate proper code for .deb generation
 include(CPack)
+
+target_include_directories(${SERVER_BIN}    PUBLIC ${SRC}/server})
