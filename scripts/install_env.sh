@@ -9,14 +9,6 @@ install_boost() {
     sudo ./b2 link=static runtime-link=shared install
 }
 
-sudo apt-get update
-#sudo apt-get install cmake
-#sudo apt-get install libgtest-dev
-#sudo apt-get install sqlite3 libsqlite3-dev
-#sudo apt-get install doxygen
-#sudo apt-get install -qq doxygen graphviz
-#sudo apt-get install libboost-test-dev
-#sudo apt install qt5-default
-
 install_boost
+
 
