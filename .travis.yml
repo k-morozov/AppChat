@@ -6,6 +6,15 @@ compiler:
     - gcc
 os:
   - linux
+addons:
+    apt:
+        packages:
+            - graphviz
+            - doxygen
+            - libgtest-dev
+            - sqlite3 libsqlite3-dev
+            - libboost-test-dev
+            - qt5-default
 
 before_script:
     - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
@@ -24,26 +33,28 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/build
   - cmake ..
   - cmake --build .
-  #- cd lib/log/log4cplus
-  #- sudo make install
   - cd ${TRAVIS_BUILD_DIR}/build/bin
-  - tar -cf  AppChat.tar server client
+  - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
   #- cmake --build . --target package
+
 after_success:
   # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
-    if [[ "$TRAVIS_BRANCH" = "release" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
+    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
       cd $TRAVIS_BUILD_DIR
       echo 'Generating Doxygen code documentation...'
       # Redirect both stderr and stdout to the log file AND the console.
       doxygen doc/Doxyfile 2>&1 | tee doxygen.log
     fi
+
 deploy:
-    provider: script
-    skip_cleanup: true
-    script:
-      - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.tar
-    
+    #provider: script
+    #skip_cleanup: true
+    #script:
+    #- curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+    #on:
+    #    branch: master
+
     #provider: pages
     #skip-cleanup: true
     #github-token: $GITHUB_API_KEY
@@ -51,3 +62,14 @@ deploy:
     #local-dir: docs/html
     #on:
         #branch: master
+
+before_deploy:
+    - git config --local user.name "k-morozov"
+    - git config --local user.email "morozov-kst@yandex.ru"
+    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m')-$TRAVIS_BUILD_NUMBER-Linux}
+    - git tag $TRAVIS_TAG
+deploy:
+    provider: releases
+    api_key: $GITHUB_API_KEY
+    file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+    skip_cleanup: true
