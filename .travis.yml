@@ -66,10 +66,13 @@ deploy:
 before_deploy:
     - git config --local user.name "k-morozov"
     - git config --local user.email "morozov-kst@yandex.ru"
-    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m')-$TRAVIS_BUILD_NUMBER-Linux}
-    - git tag $TRAVIS_TAG
+    #- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m')-$TRAVIS_BUILD_NUMBER-Linux}
+    - git tag 0.7.$TRAVIS_BUILD_NUMBER-Linux
 deploy:
     provider: releases
     api_key: $GITHUB_API_KEY
     file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
     skip_cleanup: true
+    on:
+        branch: release
+
