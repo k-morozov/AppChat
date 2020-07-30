@@ -52,11 +52,8 @@ add_dependencies(${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${ST
 target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
     ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
 
-<<<<<<< HEAD
-=======
 # install to bin folder our binaries
 install(TARGETS ${SERVER_BIN} RUNTIME DESTINATION bin)
->>>>>>> deb_travis
 
 # generate .deb package
 set(CPACK_GENERATOR DEB)
@@ -70,8 +67,5 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
 # include will generate proper code for .deb generation
 include(CPack)
-<<<<<<< HEAD
-=======
 
 target_include_directories(${SERVER_BIN}    PUBLIC ${SRC}/server})
->>>>>>> deb_travis
