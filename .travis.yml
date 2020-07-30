@@ -17,16 +17,14 @@ before_script:
     - sudo cp *.a /usr/lib/
     - cd "${TRAVIS_BUILD_DIR}"
     # end gtest
-    - DIR_BUILD = ${TRAVIS_BUILD_DIR}/build
-    - DIR_BIN = ${DIR_BUILD}/bin
 script:
-  - mkdir ${DIR_BUILD}
-  - cd ${DIR_BUILD}
+  - mkdir ${TRAVIS_BUILD_DIR}/build
+  - cd ${TRAVIS_BUILD_DIR}/build
   - cmake ..
   - cmake --build .
   #- cd lib/log/log4cplus
   #- sudo make install
-  - cd ${DIR_BIN}
+  - cd ${TRAVIS_BUILD_DIR}/build/bin
   - jar cfe  AppChat.jar server client
   #- cmake --build . --target package
 after_success:
@@ -42,7 +40,7 @@ deploy:
     provider: script
     skip_cleanup: true
     script:
-      - curl -T ${DIR_BIN}/AppChat.jar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat.jar
+      - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat.jar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat.jar
     
     #provider: pages
     #skip-cleanup: true
