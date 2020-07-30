@@ -6,6 +6,15 @@ compiler:
     - gcc
 os:
   - linux
+addons:
+    apt:
+        packages:
+            - graphviz
+            - doxygen
+            - libgtest-dev
+            - sqlite3 libsqlite3-dev
+            - libboost-test-dev
+            - qt5-default
 
 before_script:
     - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
@@ -27,12 +36,12 @@ script:
   #- cd lib/log/log4cplus
   #- sudo make install
   - cd ${TRAVIS_BUILD_DIR}/build/bin
-  - tar -cf  AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.tar server client
+  - tar -cf  AppChat.tar server client
   #- cmake --build . --target package
 after_success:
   # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
-    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
+    if [[ "$TRAVIS_BRANCH" = "release" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
       cd $TRAVIS_BUILD_DIR
       echo 'Generating Doxygen code documentation...'
       # Redirect both stderr and stdout to the log file AND the console.
@@ -40,10 +49,10 @@ after_success:
     fi
 deploy:
     provider: script
-    cleanup: true
+    skip_cleanup: true
     script:
-      - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.tar
-    
+      - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.0.$TRAVIS_BUILD_NUMBER-Linux.tar
+
     #provider: pages
     #skip-cleanup: true
     #github-token: $GITHUB_API_KEY
