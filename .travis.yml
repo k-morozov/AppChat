@@ -52,28 +52,4 @@ deploy:
     on:
         branch: master
 
-deploy:
-    provider: pages
-    cleanup: true
-    github-token: $GITHUB_API_KEY
-    keep-history: true
-    local-dir: docs/html
-    name: "Documentation"
-    on:
-        branch: master
-
-before_deploy:
-- git config --local user.name "k-morozov"
-- git config --local user.email "morozov-kst@yandex.ru"
-#- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-- export TRAVIS_TAG=0.7.$TRAVIS_BUILD_NUMBER-Linux
-- git tag $TRAVIS_TAG
-
-deploy:
-    provider: releases
-    api_key: $GITHUB_API_KEY
-    file: ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-    cleanup: true
-    on:
-        branch: master
 
