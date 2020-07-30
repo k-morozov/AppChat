@@ -11,8 +11,9 @@ addons:
         packages:
             - graphviz
             - doxygen
+            - libgtest-dev
             - sqlite3 libsqlite3-dev
-            - libboost-all-dev
+            - libboost-test-dev
             - qt5-default
 
 before_script:
@@ -46,7 +47,7 @@ after_success:
     fi
 deploy:
     provider: script
-    cleanup: true
+    skip_cleanup: true
     script:
     - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
     on:
