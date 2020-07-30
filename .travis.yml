@@ -66,7 +66,7 @@ deploy:
 before_deploy:
     - git config --local user.name "k-morozov"
     - git config --local user.email "morozov-kst@yandex.ru"
-    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m%y%')-$TRAVIS_BUILD_NUMBER-Linux}
+    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m')-$TRAVIS_BUILD_NUMBER-Linux}
     - git tag $TRAVIS_TAG
 deploy:
     provider: releases
