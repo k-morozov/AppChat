@@ -32,7 +32,7 @@ script:
 after_success:
   # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
-    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
+    if [[ "$TRAVIS_BRANCH" = "release" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
       cd $TRAVIS_BUILD_DIR
       echo 'Generating Doxygen code documentation...'
       # Redirect both stderr and stdout to the log file AND the console.
