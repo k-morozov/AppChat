@@ -36,6 +36,7 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/build/bin
   - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
   #- cmake --build . --target package
+
 after_success:
   # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
@@ -45,11 +46,12 @@ after_success:
       # Redirect both stderr and stdout to the log file AND the console.
       doxygen doc/Doxyfile 2>&1 | tee doxygen.log
     fi
+
 deploy:
     provider: script
     skip_cleanup: true
     script:
-    - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+    - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
     on:
         branch: master
 
