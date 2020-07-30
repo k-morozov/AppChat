@@ -8,14 +8,14 @@ os:
   - linux
 
 before_script:
-    - if [ $TRAVIS_OS_NAME == linux ]; then ./scripts/install_env.sh; fi
+    - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
     #gtest
-    - apt-get install libgtest-dev -y
-    - chmod 777 /usr/src/gtest
+    - sudo apt-get install libgtest-dev -y
+    - sudo chmod 777 /usr/src/gtest
     - cd /usr/src/gtest
     - cmake .
     - make
-    - cp *.a /usr/lib/
+    - sudo cp *.a /usr/lib/
     - cd "${TRAVIS_BUILD_DIR}"
     # end gtest
 
