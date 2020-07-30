@@ -1,10 +1,17 @@
 dist: bionic
 language: cpp
+<<<<<<< HEAD
 compiler: gcc
+=======
+sudo: required
+compiler:
+    - gcc
+>>>>>>> deb_travis
 os:
   - linux
 
 before_script:
+<<<<<<< HEAD
   - sudo apt-get update
   - sudo apt-get install sqlite3 libsqlite3-dev
   - sudo apt-get install doxygen
@@ -26,10 +33,23 @@ before_script:
   - cd "${TRAVIS_BUILD_DIR}"
 # end gtest
   - sudo apt install qt5-default
+=======
+    - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
+    #gtest
+    - sudo apt-get install libgtest-dev -y
+    - sudo chmod 777 /usr/src/gtest
+    - cd /usr/src/gtest
+    - cmake .
+    - make
+    - sudo cp *.a /usr/lib/
+    - cd "${TRAVIS_BUILD_DIR}"
+    # end gtest
+>>>>>>> deb_travis
 script:
-  - mkdir build
-  - cd build
+  - mkdir ${TRAVIS_BUILD_DIR}/build
+  - cd ${TRAVIS_BUILD_DIR}/build
   - cmake ..
+<<<<<<< HEAD
   - make
   #- cmake --build ..
   #- cmake --build .. --server package
@@ -41,6 +61,14 @@ script:
 #  - jar cfe artefact.jar server client
 #  - cmake --build . --target test
 #  - cmake --build . --target package
+=======
+  - cmake --build .
+  #- cd lib/log/log4cplus
+  #- sudo make install
+  - cd ${TRAVIS_BUILD_DIR}/build/bin
+  - jar cfe  AppChat.jar server client
+  #- cmake --build . --target package
+>>>>>>> deb_travis
 after_success:
   # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
@@ -54,7 +82,11 @@ deploy:
     provider: script
     skip_cleanup: true
     script:
+<<<<<<< HEAD
       - curl -T ${TRAVIS_BUILD_DIR}/bin/server -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Server/$TRAVIS_BUILD_NUMBER/server && curl -T ${TRAVIS_BUILD_DIR}/bin/client -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Client/$TRAVIS_BUILD_NUMBER/client
+=======
+      - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat.jar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/AppChat/$TRAVIS_BUILD_NUMBER/AppChat.jar
+>>>>>>> deb_travis
     
     #provider: pages
     #skip-cleanup: true

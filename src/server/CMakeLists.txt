@@ -13,8 +13,9 @@ set (Boost_USE_MULTITHREADED ON)
 
 add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
 
-set(Connection_dir          connection)
-set(Channel_dir             channel)
+set(SERVER_BIN      server)
+set(Connection_dir  connection)
+set(Channel_dir     channel)
 
 #****************************************************************************************************
 set(CHANNELS_SRC
@@ -39,9 +40,23 @@ target_include_directories(${SERVER_BIN} PUBLIC .)
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
 
+set_target_properties(${SERVER_BIN} PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        LINK_LIBRARIES pthread
+        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
+)
+
+add_dependencies(${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
+    ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
 target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
     ${BACKTRACE_LIB_NAME} ${TRACEDEXCEPTION_LIB_NAME})
 
+<<<<<<< HEAD
+=======
+# install to bin folder our binaries
+install(TARGETS ${SERVER_BIN} RUNTIME DESTINATION bin)
+>>>>>>> deb_travis
 
 # generate .deb package
 set(CPACK_GENERATOR DEB)
@@ -55,3 +70,8 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
 # include will generate proper code for .deb generation
 include(CPack)
+<<<<<<< HEAD
+=======
+
+target_include_directories(${SERVER_BIN}    PUBLIC ${SRC}/server})
+>>>>>>> deb_travis
