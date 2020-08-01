@@ -11,6 +11,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 #****************************************************************************************************
+set(CLIENT_BIN  client)
 set(Control_dir control)
 set(Client_dir client)
 set(GUI_dir gui)
@@ -32,5 +33,31 @@ target_include_directories(${CLIENT_BIN} PUBLIC .)
 
 #****************************************************************************************************
 find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
+
+set_target_properties(${CLIENT_BIN} PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        LINK_LIBRARIES pthread
+        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
+)
+
+#add_dependencies(${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})
 target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})
 
+# install to bin folder our binaries
+install(TARGETS ${CLIENT_BIN} RUNTIME DESTINATION bin)
+
+# generate .deb package
+set(CPACK_GENERATOR DEB)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+
+set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+# include will generate proper code for .deb generation
+include(CPack)
+
+target_include_directories(${CLIENT_BIN}    PUBLIC ${SRC}/client)
