@@ -2,8 +2,10 @@
 #define CONTROL_H
 
 #include <QWidget>
-#include <client/client.h>
-#include <gui/mainwindow.h>
+#include <QString>
+#include <QDateTime>
+
+#include "client/client.h"
 
 /**
  * @brief Controller
@@ -29,7 +31,6 @@ public:
      * @brief Close client socket when destroy UI controller.
      */
     ~Control() {
-        client->close();
     }
 
 signals:
@@ -40,7 +41,12 @@ signals:
      * @param text message content
      * @param dt date and time of sending the text
      */
-    void send_text_to_gui(const std::string& login, const std::string& text, DateTime dt);
+    void send_text_to_gui(const QString& login, const QString& text, const QDateTime dt);
+
+    void registrationOk();
+    void registrationBusy();
+    void authorisationOk();
+    void authorisationIncorrect();
 
 public slots:
     /**
@@ -49,12 +55,11 @@ public slots:
      * @param login user's login
      * 
      * @param password user's password
-     * 
-     * @todo fix typo autorisation -> authorization
      */
-    void autorisation(const std::string& login, const std::string& password) {
+    void authorisation(const QString& login, const QString& password) {
         std::thread th([this, login, password]() {
-            connect_to_server(login, password, TypeCommand::AuthorisationRequest);
+            connect_to_server(login.toStdString(), password.toStdString(),
+                              TypeCommand::AuthorisationRequest);
         });
         th.detach();
     }
@@ -65,9 +70,10 @@ public slots:
      * @param login user's login
      * @param password user's password
      */
-    void registration(const std::string& login, const std::string& password) {
+    void registration(const QString& login, const QString& password) {
         std::thread th([this, login, password]() {
-            connect_to_server(login, password, TypeCommand::RegistrationRequest);
+            connect_to_server(login.toStdString(), password.toStdString(),
+                              TypeCommand::RegistrationRequest);
         });
         th.detach();
     }
@@ -79,8 +85,8 @@ public slots:
      * @param text message content
      * @param room_id sender's room
      */
-    void get_text_from_gui(const std::string& login, const std::string& text, int room_id) {
-        client->write(std::make_shared<TextRequest>(login, room_id, text));
+    void get_text_from_gui(const QString& login, const QString& text, int room_id) {
+        client->write(std::make_shared<TextRequest>(login.toStdString(), room_id, text.toStdString()));
     }
 
     /**
@@ -91,7 +97,9 @@ public slots:
      * @param dt date and time of sending the text
      */
     void text_from_client(const std::string& from, const std::string& text, DateTime dt) {
-        send_text_to_gui(from, text, dt);
+        const QDateTime qdt(QDate(dt.year, dt.month, dt.day),
+                            QTime(dt.hours, dt.minutes, dt.seconds));
+        send_text_to_gui(QString(from.c_str()), QString(text.c_str()), qdt);
     }
 
     /**
@@ -104,10 +112,10 @@ public slots:
         client->write(std::make_shared<JoinRoomRequest>(new_room_id));
     }
 
+    void send_input_code(InputCode code);
 
 private:
     std::unique_ptr<Client> client;
-    MainWindow w;
 };
 
 #endif // CONTROL_H

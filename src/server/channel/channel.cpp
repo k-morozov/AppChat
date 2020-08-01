@@ -28,10 +28,10 @@ void Channel::leave(subscriber_ptr subsciber) {
 
 void Channel::notification(text_response_ptr response) {
     for(auto [id, sub]:subscribers) {
-        if (sub->get_login() !=response->get_login())
-        {
+//        if (sub->get_login() !=response->get_login())
+//        {
             sub->sendme(response);
-        }
+//        }
     }
     history_room.push_back(response);
 }
