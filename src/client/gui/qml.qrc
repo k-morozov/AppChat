@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/main.qml</file>
+        <file>resources/AuthorisationWindow.qml</file>
+        <file>resources/images/key.svg</file>
+        <file>resources/images/avatar.svg</file>
+        <file>resources/CustomButton.qml</file>
+        <file>resources/AuthHeader.qml</file>
+        <file>resources/RegistrationWindow.qml</file>
+        <file>resources/ChatWindow.qml</file>
+    </qresource>
+</RCC>

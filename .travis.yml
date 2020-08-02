@@ -15,6 +15,7 @@ addons:
             - sqlite3 libsqlite3-dev
             - libboost-test-dev
             - qt5-default
+            - qtdeclarative5-dev
 
 before_script:
     - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
