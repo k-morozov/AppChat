@@ -68,7 +68,7 @@ ApplicationWindow {
 
         onClicked: {
           root.roomId = parseInt(inputRoomId.text);
-          chatArea.text = "";
+          chatMessages.clear();
           root.buttonChangeClicked();
         }
       }
