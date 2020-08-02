@@ -128,7 +128,7 @@ ApplicationWindow {
         Layout.fillWidth: true
         Layout.column: 0
 
-        contentText: "Sign in"
+        contentText: "Sign up"
 
         onMouseEnter: { buttonRegistration.opacity = 0.5; }
         onMouseLeave: { buttonRegistration.opacity = 1; }
@@ -146,7 +146,7 @@ ApplicationWindow {
         Layout.fillWidth: true
         Layout.column: 1
 
-        contentText: "Log in"
+        contentText: "Sign in"
         pressedBackgroundColor: "white"
 
         onMouseEnter: { buttonAuthorisation.opacity = 0.5; }
