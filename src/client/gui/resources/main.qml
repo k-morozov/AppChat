@@ -20,10 +20,18 @@ ChatWindow {
   Connections {
     target: control
 
-    onRegistrationOk: { chatWindow.login = regWindow.login; messageDialogRO.open(); }
+    onRegistrationOk: {
+      chatWindow.login = regWindow.login;
+      regWindow.close();
+      chatWindow.show();
+    }
     onRegistrationBusy: { messageDialogRB.open(); }
 
-    onAuthorisationOk: { chatWindow.login = authWindow.login; messageDialogAO.open(); }
+    onAuthorisationOk: {
+      chatWindow.login = authWindow.login;
+      authWindow.close();
+      chatWindow.show();
+    }
     onAuthorisationIncorrect: { messageDialogAI.open(); }
 
     onSend_text_to_gui: {
@@ -66,23 +74,9 @@ ChatWindow {
   }
 
   MessageDialog {
-    id: messageDialogRO
-    title: "registration"
-    text: "ok"
-    onAccepted: { regWindow.close(); chatWindow.show(); }
-  }
-
-  MessageDialog {
     id: messageDialogRB
     title: "registration"
     text: "login busy"
-  }
-
-  MessageDialog {
-    id: messageDialogAO
-    title: "authorisation"
-    text: "ok"
-    onAccepted: { authWindow.close(); chatWindow.show(); }
   }
 
   MessageDialog {
