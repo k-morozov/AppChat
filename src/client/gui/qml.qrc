@@ -3,6 +3,7 @@
         <file>resources/main.qml</file>
         <file>resources/AuthorisationWindow.qml</file>
         <file>resources/images/key.svg</file>
+        <file>resources/images/keyrepeat.svg</file>
         <file>resources/images/avatar.svg</file>
         <file>resources/CustomButton.qml</file>
         <file>resources/AuthHeader.qml</file>
