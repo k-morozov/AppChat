@@ -9,6 +9,7 @@ ApplicationWindow {
   property color backgroundColor: "grey"
   property string login: inputLogin.text
   property string password: inputPassword.text
+  property string passwordRepeat: inputPasswordRepeat.text
 
   signal confirmClicked;
 
@@ -61,11 +62,22 @@ ApplicationWindow {
           font.pixelSize: 14
           verticalAlignment: Text.AlignVCenter
 
-          focus: true
+          focus: true          
 
           KeyNavigation.tab: inputPassword
           Keys.onReturnPressed: { buttonRegistration.clicked(); }
           Keys.onEnterPressed: { buttonRegistration.clicked(); } // Numpad enter key
+
+          readonly property string placeholderText: "Enter login . . ."
+
+          Text {
+            anchors.fill: parent
+            text: inputLogin.placeholderText
+            color: "#aaa"
+            visible: !inputLogin.text
+            font.pixelSize: inputLogin.font.pixelSize
+            verticalAlignment: inputLogin.verticalAlignment            
+          }
         }
       }
     }
@@ -97,9 +109,65 @@ ApplicationWindow {
 
           echoMode: TextInput.Password
 
+          KeyNavigation.tab: inputPasswordRepeat
+          Keys.onReturnPressed: { buttonRegistration.clicked(); }
+          Keys.onEnterPressed: { buttonRegistration.clicked(); } // Numpad enter key
+
+          readonly property string placeholderText: "Enter password . . ."
+
+          Text {
+            anchors.fill: parent
+            text: inputPassword.placeholderText
+            color: "#aaa"
+            visible: !inputPassword.text
+            font.pixelSize: inputPassword.font.pixelSize
+            verticalAlignment: inputPassword.verticalAlignment            
+          }
+        }
+      }
+    }
+
+    Row {
+      Layout.fillHeight: true
+      Layout.fillWidth: true
+
+      Image {
+        id: imagePasswordRepeat
+        source: "images/keyrepeat.svg"
+        anchors.verticalCenter: rectanglePasswordRepeat.verticalCenter
+        height: 35
+        width: 35
+      }
+
+      Rectangle {
+        id: rectanglePasswordRepeat
+        height: 30
+        width: parent.width - imagePasswordRepeat.width;
+        radius: 10
+
+        TextInput {
+          id: inputPasswordRepeat
+          anchors.fill: parent
+
+          font.pixelSize: 14
+          verticalAlignment: Text.AlignVCenter
+
+          echoMode: TextInput.Password
+
           KeyNavigation.tab: inputLogin
           Keys.onReturnPressed: { buttonRegistration.clicked(); }
           Keys.onEnterPressed: { buttonRegistration.clicked(); } // Numpad enter key
+
+          readonly property string placeholderText: "Repeat password . . ."
+
+          Text {
+            anchors.fill: parent
+            text: inputPasswordRepeat.placeholderText
+            color: "#aaa"
+            visible: !inputPasswordRepeat.text
+            font.pixelSize: inputPasswordRepeat.font.pixelSize
+            verticalAlignment: inputPasswordRepeat.verticalAlignment            
+          }
         }
       }
     }

@@ -51,7 +51,18 @@ ChatWindow {
   RegistrationWindow {
     id: regWindow
 
-    onConfirmClicked: { control.registration(regWindow.login, regWindow.password); }
+    onConfirmClicked: {
+      if (regWindow.password != regWindow.passwordRepeat)
+        messageDialogRP.open();
+      else
+        control.registration(regWindow.login, regWindow.password);
+    }
+  }
+
+  MessageDialog {
+    id: messageDialogRP
+    title: "registration"
+    text: "password mismatch"
   }
 
   MessageDialog {
