@@ -18,14 +18,14 @@ set(GUI_dir gui)
 #****************************************************************************************************
 set(CLIENT_SOURCES
     startup_client.cpp
-	${Client_dir}/client.h  ${Client_dir}/client.cpp
-	${Control_dir}/control.h ${Control_dir}/control.cpp
-	${GUI_dir}/qml.qrc
+    ${Client_dir}/client.h  ${Client_dir}/client.cpp
+    ${GUI_dir}/mainwindow.h ${GUI_dir}/mainwindow.cpp
+    ${GUI_dir}/mainwindow.ui
+    ${Control_dir}/control.h ${Control_dir}/control.cpp
 )
 
 #****************************************************************************************************
-find_package(Qt5 COMPONENTS Core Gui Qml Quick Widgets REQUIRED)
-#find_package(Qt5Quick REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package (Threads)
 
 add_executable(${CLIENT_BIN}  ${CLIENT_SOURCES})
@@ -42,8 +42,7 @@ set_target_properties(${CLIENT_BIN} PROPERTIES
 )
 
 #add_dependencies(${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})
-target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${PROTOCOL_LIB_NAME}
-	Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick Qt5::Widgets)
+target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})
 
 # install to bin folder our binaries
 install(TARGETS ${CLIENT_BIN} RUNTIME DESTINATION bin)

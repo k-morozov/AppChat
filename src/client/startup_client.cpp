@@ -1,22 +1,17 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
+#include <string>
 
-#include "control/control.h"
+#include <boost/asio.hpp>
+#include <QApplication>
+
+#include <protocol.h>
+#include <control/control.h>
+#include <gui/mainwindow.h>
+
 
 int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication a(argc, argv);
 
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
     Control control;
 
-    engine.rootContext()->setContextProperty("control", &control);
-    engine.load(QUrl(QStringLiteral("qrc:/resources/main.qml")));
-
-    if (engine.rootObjects().isEmpty())
-      return -1;
-
-    return app.exec();
+    return a.exec();
 }
