@@ -1,7 +1,5 @@
 #include "database.h"
 
-#include <boost/format.hpp>
-
 std::string Database::create_table_history = std::string("create table if not exists history ")
         + std::string("(author varchar[") + std::to_string(Block::LoginName) + std::string("], ")
 //        + std::string("client_id integer, ")
@@ -54,10 +52,8 @@ Database::~Database() {
 
 void Database::save_text_message(text_request_ptr message) {
     const auto dt = message->get_datetime();
-    const std::string str_datetime = boost::str(boost::format("%1$d-%2$#02d-%3$#02d %4$#02s:%5$#02s:%6$#02s")
-      % (dt.year + 2000) % static_cast<unsigned int>(dt.month) % static_cast<unsigned int>(dt.day)
-      % static_cast<unsigned int>(dt.hours) % static_cast<unsigned int>(dt.minutes) % static_cast<unsigned int>(dt.seconds)
-    );
+    const std::string str_datetime = std::to_string(dt.year + 2000) + "-" + std::to_string(dt.month) + "-" + std::to_string(dt.day)
+        + " " + std::to_string(dt.hours) + ":" + std::to_string(dt.minutes) + ":" + std::to_string(dt.seconds);
 
     const std::string insert_query = std::string("insert into history values('")
                                       + std::string(message->get_login()) + std::string("', ")
@@ -93,14 +89,14 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
     }
     int ret_code = 0;
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
-        std::string author = (const char *)sqlite3_column_blob(stmt, 0);
-        int room_id = sqlite3_column_int(stmt, 1);
-        std::string dt = (const char *)sqlite3_column_blob(stmt, 2);
-        std::string message = (const char *)sqlite3_column_blob(stmt, 3);
-
-        LOG4CPLUS_INFO(logger, author << " " << room_id << " " << dt << " " << message);
-        text_response_ptr response = std::make_shared<TextResponse>(author, DateTime(boost::posix_time::time_from_string(dt)), message, room_id);
-
+        LOG4CPLUS_INFO(logger,
+                       (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
+                       << (const char *)sqlite3_column_blob(stmt, 2) << " " << (const char *)sqlite3_column_blob(stmt, 3));
+        text_response_ptr response = std::make_shared<TextResponse>(
+                (const char *)sqlite3_column_blob(stmt, 0),
+                DateTime(boost::posix_time::time_from_string( (const char *)sqlite3_column_blob(stmt, 2) )),
+                (const char *)sqlite3_column_blob(stmt, 3),
+                sqlite3_column_int(stmt, 1));
         history_room.push_back(response);
         found=true;
     }
