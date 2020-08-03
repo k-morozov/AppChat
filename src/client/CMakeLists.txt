@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
-project(Client)
+
+if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
+    project(Client VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+else ()
+    project(Client VERSION 0.0.1)
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
