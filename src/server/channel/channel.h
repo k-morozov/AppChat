@@ -63,6 +63,11 @@ public:
      */
     virtual identifier_t get_room_id() const override { return channel_id; }
 
+    ~Channel() {
+        for(auto it:subscribers) {
+            leave(it.second);
+        }
+    }
 private:
     std::mutex mutex_subs;
     std::unordered_map<identifier_t, subscriber_ptr> subscribers;

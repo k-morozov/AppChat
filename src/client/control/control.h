@@ -29,7 +29,9 @@ public:
      * @brief Close client socket when destroy UI controller.
      */
     ~Control() {
-        client->close();
+        if (client) {
+            client->close();
+        }
     }
 
 signals:
@@ -100,10 +102,8 @@ public slots:
      * @param new_room_id room where user is switching
      */
     void change_room(int new_room_id) {
-//        emit send_text_to_gui("server", "получил запрос на смену комнаты");
         client->write(std::make_shared<JoinRoomRequest>(new_room_id));
     }
-
 
 private:
     std::unique_ptr<Client> client;
