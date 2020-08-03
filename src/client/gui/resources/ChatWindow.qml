@@ -94,8 +94,8 @@ ApplicationWindow {
         model: chatMessages
         clip: true
 
-        delegate: TextEdit {
-          selectByMouse: true
+        delegate: Text {
+          wrapMode: Text.WordWrap
           text: "[" + datetime + "] " + from + ": " + msg
         }
 
@@ -104,6 +104,8 @@ ApplicationWindow {
           chatView.positionViewAtEnd();
           chatView.currentIndex = newIndex;
         }
+
+        ScrollBar.vertical: ScrollBar { }
       }
     }
 
@@ -132,6 +134,8 @@ ApplicationWindow {
           Keys.onReturnPressed: { buttonSend.clicked(); }
           Keys.onEnterPressed: { buttonSend.clicked(); } // Numpad enter key
         }
+
+        ScrollBar.vertical: ScrollBar { }
       }
     }
 
