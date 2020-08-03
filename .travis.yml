@@ -54,7 +54,6 @@ deploy:
     - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
     on:
         branch: master
-    
     #provider: pages
     #skip-cleanup: true
     #github-token: $GITHUB_API_KEY
