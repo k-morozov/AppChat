@@ -40,6 +40,10 @@ set_target_properties(${CLIENT_BIN} PROPERTIES
         COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
 )
 
+<<<<<<< HEAD
+=======
+#add_dependencies(${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} Qt5::Widgets ${PROTOCOL_LIB_NAME})
+>>>>>>> 6876912e33b7b1395fd523ed06be44551b2a5490
 target_link_libraries (${CLIENT_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${PROTOCOL_LIB_NAME}
 	Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick Qt5::Widgets)
 
