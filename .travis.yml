@@ -2,8 +2,7 @@ dist: bionic
 language: cpp
 compiler: gcc
 sudo: required
-compiler:
-    - gcc
+
 os:
   - linux
 addons:
@@ -33,12 +32,11 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/build
   - cmake ..
   - cmake --build .
+  - cmake --build . --target test
   - cd ${TRAVIS_BUILD_DIR}/build/bin
   - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
-  #- cmake --build . --target package
 
 after_success:
-  # Generate the docs only if master, and the TRAVIS_BUILD_DOCS is not zero
   - >-
     if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
       cd $TRAVIS_BUILD_DIR
@@ -47,32 +45,33 @@ after_success:
       doxygen doc/Doxyfile 2>&1 | tee doxygen.log
     fi
 
-deploy:
-    provider: script
-    skip_cleanup: true
-    script:
-    - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-    on:
-        branch: master
-    
-    #provider: pages
-    #skip-cleanup: true
-    #github-token: $GITHUB_API_KEY
-    #keep-history: true
-    #local-dir: docs/html
-    #on:
-        #branch: master
+    if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
+        curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+    fi
 
-before_deploy:
-    - git config --local user.name "k-morozov"
-    - git config --local user.email "morozov-kst@yandex.ru"
-    #- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m')-$TRAVIS_BUILD_NUMBER-Linux}
-    - git tag 0.7.$TRAVIS_BUILD_NUMBER-Linux
 deploy:
-    provider: releases
-    api_key: $GITHUB_API_KEY
-    file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-    skip_cleanup: true
-    on:
-        branch: release
+    #- provider: script
+    #  skip_cleanup: true
+    #  script:
+    #  - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+
+    - provider: pages
+      skip-cleanup: true
+      github-token: $GITHUB_API_KEY
+      keep-history: true
+      local-dir: docs/html
+      on:
+              branch: master
+
+#before_deploy:
+#    - git config --local user.name "k-morozov"
+#    - git config --local user.email "morozov-kst@yandex.ru"
+#    - git tag 0.7.$TRAVIS_BUILD_NUMBER-Linux
+#deploy:
+#    - provider: releases
+#      api_key: $GITHUB_API_KEY
+#      file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+#      skip_cleanup: true
+#      on:
+#        branch: release
 

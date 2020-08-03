@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QtCore>
+#include <QCloseEvent>
 
 #include <client/client.h>
 
@@ -41,7 +42,6 @@ public:
      * @return std::string 
      */
     std::string get_message();
-
 signals:
     /**
      * @brief Notify user is authorizing on the server
@@ -79,7 +79,7 @@ public slots:
     /**
      * @brief show incoming message
      * 
-     * @param from sender's login
+     * @param login sender's login
      * @param message message's content
      * @param dt date and time of sending the text
      */
