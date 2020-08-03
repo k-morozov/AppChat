@@ -3,6 +3,8 @@ project(Storage)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
 
 set(Storage_dir             storage)
 
@@ -19,4 +21,5 @@ target_include_directories(${STORAGE_LIB_NAME} PUBLIC .)
 
 #****************************************************************************************************
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-target_link_libraries (${STORAGE_LIB_NAME} ${SQLite3_LIBRARIES} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME} ${SQLITE3_LIBRARY})
+find_package(Boost REQUIRED)
+target_link_libraries (${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME} ${SQLITE3_LIBRARY} ${Boost_LIBRARIES})
