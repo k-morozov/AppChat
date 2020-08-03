@@ -114,11 +114,8 @@ public slots:
         client->write(std::make_shared<JoinRoomRequest>(new_room_id));
     }
 
-<<<<<<< HEAD
-=======
     void send_input_code(InputCode code);
 
->>>>>>> ported to QML
 private:
     std::unique_ptr<Client> client;
 };

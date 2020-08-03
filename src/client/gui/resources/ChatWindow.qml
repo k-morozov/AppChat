@@ -94,11 +94,16 @@ ApplicationWindow {
         model: chatMessages
         clip: true
 
-        delegate: Text {
-          text: "[" + datetime + "] " + from + ": " + msg;
+        delegate: TextEdit {
+          selectByMouse: true
+          text: "[" + datetime + "] " + from + ": " + msg
         }
 
-        onCountChanged: { chatView.positionViewAtEnd(); }
+        onCountChanged: {
+          let newIndex = chatView.count - 1;
+          chatView.positionViewAtEnd();
+          chatView.currentIndex = newIndex;
+        }
       }
     }
 
