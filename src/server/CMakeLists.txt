@@ -14,18 +14,18 @@ set (Boost_USE_MULTITHREADED ON)
 add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
 
 set(SERVER_BIN      server)
-set(Connection_dir  connection)
-set(Channel_dir     channel)
+set(DIR_CONNECTION  connection)
+set(DIR_CHANNEL     channel)
 
 #****************************************************************************************************
 set(CHANNELS_SRC
-    ${Channel_dir}/iroom.h ${Channel_dir}/iroom.cpp
-    ${Channel_dir}/channels_manager.h ${Channel_dir}/channels_manager.cpp
-    ${Channel_dir}/channel.h ${Channel_dir}/channel.cpp
+    ${DIR_CHANNEL}/iroom.h ${DIR_CHANNEL}/iroom.cpp
+    ${DIR_CHANNEL}/channels_manager.h ${DIR_CHANNEL}/channels_manager.cpp
+    ${DIR_CHANNEL}/channel.h ${DIR_CHANNEL}/channel.cpp
 )
 set(CONNECTIONS_SRC
-    ${Connection_dir}/isubscriber.h ${Connection_dir}/isubscriber.cpp
-    ${Connection_dir}/connection.h ${Connection_dir}/connection.cpp
+    ${DIR_CONNECTION}/isubscriber.h ${DIR_CONNECTION}/isubscriber.cpp
+    ${DIR_CONNECTION}/connection.h ${DIR_CONNECTION}/connection.cpp
 )
 
 #****************************************************************************************************

@@ -33,6 +33,7 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/build
   - cmake ..
   - cmake --build .
+  - cmake --build . --target test
   - cd ${TRAVIS_BUILD_DIR}/build/bin
   - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
   #- cmake --build . --target package
@@ -48,19 +49,20 @@ after_success:
     fi
 
 deploy:
-    provider: script
-    skip_cleanup: true
-    script:
-    - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-    on:
+    - provider: script
+      skip_cleanup: true
+      script:
+      - curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+      on:
         branch: master
-    #provider: pages
-    #skip-cleanup: true
-    #github-token: $GITHUB_API_KEY
-    #keep-history: true
-    #local-dir: docs/html
-    #on:
-        #branch: master
+
+    - provider: pages
+      skip-cleanup: true
+      github-token: $GITHUB_API_KEY
+      keep-history: true
+      local-dir: docs/html
+      on:
+        branch: master
 
 before_deploy:
     - git config --local user.name "k-morozov"
@@ -68,10 +70,10 @@ before_deploy:
     #- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%d%m')-$TRAVIS_BUILD_NUMBER-Linux}
     - git tag 0.7.$TRAVIS_BUILD_NUMBER-Linux
 deploy:
-    provider: releases
-    api_key: $GITHUB_API_KEY
-    file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-    skip_cleanup: true
-    on:
+    - provider: releases
+      api_key: $GITHUB_API_KEY
+      file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+      skip_cleanup: true
+      on:
         branch: release
 
