@@ -95,7 +95,8 @@ ApplicationWindow {
         clip: true
 
         delegate: Text {
-          wrapMode: Text.WordWrap
+          width: chatView.width
+          wrapMode: Text.WrapAnywhere
           text: "[" + datetime + "] " + from + ": " + msg
         }
 
