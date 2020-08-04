@@ -60,5 +60,7 @@ void ChannelsManager::leave(subscriber_ptr sub) {
     else {
         LOG4CPLUS_ERROR(logger, "no room room_id=" << room_id);
     }
+
+    sub->set_busy(false);
 }
 
