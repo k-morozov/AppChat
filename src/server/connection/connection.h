@@ -26,10 +26,35 @@ public:
      */
     explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
         socket(std::move(_socket)),
-        db(_db)
+        db(_db),
+        busy(true)
     {
         LOG4CPLUS_INFO(logger,
                        "new connection from " << socket.remote_endpoint().address().to_string()
+                       << ":" << socket.remote_endpoint().port()
+                       );
+    }
+
+    /**
+     * @brief reuse connection for Object Pool
+     *
+     * @param _socket Accepted client socket.
+     * @param _db
+     */
+    void init(boost::asio::ip::tcp::socket&& _socket, database_ptr _db) {
+        socket.close();
+
+        packets_to_client.clear();
+        client_id = -1;
+        login.clear();
+        password.clear();
+
+        socket = std::move(_socket);
+        db = _db;
+
+        busy = true;
+        LOG4CPLUS_INFO(logger,
+                       "init connection from " << socket.remote_endpoint().address().to_string()
                        << ":" << socket.remote_endpoint().port()
                        );
     }
@@ -68,7 +93,18 @@ public:
      */
     virtual const std::string& get_login() const override { return login; }
 
+    virtual bool is_busy() const noexcept override { return busy; }
+    virtual void set_busy(bool flag = true) noexcept override { busy = flag; }
+    /**
+      *
+      * @todo double close socket?
+      *
+      * */
+    ~Connection() {
+//        socket.close();
+    }
 private:
+
     boost::asio::ip::tcp::socket socket;
     std::deque<response_ptr> packets_to_client;
 
@@ -77,6 +113,7 @@ private:
     std::string password;
 
     database_ptr db;
+    bool busy;
 
     log4cplus::Logger logger = LOGGER("Connection");
 
