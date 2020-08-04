@@ -30,11 +30,7 @@ public:
     /**
      * @brief Close client socket when destroy UI controller.
      */
-    ~Control() {
-        if (client) {
-            client->close();
-        }
-    }
+    ~Control() { }
 
 signals:
     /**
@@ -102,7 +98,7 @@ public slots:
     void text_from_client(const std::string& from, const std::string& text, DateTime dt) {
         const QDateTime qdt(QDate(dt.year, dt.month, dt.day),
                             QTime(dt.hours, dt.minutes, dt.seconds));
-        send_text_to_gui(QString(from.c_str()), QString(text.c_str()), qdt);
+        emit send_text_to_gui(QString(from.c_str()), QString(text.c_str()), qdt);
     }
 
     /**

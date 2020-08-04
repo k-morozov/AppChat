@@ -27,7 +27,6 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
     });
 
     th.join();
-    client->close();
 }
 
 void Control::send_input_code(InputCode code)

@@ -154,7 +154,7 @@ void Client::read_response_header() {
                 }
             }
             else {
-                sock.close();
+                std::cout << ec.message() << "\n";
             }
     });
 }
@@ -199,7 +199,7 @@ void Client::read_response_data(text_response_ptr packet) {
                 auto local_time = DateTime::from_universal_to_local(packet->get_datetime());
 
                 std::cout << packet->get_login() << ": " << packet->get_message() << std::endl;
-                send_text(packet->get_login(), packet->get_message(), local_time);
+                emit send_text(packet->get_login(), packet->get_message(), local_time);
 
                 read_response_header();
             }
