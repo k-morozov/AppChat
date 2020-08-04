@@ -26,6 +26,7 @@ set(CHANNELS_SRC
 set(CONNECTIONS_SRC
     ${DIR_CONNECTION}/isubscriber.h ${DIR_CONNECTION}/isubscriber.cpp
     ${DIR_CONNECTION}/connection.h ${DIR_CONNECTION}/connection.cpp
+    ${DIR_CONNECTION}/connection_manager.h ${DIR_CONNECTION}/connection_manager.cpp
 )
 
 #****************************************************************************************************
@@ -38,7 +39,7 @@ set(SERVER_SOURCES
 add_executable(${SERVER_BIN}  ${SERVER_SOURCES})
 target_include_directories(${SERVER_BIN} PUBLIC .)
 #****************************************************************************************************
-find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
+find_package(Boost COMPONENTS system date_time REQUIRED)
 
 set_target_properties(${SERVER_BIN} PROPERTIES
         CXX_STANDARD 17

@@ -37,7 +37,7 @@ add_executable(${CLIENT_BIN}  ${CLIENT_SOURCES})
 target_include_directories(${CLIENT_BIN} PUBLIC .)
 
 #****************************************************************************************************
-find_package(Boost COMPONENTS system date_time program_options regex REQUIRED)
+find_package(Boost COMPONENTS system date_time REQUIRED)
 
 set_target_properties(${CLIENT_BIN} PROPERTIES
         CXX_STANDARD 17

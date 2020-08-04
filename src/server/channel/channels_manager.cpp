@@ -2,6 +2,7 @@
 
 ChannelsManager::ChannelsManager()
 {
+    LOG4CPLUS_INFO(logger, "create ChannelsManager");
 }
 
 void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, database_ptr db) {
@@ -28,7 +29,7 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, databas
         else {
             LOG4CPLUS_INFO(logger,
                             "New subsciber client_id="<< it2->first
-                            << "in room_id=" << it2->second);
+                            << " in room_id=" << it2->second);
         }
     }
 
@@ -60,5 +61,7 @@ void ChannelsManager::leave(subscriber_ptr sub) {
     else {
         LOG4CPLUS_ERROR(logger, "no room room_id=" << room_id);
     }
+
+    sub->set_busy(false);
 }
 
