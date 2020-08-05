@@ -52,6 +52,8 @@ add_dependencies(${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${ST
 target_link_libraries (${SERVER_BIN} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${STORAGE_LIB_NAME} ${PROTOCOL_LIB_NAME} ${LOGGER_LIB_NAME}
     )
 
+target_include_directories(${SERVER_BIN}    PUBLIC ${SRC}/server})
+
 # install to bin folder our binaries
 install(TARGETS ${SERVER_BIN} RUNTIME DESTINATION bin)
 
@@ -68,4 +70,4 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # include will generate proper code for .deb generation
 include(CPack)
 
-target_include_directories(${SERVER_BIN}    PUBLIC ${SRC}/server})
+
