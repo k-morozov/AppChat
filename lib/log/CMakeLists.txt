@@ -13,13 +13,11 @@ set(LOGGER_SRC
     logger.cpp
 )
 
-# set(LOGGER_LIB_NAME     logger_lib)
 #****************************************************************************************************
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 
-add_library(${LOGGER_LIB_NAME}  ${LOGGER_SRC})
+add_library(${LOGGER_LIB_NAME} STATIC ${LOGGER_SRC})
 target_include_directories(${LOGGER_LIB_NAME} PUBLIC .)
-target_link_libraries(${LOGGER_LIB_NAME} log4cplus)
+target_link_libraries(${LOGGER_LIB_NAME}  log4cplus)
 
-# use if you have log4cplus
-# target_link_libraries(${LOGGER_LIB_NAME} ${LOGGER_CPLUS})
+#install(TARGETS ${LOGGER_LIB_NAME})
