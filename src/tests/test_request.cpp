@@ -4,23 +4,9 @@
 #include <memory>
 
 /**
- * @brief Unit tests for queue project.
+ * @brief Unit tests for AppChat project.
  */
 BOOST_AUTO_TEST_SUITE(test_request)
-
-//class request: public ::testing::Test {
-//protected:
-
-//    virtual void SetUp() override {
-
-//    }
-//    virtual void TearDown() override {
-
-//    }
-//    virtual void TestBody() override {
-
-//    }
-//};
 
 BOOST_AUTO_TEST_CASE(registration_basic) {
     std::string login = "vasiliy";
@@ -33,142 +19,139 @@ BOOST_AUTO_TEST_CASE(registration_basic) {
     BOOST_CHECK(request.get_login() == login);
     BOOST_CHECK(request.get_password() == passsword);
 }
+
+BOOST_AUTO_TEST_CASE(registration_empty_login) {
+    std::string login = "";
+    std::string passsword = "a1s22g";
+    RegistrationRequest  request(login.data(),passsword.data());
+
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
 }
-//TEST_F(request, registration_empty_login) {
-//    std::string login = "";
-//    std::string passsword = "a1s22g";
-//    RegistrationRequest  request(login.data(),passsword.data());
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::RegistrationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+BOOST_AUTO_TEST_CASE(registration_empty_password) {
+    std::string login = "vasiliy";
+    std::string passsword       = "";
+    RegistrationRequest  request(login.data(), passsword.data());
 
-//TEST_F(request, registration_empty_password) {
-//    std::string login = "vasiliy";
-//    std::string passsword       = "";
-//    RegistrationRequest  request(login.data(), passsword.data());
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::RegistrationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+BOOST_AUTO_TEST_CASE(registration_over_login) {
+    std::string fake_login = "vasiliyaaaaaaaaBBBB";
+    std::string login = "vasiliyaaaaaaaa";
+    std::string passsword = "a1s22g";
+    RegistrationRequest  request(fake_login.data(),passsword.data());
 
-//TEST_F(request, registration_over_login) {
-//    std::string fake_login = "vasiliyaaaaaaaaBBBB";
-//    std::string login = "vasiliyaaaaaaaa";
-//    std::string passsword = "a1s22g";
-//    RegistrationRequest  request(fake_login.data(),passsword.data());
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::RegistrationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+BOOST_AUTO_TEST_CASE(registration_over_password) {
+    std::string login = "vasiliy";
+    std::string fake_passsword  = "12345678901234567890123456789012345";
+    std::string passsword       = "1234567890123456789012345678901";
+    RegistrationRequest  request(login.data(), fake_passsword.data());
 
-//TEST_F(request, registration_over_password) {
-//    std::string login = "vasiliy";
-//    std::string fake_passsword  = "12345678901234567890123456789012345";
-//    std::string passsword       = "1234567890123456789012345678901";
-//    RegistrationRequest  request(login.data(), fake_passsword.data());
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::RegistrationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+BOOST_AUTO_TEST_CASE(autorisation_basic) {
+    std::string login = "vasiliy";
+    std::string passsword = "a1s22g_1";
 
+    AutorisationRequest  request(login.data(),passsword.data());
 
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//TEST_F(request, autorisation_basic) {
-//    std::string login = "vasiliy";
-//    std::string passsword = "a1s22g_1";
+BOOST_AUTO_TEST_CASE(autorisation_empty_login) {
+    std::string login = "";
+    std::string passsword = "a1s22g_1";
 
-//    AutorisationRequest  request(login.data(),passsword.data());
+    AutorisationRequest  request(login.data(),passsword.data());
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::AuthorisationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//TEST_F(request, autorisation_empty_login) {
-//    std::string login = "";
-//    std::string passsword = "a1s22g_1";
+BOOST_AUTO_TEST_CASE(autorisation_empty_password) {
+    std::string login = "vasiliy";
+    std::string passsword = "";
 
-//    AutorisationRequest  request(login.data(),passsword.data());
+    AutorisationRequest  request(login.data(),passsword.data());
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::AuthorisationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//TEST_F(request, autorisation_empty_password) {
-//    std::string login = "vasiliy";
-//    std::string passsword = "";
+BOOST_AUTO_TEST_CASE(autorisation_over_login) {
+    std::string fake_login      = "vasiliyaaaaaaaaBBBB";
+    std::string login           = "vasiliyaaaaaaaa";
+    std::string passsword = "a1s22g";
+    AutorisationRequest  request(fake_login.data(),passsword.data());
 
-//    AutorisationRequest  request(login.data(),passsword.data());
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::AuthorisationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+BOOST_AUTO_TEST_CASE(autorisation_over_password) {
+    std::string login = "vasiliy";
+    std::string fake_passsword  = "12345678901234567890123456789012345";
+    std::string passsword       = "1234567890123456789012345678901";
+    AutorisationRequest  request(login.data(), fake_passsword.data());
 
-//TEST_F(request, autorisation_over_login) {
-//    std::string fake_login      = "vasiliyaaaaaaaaBBBB";
-//    std::string login           = "vasiliyaaaaaaaa";
-//    std::string passsword = "a1s22g";
-//    AutorisationRequest  request(fake_login.data(),passsword.data());
+    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
+    BOOST_CHECK(request.get_login() == login);
+    BOOST_CHECK(request.get_password() == passsword);
+}
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::AuthorisationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+BOOST_AUTO_TEST_CASE(autorisation_basic_ptr) {
+    std::string login = "vasiliy";
+    std::string password = "a1s22g_1";
 
-//TEST_F(request, autorisation_over_password) {
-//    std::string login = "vasiliy";
-//    std::string fake_passsword  = "12345678901234567890123456789012345";
-//    std::string passsword       = "1234567890123456789012345678901";
-//    AutorisationRequest  request(login.data(), fake_passsword.data());
+    autor_request_ptr request;
+    request = std::make_shared<AutorisationRequest>(login.data(), password.data());
 
-//    EXPECT_EQ(request.get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request.get_type_data(), TypeCommand::AuthorisationRequest);
-//    EXPECT_EQ(request.get_login(), login);
-//    EXPECT_EQ(request.get_password(), passsword);
-//}
+    BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
+    BOOST_CHECK(request->get_login() == login);
+    BOOST_CHECK(request->get_password() == password);
+}
 
+BOOST_AUTO_TEST_CASE(input_basic_empty_ptr) {
+    input_request_ptr request;
+    request = std::make_shared<AutorisationRequest>();
 
+    BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
+}
 
-//TEST_F(request, autorisation_basic_ptr) {
-//    std::string login = "vasiliy";
-//    std::string password = "a1s22g_1";
+BOOST_AUTO_TEST_CASE(autorisation_basic_empty_ptr) {
+    autor_request_ptr request;
+    request = std::make_shared<AutorisationRequest>();
 
-//    autor_request_ptr request;
-//    request = std::make_shared<AutorisationRequest>(login.data(), password.data());
-
-//    EXPECT_EQ(request->get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request->get_type_data(), TypeCommand::AuthorisationRequest);
-//    EXPECT_EQ(request->get_login(), login);
-//    EXPECT_EQ(request->get_password(), password);
-//}
-
-//TEST_F(request, input_basic_empty_ptr) {
-//    input_request_ptr request;
-//    request = std::make_shared<AutorisationRequest>();
-
-//    EXPECT_EQ(request->get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request->get_type_data(), TypeCommand::AuthorisationRequest);
-//}
-
-//TEST_F(request, autorisation_basic_empty_ptr) {
-//    autor_request_ptr request;
-//    request = std::make_shared<AutorisationRequest>();
-
-//    EXPECT_EQ(request->get_protocol_version(), PROTOCOL_VERS);
-//    EXPECT_EQ(request->get_type_data(), TypeCommand::AuthorisationRequest);
-//}
+    BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
+}
+} // end boost::test
