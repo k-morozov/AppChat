@@ -7,12 +7,13 @@
 
 /**
  * @brief Controller
+ * @param ip and port server
  */
 class Control: public QObject
 {
     Q_OBJECT
 public:
-    Control();
+    Control(int argc, char** argv);
 
     /**
      * @brief Start communication with server
@@ -108,6 +109,12 @@ public slots:
 private:
     std::unique_ptr<Client> client;
     MainWindow w;
+
+    /**
+     * @todo convert to 4 bytes
+     */
+    std::string ip = "127.0.0.1";
+    int32_t port = SERVER_DEFAULT_PORT;
 };
 
 #endif // CONTROL_H

@@ -8,10 +8,9 @@
 #include <gui/mainwindow.h>
 
 
-int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
+int main(int argc, char** argv) {
     QApplication a(argc, argv);
-
-    Control control;
+    Control control(argc, argv);
 
     return a.exec();
 }
