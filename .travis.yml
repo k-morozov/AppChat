@@ -70,8 +70,6 @@ deploy:
       skip_cleanup: true
       on:
         branch: release
-
-deploy:
     - provider: pages
       skip-cleanup: true
       github-token: $GITHUB_API_KEY
