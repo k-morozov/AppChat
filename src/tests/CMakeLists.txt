@@ -14,15 +14,13 @@ set_target_properties(${TESTS} PROPERTIES
         LINK_LIBRARIES pthread
         COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
 )
-#****************************************************************************************************
+
 add_executable(${TESTS_BIN}
     ${TESTS_SOURSES}
 )
 include_directories(${GTEST_INCLUDE_DIR})
 
 find_package(GTest REQUIRED)
-#find_library(UnitTests gtest)
-#****************************************************************************************************
 
 target_link_libraries (${TESTS_BIN} ${CMAKE_THREAD_LIBS_INIT} gtest ${PROTOCOL_LIB_NAME})
 
