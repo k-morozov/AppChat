@@ -12,15 +12,12 @@
 ## Installation
 
 #### Windows
-in progress
+* in progress
 #### Linux/Unix
-
 Deb package installs the server and the client.
 The server is installed without errors, but the problem with creating logs and database. This does not prevent the server from working during one session.
 For now it is better to run the client as a separate file rather than through the deb package.
-
 #### Android
-
 * in progress
 ------------
 ## Requirments
@@ -30,12 +27,14 @@ For now it is better to run the client as a separate file rather than through th
 * boost 1.73
 * Qt5
 * in progress
+
 -----------
 ## Quick start
 * [UML](../master/doc/AppChat.svg)
 * [Documebtation](https://k-morozov.github.io/AppChat)
 * in progress
 -----------
+
 ## What's next
 
 * Windows port
