@@ -11,7 +11,7 @@ using boost::asio::ip::tcp;
 /**
  * @brief Async TCP Server.
  * 
- * @details Async TCP Server handling incoming tcp conntection on port 7777.
+ * @details Async TCP Server handling incoming tcp conntection on port SERVER_DEFAULT_PORT.
  */
 class Server {
 public:
@@ -19,8 +19,8 @@ public:
      * @brief Construct a new Server object.
      * @param argc, argv: first argument - number port
      */
-    Server([[maybe_unused]]int argc, [[maybe_unused]]char** argv):
-        endpoint(boost::asio::ip::tcp::v4(), (argc>1 ? std::stoi(argv[1]) : SERVER_DEFAULT_PORT)),
+    Server(int32_t port):
+        endpoint(boost::asio::ip::tcp::v4(), port),
         acceptor(io_service, endpoint)
     {
         scan_acception();
