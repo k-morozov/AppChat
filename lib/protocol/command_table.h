@@ -13,6 +13,7 @@
 #include "datetime.h"
 
 constexpr uint32_t PROTOCOL_VERS = 2;
+constexpr int32_t SERVER_DEFAULT_PORT = 7777;
 
 using identifier_t = int32_t;
 

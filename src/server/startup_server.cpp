@@ -8,7 +8,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
     LOG4CPLUS_INFO(logger, "Server started. Version: 0.5");
 
     try {
-        Server server;
+        Server server(argc, argv);
         server.run();
     } catch (const std::exception & ex) {
         LOG4CPLUS_ERROR(logger, "exception " << ex.what());
