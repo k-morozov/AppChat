@@ -1,5 +1,4 @@
 #include <client/client.h>
-//#include <charconv>
 
 void Client::write(const std::string& message) {
     text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
@@ -60,7 +59,9 @@ void Client::send_login_packet(packet_ptr packet) {
                                                  packet->get_length_data()), error_code);
 
     if (error_code) {
-        sock.close();
+        if (sock.is_open()) {
+            sock.close();
+        }
         std::cout << "error when send login" << std::endl;
         return ;
     }
@@ -69,7 +70,9 @@ void Client::send_login_packet(packet_ptr packet) {
     boost::asio::read(sock, boost::asio::buffer(response->get_header(),
                                                 Block::Header), error_code);
     if (error_code) {
-        sock.close();
+        if (sock.is_open()) {
+            sock.close();
+        }
         std::cout << "error when read login-id" << std::endl;
         return ;
     }
@@ -89,19 +92,16 @@ void Client::send_login_packet(packet_ptr packet) {
             }
             else
             {
-//                good_client_is_registred();
                 emit send_input_code(InputCode::RegistrOK);
             }
         else {
             if (response->get_loginid()==-1) {
-//                emit bad_client_is_autorisation();
                 emit send_input_code(InputCode::IncorrectAutor);
                 this->close();
                 return;
             }
             else
             {
-//                good_client_is_autorisation();
                 emit send_input_code(InputCode::AutorOK);
             }
         }
@@ -154,7 +154,9 @@ void Client::read_response_header() {
                 }
             }
             else {
-                sock.close();
+                if (sock.is_open()) {
+                    sock.close();
+                }
             }
     });
 }
@@ -165,12 +167,12 @@ void Client::read_response_data(registr_response_ptr packet) {
     boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
-//                std::cout << "read_response_data" << std::endl;
-
                 read_response_header();
             }
             else {
-                sock.close();
+                if (sock.is_open()) {
+                    sock.close();
+                }
             }
     });
 }
@@ -181,11 +183,12 @@ void Client::read_response_data(autor_response_ptr packet) {
     boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
         [this, packet](boost::system::error_code error, std::size_t) {
             if (!error) {
-//                std::cout << "read_response_data" << std::endl;
                 read_response_header();
             }
             else {
-                sock.close();
+                if (sock.is_open()) {
+                    sock.close();
+                }
             }
     });
 }
@@ -204,14 +207,13 @@ void Client::read_response_data(text_response_ptr packet) {
                 read_response_header();
             }
             else {
-                sock.close();
+                if (sock.is_open()) {
+                    sock.close();
+                }
             }
     });
 }
 
-//void Client::read_response_join_room(join_room_request_ptr) {
-
-//}
 void Client::send_request_header() {
     boost::asio::async_write(sock, boost::asio::buffer(packets_to_server.front()->get_header(), Block::Header),
         [this](boost::system::error_code ec, std::size_t) {
@@ -220,7 +222,9 @@ void Client::send_request_header() {
         }
         else {
             std::cout << "error start_sending" << std::endl;
-            sock.close();
+            if (sock.is_open()) {
+                sock.close();
+            }
         }
     });
 }
@@ -234,7 +238,9 @@ void Client::send_request_data() {
             if (!packets_to_server.empty()) send_request_header();
         }
         else {
-            sock.close();
+            if (sock.is_open()) {
+                sock.close();
+            }
         }
     });
 }

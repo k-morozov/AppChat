@@ -1,94 +1,84 @@
-#include <gtest/gtest.h>
-
+#include <boost/test/unit_test.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
 #include "datetime.h"
 
-class datetime : public ::testing::Test
-{
-protected:
-    virtual void SetUp() override { }
-    virtual void TearDown() override { }
-};
+/**
+ * @brief Unit tests for AppChat project.
+ */
+BOOST_AUTO_TEST_SUITE(test_request)
 
-TEST_F(datetime, construction_by_default)
-{
+BOOST_AUTO_TEST_CASE(construction_by_default) {
     DateTime dt;
 
-    EXPECT_EQ(dt.hours, 0);
-    EXPECT_EQ(dt.minutes, 0);
-    EXPECT_EQ(dt.seconds, 0);
-
-    EXPECT_EQ(dt.day, 0);
-    EXPECT_EQ(dt.month, 0);
-    EXPECT_EQ(dt.year, 0);
+    BOOST_CHECK(dt.hours == 0);
+    BOOST_CHECK(dt.minutes == 0);
+    BOOST_CHECK(dt.seconds == 0);
+    BOOST_CHECK(dt.day == 0);
+    BOOST_CHECK(dt.month == 0);
+    BOOST_CHECK(dt.year == 0);
 }
 
-TEST_F(datetime, construction_from_ptime)
-{
+BOOST_AUTO_TEST_CASE(construction_from_ptime) {
     using namespace boost::posix_time;
 
     ptime pt = second_clock::universal_time();
 
     DateTime dt(pt);
 
-    EXPECT_EQ(dt.hours, pt.time_of_day().hours());
-    EXPECT_EQ(dt.minutes, pt.time_of_day().minutes());
-    EXPECT_EQ(dt.seconds, pt.time_of_day().seconds());
+    BOOST_CHECK(dt.hours == pt.time_of_day().hours());
+    BOOST_CHECK(dt.minutes == pt.time_of_day().minutes());
+    BOOST_CHECK(dt.seconds == pt.time_of_day().seconds());
 
-    EXPECT_EQ(dt.day, pt.date().day());
-    EXPECT_EQ(dt.month, pt.date().month());
-    EXPECT_EQ(dt.year + 2000, pt.date().year());
+    BOOST_CHECK(dt.day == pt.date().day());
+    BOOST_CHECK(dt.month == pt.date().month());
+    BOOST_CHECK(dt.year + 2000 == pt.date().year());
 }
 
-TEST_F(datetime, simple_date_string)
-{
+BOOST_AUTO_TEST_CASE(simple_date_string) {
     DateTime dt;
     
     dt.day = 22;
     dt.month = 7;
     dt.year = 20;
 
-    EXPECT_EQ(dt.to_simple_date(), "22.07.2020");
+    BOOST_CHECK(dt.to_simple_date() == "22.07.2020");
 
     dt.day = 0;
     dt.month = 0;
     dt.year = 0;
 
-    EXPECT_EQ(dt.to_simple_date(), "00.00.2000");
+    BOOST_CHECK(dt.to_simple_date() == "00.00.2000");
 
     dt.day = 31;
     dt.month = 12;
     dt.year = 255;
 
-    EXPECT_EQ(dt.to_simple_date(), "31.12.2255");
+    BOOST_CHECK(dt.to_simple_date() == "31.12.2255");
 }
 
-TEST_F(datetime, simple_time_string)
-{
+BOOST_AUTO_TEST_CASE(simple_time_string) {
     DateTime dt;
 
     dt.hours = 16;
     dt.minutes = 5;
     dt.seconds = 50;
 
-    EXPECT_EQ(dt.to_simple_time(), "16:05:50");
+    BOOST_CHECK(dt.to_simple_time() == "16:05:50");
 
     dt.hours = 0;
     dt.minutes = 0;
     dt.seconds = 0;
 
-    EXPECT_EQ(dt.to_simple_time(), "00:00:00");
+    BOOST_CHECK(dt.to_simple_time() == "00:00:00");
 
     dt.hours = 23;
     dt.minutes = 59;
     dt.seconds = 59;
 
-    EXPECT_EQ(dt.to_simple_time(), "23:59:59");
+    BOOST_CHECK(dt.to_simple_time() == "23:59:59");
 }
 
-TEST_F(datetime, operator_equal)
-{
+BOOST_AUTO_TEST_CASE(operator_equal) {
     DateTime lhs;
 
     lhs.hours = 1;
@@ -109,19 +99,18 @@ TEST_F(datetime, operator_equal)
     rhs.month = 5;
     rhs.year = 6;
 
-    EXPECT_EQ(lhs == rhs, true);
+    BOOST_CHECK(lhs == rhs);
 
     rhs.year = 7;
 
-    EXPECT_EQ(lhs == rhs, false);
+    BOOST_CHECK(!(lhs == rhs));
 
     rhs.year = 5;
 
-    EXPECT_EQ(lhs == rhs, false);
+    BOOST_CHECK(!(lhs == rhs));
 }
 
-TEST_F(datetime, operator_less)
-{
+BOOST_AUTO_TEST_CASE(operator_less) {
     DateTime lhs;
 
     lhs.seconds = 1;
@@ -142,64 +131,65 @@ TEST_F(datetime, operator_less)
     rhs.month = 5;
     rhs.year = 6;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.year = 7;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.year = 6;
     lhs.month = 6;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.month = 5;
     lhs.day = 5;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.day = 4;
     lhs.hours = 4;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.hours = 3;
     lhs.minutes = 3;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.minutes = 2;
     lhs.seconds = 2;
 
-    EXPECT_EQ(lhs < rhs, false);
+    BOOST_CHECK(!(lhs < rhs));
 
     lhs.seconds = 0;
 
-    EXPECT_EQ(lhs < rhs, true);
+    BOOST_CHECK(lhs < rhs);
 
     lhs.seconds = 1;
     lhs.minutes = 1;
 
-    EXPECT_EQ(lhs < rhs, true);
+    BOOST_CHECK(lhs < rhs);
 
     lhs.minutes = 2;
     lhs.hours = 2;
 
-    EXPECT_EQ(lhs < rhs, true);
+    BOOST_CHECK(lhs < rhs);
 
     lhs.hours = 3;
     lhs.day = 3;
 
-    EXPECT_EQ(lhs < rhs, true);
+    BOOST_CHECK(lhs < rhs);
 
     lhs.day = 4;
     lhs.month = 4;
 
-    EXPECT_EQ(lhs < rhs, true);
+    BOOST_CHECK(lhs < rhs);
 
     lhs.month = 5;
     lhs.year = 5;
 
-    EXPECT_EQ(lhs < rhs, true);
+    BOOST_CHECK(lhs < rhs);
 }
 
+}

@@ -53,7 +53,9 @@ public:
      */
     void close() {
         boost::asio::post(io_service, [this]() {
-            sock.close();
+            if (sock.is_open()) {
+                sock.close();
+            }
         });
     }
 
