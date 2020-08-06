@@ -15,7 +15,7 @@ set(PROTOCOL_SRC
     response/transport_response.h
 )
 
-add_library(${PROTOCOL_LIB_NAME} SHARED STATIC
+add_library(${PROTOCOL_LIB_NAME}
     ${PROTOCOL_SRC})
 
 set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
@@ -25,5 +25,4 @@ set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
         COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic;-fPIC"
 )
 
-install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/bin)
-install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION lib)
+install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)
