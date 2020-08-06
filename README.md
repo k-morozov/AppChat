@@ -20,6 +20,7 @@ The server is installed without errors, but the problem with creating logs and d
 For now it is better to run the client as a separate file rather than through the deb package.
 
 #### Android
+
 in progress
 ------------
 ## Requirments
