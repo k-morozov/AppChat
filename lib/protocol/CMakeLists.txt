@@ -1,8 +1,4 @@
 cmake_minimum_required(VERSION 3.5)
-project(Protocol)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROTOCOL_SRC
     protocol.h protocol.cpp
@@ -17,11 +13,16 @@ set(PROTOCOL_SRC
     response/response.h
     response/input_response.h response/input_response.cpp
     response/transport_response.h
-
 )
-#****************************************************************************************************
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fPIC")
+add_library(${PROTOCOL_LIB_NAME}
+    ${PROTOCOL_SRC})
 
-add_library(${PROTOCOL_LIB_NAME} ${PROTOCOL_SRC})
-target_include_directories(${PROTOCOL_LIB_NAME} PUBLIC .)
+set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        LINK_LIBRARIES pthread
+        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic;-fPIC"
+)
+
+install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)

@@ -16,6 +16,7 @@ void Channel::join(subscriber_ptr new_subsciber) {
 }
 
 void Channel::leave(subscriber_ptr subsciber) {
+    subsciber->set_busy(false);
     mutex_subs.lock();
         subscribers.erase(subsciber->get_client_id());
     mutex_subs.unlock();

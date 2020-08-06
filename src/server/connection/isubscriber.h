@@ -43,6 +43,9 @@ public:
      */
     virtual const std::string& get_login() const = 0;
 
+    virtual bool is_busy() const noexcept = 0;
+    virtual void set_busy(bool flag = true) noexcept = 0;
+
     virtual ~ISubscriber() = default;
 };
 

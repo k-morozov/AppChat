@@ -33,6 +33,8 @@ void MainWindow::on_push_autorisation_clicked()
     password = ui->password->text();
     if (logon.isEmpty() || password.isEmpty()) return;
     send_autorisation_info(logon.toStdString(), password.toStdString());
+    ui->logon->clear();
+    ui->password->clear();
 }
 
 void MainWindow::on_push_send_clicked()
@@ -68,6 +70,8 @@ void MainWindow::on_push_registration_clicked()
     password = ui->password->text();
     if (logon.isEmpty() || password.isEmpty()) return;
     send_registration_info(logon.toStdString(), password.toStdString());
+    ui->logon->clear();
+    ui->password->clear();
 }
 
 void MainWindow::on_push_change_room_id_clicked()
