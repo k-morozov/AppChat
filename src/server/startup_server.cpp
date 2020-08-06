@@ -2,7 +2,7 @@
 #include <logger.h>
 
 
-int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
+int main(int argc, char** argv) {
     init_logger();
     auto logger = LOGGER("Main");
     LOG4CPLUS_INFO(logger, "Server started. Version: 0.5");
