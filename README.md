@@ -21,7 +21,7 @@ For now it is better to run the client as a separate file rather than through th
 
 #### Android
 
-in progress
+* in progress
 ------------
 ## Requirments
 
