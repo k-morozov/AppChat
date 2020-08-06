@@ -33,6 +33,7 @@ script:
   - cmake ..
   - cmake --build .
   - cmake --build . --target test
+  - cmake --build . --target package
   - cd ${TRAVIS_BUILD_DIR}/build/bin
   - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
 
