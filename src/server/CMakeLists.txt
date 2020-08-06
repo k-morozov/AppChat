@@ -23,8 +23,6 @@ set(SERVER_SOURCES
 )
 add_executable(${SERVER_BIN}  ${SERVER_SOURCES})
 
-find_package(Boost COMPONENTS system date_time REQUIRED)
-
 set_target_properties(${SERVER_BIN} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON

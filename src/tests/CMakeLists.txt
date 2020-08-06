@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-set(TESTS_BIN tests)
+set(TESTS_BIN app_chat_tests)
 
 set(TESTS_SOURSES
     startup_tests.cpp
@@ -18,10 +18,11 @@ set_target_properties(${TESTS} PROPERTIES
 add_executable(${TESTS_BIN}
     ${TESTS_SOURSES}
 )
-include_directories(${GTEST_INCLUDE_DIR})
 
-find_package(GTest REQUIRED)
-
-target_link_libraries (${TESTS_BIN} ${CMAKE_THREAD_LIBS_INIT} gtest ${PROTOCOL_LIB_NAME})
+target_link_libraries (${TESTS_BIN}
+    ${Boost_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${PROTOCOL_LIB_NAME}
+)
 
 add_test(NAME ${TESTS_BIN} COMMAND ${TESTS_BIN})

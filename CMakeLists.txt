@@ -8,15 +8,20 @@ endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set (Boost_USE_STATIC_LIBS ON)
-set (Boost_USE_MULTITHREADED ON)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
-set(PROTOCOL_LIB_NAME        protocol_lib)
-set(LOGGER_LIB_NAME          logger_lib)
-set(STORAGE_LIB_NAME         sqlite_db)
+set(PROTOCOL_LIB_NAME protocol_lib)
+set(LOGGER_LIB_NAME   logger_lib)
+set(STORAGE_LIB_NAME  sqlite_db)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin/lib)
+
+find_package(Threads REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework REQUIRED)
 
 include_directories(
     ${Boost_INCLUDE_DIR}
@@ -25,7 +30,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/lib/storage
     ${CMAKE_SOURCE_DIR}/src/server
     ${CMAKE_SOURCE_DIR}/src/client
-    ${CMAKE_SOURCE_DIR}/src/tests
 )
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/protocol)

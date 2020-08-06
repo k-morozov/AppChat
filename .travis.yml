@@ -17,16 +17,6 @@ addons:
 
 before_script:
     - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
-    #gtest
-    - sudo apt-get install libgtest-dev -y
-    - sudo chmod 777 /usr/src/gtest
-    - cd /usr/src/gtest
-    - cmake .
-    - make
-    - sudo cp *.a /usr/lib/
-    - cd "${TRAVIS_BUILD_DIR}"
-    # end gtest
-
 script:
   - mkdir ${TRAVIS_BUILD_DIR}/build
   - cd ${TRAVIS_BUILD_DIR}/build
