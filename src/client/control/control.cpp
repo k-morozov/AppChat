@@ -21,7 +21,7 @@ Control::Control() {
 void Control::connect_to_server(const std::string& login, const std::string& password, TypeCommand command) {
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::resolver resolver(io_service);
-    auto endpoints = resolver.resolve("127.0.0.1", "7777");
+    auto endpoints = resolver.resolve("172.17.0.1", "7777");
 
     input_request_ptr request;
     if (command==TypeCommand::RegistrationRequest) {

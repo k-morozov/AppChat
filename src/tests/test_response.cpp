@@ -1,66 +1,59 @@
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
+
 #include <protocol.h>
 #include <memory>
 
-class response: public ::testing::Test {
-protected:
+/**
+ * @brief Unit tests for AppChat project.
+ */
+BOOST_AUTO_TEST_SUITE(test_request)
 
-    virtual void SetUp() override {
-
-    }
-    virtual void TearDown() override {
-
-    }
-    virtual void TestBody() override {
-
-    }
-};
-
-TEST_F(response, registration_basic) {
-    int32_t id = 12345;
+BOOST_AUTO_TEST_CASE(response_registration_basic) {
+    identifier_t id = 12345;
     RegistrationResponse  response(id);
 
-    EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), TypeCommand::RegistrationResponse);
-    EXPECT_EQ(response.get_loginid(), id);
+    BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(response.get_type_data() == TypeCommand::RegistrationResponse);
+    BOOST_CHECK(response.get_loginid() == id);
 }
 
-TEST_F(response, autorisation_basic) {
-    uint32_t id = 1234567890;
+BOOST_AUTO_TEST_CASE(response_autorisation_basic) {
+    identifier_t id = 1234567890;
     AutorisationResponse  response(id);
 
-    EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), TypeCommand::AutorisationResponse);
-    EXPECT_EQ(response.get_loginid(), id);
+    BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(response.get_type_data() == TypeCommand::AutorisationResponse);
+    BOOST_CHECK(response.get_loginid() == id);
 }
 
-TEST_F(response, registration_basic_change_id) {
-    uint32_t id = 12345;
+BOOST_AUTO_TEST_CASE(response_registration_basic_change_id) {
+    identifier_t id = 12345;
     RegistrationResponse  response(id);
     id = 123;
     response.set_loginid(id);
-    EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), TypeCommand::RegistrationResponse);
-    EXPECT_EQ(response.get_loginid(), id);
+    BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(response.get_type_data() == TypeCommand::RegistrationResponse);
+    BOOST_CHECK(response.get_loginid() == id);
 
     response.set_loginid();
-    EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), TypeCommand::RegistrationResponse);
-    EXPECT_EQ(response.get_loginid(), 0);
+    BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(response.get_type_data() == TypeCommand::RegistrationResponse);
+    BOOST_CHECK(response.get_loginid() == 0);
 }
 
-TEST_F(response, autorisation_basic_change_id) {
-    uint32_t id = 1234567890;
+BOOST_AUTO_TEST_CASE(response_autorisation_basic_change_id) {
+    identifier_t id = 1234567890;
     AutorisationResponse  response(id);
     id = 123;
     response.set_loginid(id);
 
-    EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), TypeCommand::AutorisationResponse);
-    EXPECT_EQ(response.get_loginid(), id);
+    BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(response.get_type_data() == TypeCommand::AutorisationResponse);
+    BOOST_CHECK(response.get_loginid() == id);
 
     response.set_loginid();
-    EXPECT_EQ(response.get_protocol_version(), PROTOCOL_VERS);
-    EXPECT_EQ(response.get_type_data(), TypeCommand::AutorisationResponse);
-    EXPECT_EQ(response.get_loginid(), 0);
+    BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
+    BOOST_CHECK(response.get_type_data() == TypeCommand::AutorisationResponse);
+    BOOST_CHECK(response.get_loginid() == 0);
+}
 }

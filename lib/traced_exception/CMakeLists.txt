@@ -11,9 +11,11 @@ set(TRACEDEXCEPTION_SRC
     traced_exception.cpp
 )
 
-add_library(${TRACEDEXCEPTION_LIB_NAME} ${TRACEDEXCEPTION_SRC})
+install(TARGETS ${BACKTRACE_LIB_NAME})
+
+add_library(${TRACEDEXCEPTION_LIB_NAME} SHARED ${TRACEDEXCEPTION_SRC})
 target_include_directories(${TRACEDEXCEPTION_LIB_NAME} PUBLIC .)
-
 find_package(Boost REQUIRED)
+target_link_libraries(${TRACEDEXCEPTION_LIB_NAME} ${Boost_LIBRARIES} ${CMAKE_DL_LIBS} ${BACKTRACE_LIB_NAME})
 
-target_link_libraries(${TRACEDEXCEPTION_LIB_NAME} ${Boost_LIBRARIES} ${CMAKE_DL_LIBS})
+
