@@ -5,7 +5,9 @@
 ![GitHub issues](https://img.shields.io/github/issues-raw/k-morozov/AppChat)
 
 
-[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/Download/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Download/_latestVersion)
+sourse and bin[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/Download/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Download/_latestVersion)
+
+deb package [ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/Install-Linux/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Install-Linux/_latestVersion)
 
 TCP client-server application.
 
