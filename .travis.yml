@@ -2,33 +2,51 @@ dist: bionic
 language: cpp
 compiler: gcc
 sudo: required
-
 os:
   - linux
-addons:
-    apt:
-        packages:
+
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
             - graphviz
             - doxygen
-            - libgtest-dev
             - sqlite3 libsqlite3-dev
             - libboost-test-dev
             - qt5-default
+#          cache:
+#            directories:
+#              - $HOME/boost_1_67_0/boost
+#              - $HOME/boost_1_67_0/stage/lib
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - BUILD_DIR=build
+        - PROJECT_NAME=AppChat
+
+before_install:
+    - eval "${MATRIX_EVAL}"
 
 before_script:
     - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
+
 script:
-  - mkdir ${TRAVIS_BUILD_DIR}/build
-  - cd ${TRAVIS_BUILD_DIR}/build
+  - mkdir ${BUILD_DIR}
+  - cd ${BUILD_DIR}
   - cmake ..
   - cmake --build .
   - cmake --build . --target test
   - cmake --build . --target package
-  - cd ${TRAVIS_BUILD_DIR}/build/bin
-  - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
 
 after_success:
-  - >-
+- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin
+- tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
+- >-
     if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
       cd $TRAVIS_BUILD_DIR
       echo 'Generating Doxygen code documentation...'
