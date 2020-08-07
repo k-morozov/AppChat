@@ -5,10 +5,10 @@
 #include <memory>
 #include <deque>
 
-#include <connection/isubscriber.h>
-#include <channel/channels_manager.h>
-#include <protocol.h>
-#include <logger.h>
+#include "server/connection/isubscriber.h"
+#include "server/channel/channels_manager.h"
+#include "protocol/protocol.h"
+#include "server/log/logger.h"
 
 /**
  * @brief Connection class

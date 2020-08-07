@@ -1,4 +1,4 @@
-#include <channel/channel.h>
+#include "server/channel/channel.h"
 #include <sstream>
 
 void Channel::join(subscriber_ptr new_subsciber) {

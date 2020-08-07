@@ -2,7 +2,7 @@
 #define CONTROL_H
 
 #include <QWidget>
-#include <client/client.h>
+#include "client/client.h"
 #include <gui/mainwindow.h>
 
 /**

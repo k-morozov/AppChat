@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <mutex>
 #include <deque>
-#include <channel/iroom.h>
-#include <database.h>
-#include <logger.h>
+#include "iroom.h"
+#include "server/storage/database.h"
+#include "server/log/logger.h"
 
 /**
  * @brief Channel class
