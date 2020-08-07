@@ -13,11 +13,9 @@ class ConnectionManager
 {
 public:
     ConnectionManager():
-        logger(LOGGER("ConnectionManager")),
         db(std::make_shared<Database>("history.db"))
     {
-        LOG4CPLUS_INFO(logger,
-                   "create ConnectionManager");
+        BOOST_LOG_TRIVIAL(info) << "create ConnectionManager";
     }
     ConnectionManager(const ConnectionManager&) = delete;
 
@@ -35,7 +33,6 @@ public:
     }
 private:
     std::vector<connection_ptr> pool_connections;
-    log4cplus::Logger logger;
     database_ptr db;
 
     /**

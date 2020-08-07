@@ -30,7 +30,6 @@ private:
     static std::string create_table_history;
     static std::string create_table_logins;
 
-    log4cplus::Logger logger = LOGGER("Database");
 };
 
 using database_ptr = std::shared_ptr<Database>;

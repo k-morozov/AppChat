@@ -27,14 +27,11 @@ public:
     explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
         socket(std::move(_socket)),
         db(_db),
-        busy(true),
-        logger(LOGGER("Connection"))
+        busy(true)
 
     {
-        LOG4CPLUS_INFO(logger,
-                       "new connection from " << socket.remote_endpoint().address().to_string()
-                       << ":" << socket.remote_endpoint().port()
-                       );
+        BOOST_LOG_TRIVIAL(info) << "new connection from " << socket.remote_endpoint().address().to_string()
+                                << ":" << socket.remote_endpoint().port();
     }
 
     /**
@@ -54,10 +51,8 @@ public:
         socket = std::move(_socket);
 
         busy = true;
-        LOG4CPLUS_INFO(logger,
-                       "init connection from " << socket.remote_endpoint().address().to_string()
-                       << ":" << socket.remote_endpoint().port()
-                       );
+        BOOST_LOG_TRIVIAL(info) << "init connection from " << socket.remote_endpoint().address().to_string()
+                                << ":" << socket.remote_endpoint().port();
     }
 
     /**
@@ -117,8 +112,6 @@ private:
 
     database_ptr db;
     bool busy;
-
-    log4cplus::Logger logger;
 
 private:
     /**
