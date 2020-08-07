@@ -4,7 +4,8 @@ os:
 
 before_install:
   - choco install python3 --params "/InstallDir:C:\Python"
-  - C:/Python/python3.exe /scripts/install_env.py
+  - cd C:\Python
+  - dir
 
 install:
   - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
