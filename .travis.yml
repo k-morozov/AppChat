@@ -1,34 +1,37 @@
-dist: bionic
+#dist: bionic
 language: cpp
 compiler: gcc
 sudo: required
 os:
-  - linux
+  #  - linux
   - windows
 
 matrix:
   include:
-        # works on Precise and Trusty
-        #        - os: linux
-        #  addons:
-        #    apt:
-        #      sources:
-        #        - ubuntu-toolchain-r-test
-        #      packages:
-        #        - g++-7
-        #        - graphviz
-        #        - doxygen
-        #        - sqlite3 libsqlite3-dev
-        #        - libboost-test-dev
-        #        - qt5-default
-#          cache:
-#            directories:
-#              - $HOME/boost_1_67_0/boost
-#              - $HOME/boost_1_67_0/stage/lib
-#      env:
-#        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-#        - BUILD_DIR=build
-#        - PROJECT_NAME=AppChat
+    # works on Precise and Trusty
+    - os: linux
+    - dist: bionic
+        before_script:
+          - sudo python3 /scripts/install_env.py
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - graphviz
+            - doxygen
+            - sqlite3 libsqlite3-dev
+            - libboost-test-dev
+            - qt5-default
+          cache:
+            directories:
+              - $HOME/boost_1_67_0/boost
+              - $HOME/boost_1_67_0/stage/lib
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - BUILD_DIR=build
+        - PROJECT_NAME=AppChat
     - os: windows
         before_install:
           - python3 /scripts/install_env.py
@@ -38,9 +41,6 @@ matrix:
   
 before_install:
     - eval "${MATRIX_EVAL}"
-
-before_script:
-    - if [ $TRAVIS_OS_NAME == linux ]; then sudo python3 /scripts/install_env.py; fi
 
 script:
   - mkdir ${BUILD_DIR}
