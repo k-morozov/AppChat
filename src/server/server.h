@@ -17,7 +17,7 @@ class Server {
 public:
     /**
      * @brief Construct a new Server object.
-     * @param argc, argv: first argument - number port
+     * @param port - number port
      */
     Server(int32_t port):
         endpoint(boost::asio::ip::tcp::v4(), port),

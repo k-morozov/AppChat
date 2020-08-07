@@ -1,15 +1,26 @@
 #include "logger.h"
 
+namespace logging = boost::log;
+namespace src = boost::log::sources;
+namespace sinks = boost::log::sinks;
+namespace keywords = boost::log::keywords;
 
-void init_logger() {
-    log4cplus::initialize();
+void init_logger()
+{
+    logging::add_file_log
+    (
+        keywords::file_name = "sample_%N.log",                                        /*< file name pattern >*/
+        keywords::rotation_size = 10 * 1024 * 1024,                                   /*< rotate files every 10 MiB... >*/
+        keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0), /*< ...or at midnight >*/
+        keywords::format = "[%TimeStamp%]- <%Severity%>: %Message%"                                 /*< log record format >*/
+    );
+    logging::add_console_log(std::cout, boost::log::keywords::format = "[%TimeStamp%]- <%Severity%>: %Message%");
 
-    log4cplus::SharedAppenderPtr console_appender(new log4cplus::ConsoleAppender());
-    console_appender->setName(LOG4CPLUS_TEXT("Console_appender"));
-    log4cplus::Logger::getRoot().addAppender(console_appender);
+    logging::core::get()->set_filter
+    (
+        logging::trivial::severity >= logging::trivial::info
+    );
 
-    log4cplus::SharedAppenderPtr file_appender(new log4cplus::RollingFileAppender(LOG4CPLUS_TEXT("Server.log"), 5 * 1024 * 1024, 5));
-    file_appender->setName(LOG4CPLUS_TEXT("File_appender"));
-    file_appender->setLayout(std::unique_ptr<log4cplus::Layout>(new log4cplus::PatternLayout(LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} [%-5p] <%x> %c - %m%n"))));
-    log4cplus::Logger::getRoot().addAppender(file_appender);
+    logging::add_common_attributes();
 }
+

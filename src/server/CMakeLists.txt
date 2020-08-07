@@ -9,6 +9,7 @@ set(DIR_STORAGE     storage)
 set(DIR_PROTOCOL    protocol)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${PROTOCOL_LIB_NAME}
@@ -34,8 +35,6 @@ set(LOGGER_SRC
     ${DIR_LOG}/logger.h
     ${DIR_LOG}/logger.cpp
 )
-
-add_subdirectory(log/log4cplus)
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
 set(STORAGE_SRC
@@ -65,13 +64,13 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 )
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-find_package(Boost REQUIRED)
+ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     ${SQLITE3_LIBRARY}
-    log4cplus
     ${PROTOCOL_LIB_NAME}
 )
 
