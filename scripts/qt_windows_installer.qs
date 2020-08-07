@@ -14,12 +14,23 @@ Controller.prototype.WelcomePageCallback = function() {
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
-    console.log("Step: " + gui.currentPageWidget());
+    var page = gui.currentPageWidget();
+    console.log("Step: " + page);
 
-    gui.currentPageWidget().loginWidget.EmailLineEdit.setText("mixas1k@list.ru");
-    gui.currentPageWidget().loginWidget.PasswordLineEdit.setText("zx3021ZX3021");
+    page.loginWidget.EmailLineEdit.setText("mixas1k@list.ru");
+    page.loginWidget.PasswordLineEdit.setText("zx3021ZX3021");
 
     gui.clickButton(buttons.NextButton, 5000);
+}
+
+Controller.prototype.ObligationsPageCallback = function() {
+    var page = gui.currentPageWidget();
+    console.log("Step: " + page);
+
+    page.obligationsAgreement.setChecked(true);
+    page.completeChanged();
+
+    gui.clickButton(buttons.NextButton);
 }
 
 Controller.prototype.IntroductionPageCallback = function() {
@@ -29,22 +40,20 @@ Controller.prototype.IntroductionPageCallback = function() {
 }
 
 Controller.prototype.TargetDirectoryPageCallback = function() {
-    console.log("Step: " + gui.currentPageWidget());
+    var page = gui.currentPageWidget();
+    console.log("Step: " + page);
 
-    gui.currentPageWidget().TargetDirectoryLineEdit.setText("C:/Qt");
+    page.TargetDirectoryLineEdit.setText("C:/Qt");
 
     gui.clickButton(buttons.NextButton);
 }
 
 Controller.prototype.ComponentSelectionPageCallback = function() {
-    console.log("Step: " + gui.currentPageWidget());
-
     var page = gui.currentPageWidget();
-    page.deselectAll();
+    console.log("Step: " + page);
 
-    for (var i = 0; i < INSTALL_COMPONENTS.length; i++) {
-        console.log(INSTALL_COMPONENTS[i]);
-    }
+    page.deselectAll();
+    page.selectComponent("qt.qt5.5142.win64_mingw73");
 
     gui.clickButton(buttons.NextButton);
 }
