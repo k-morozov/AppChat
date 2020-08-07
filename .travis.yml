@@ -6,13 +6,16 @@ os:
 
 before_install:
   - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
+  - choco install python3 --params "/InstallDir:C:\Python"
+  - python.exe -m pip install --upgrade pip
+  - python.exe -m pip install requests
 
 install:
   - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
-  - choco install python3 --params "/InstallDir:C:\Python"
-  - C:/Python/python.exe -m pip install requests
-  - C:/Python/python.exe ./scripts/install_env.py
-  - setx PATH "%PATH%;C:/Qt/5.14.2/mingw73_64/bin"
+  - python.exe ./scripts/install_env.py
+
+env:
+  - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Python:/c/Python/Scripts:$PATH
   
 script:
   - mkdir ${BUILD_DIR}
