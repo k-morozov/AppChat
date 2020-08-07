@@ -65,6 +65,8 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+ADD_DEFINITIONS(-BOOST_ALL_DYN_LINK)
+
 find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
