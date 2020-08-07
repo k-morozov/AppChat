@@ -6,7 +6,7 @@ before_install:
   - choco install python3 --params "/InstallDir:C:\Python"
   - C:/Python/python.exe -m pip install requests
   - C:/Python/python.exe ./scripts/install_env.py
-  - wget -q https://download.qt.io.official_release/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
+  - wget -q https://download.qt.io/official_release/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
 
 install:
   - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
