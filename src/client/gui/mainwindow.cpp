@@ -1,4 +1,4 @@
-#include <gui/mainwindow.h>
+#include "client/gui/mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QMessageBox>
 

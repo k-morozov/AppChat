@@ -1,4 +1,4 @@
-#include <connection/connection.h>
+#include "server/connection/connection.h"
 
 void Connection::sendme(text_response_ptr response) {
     bool write_in_progress = !packets_to_client.empty();

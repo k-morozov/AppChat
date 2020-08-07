@@ -3,9 +3,9 @@
 #include <boost/asio.hpp>
 #include <QApplication>
 
-#include <protocol.h>
-#include <control/control.h>
-#include <gui/mainwindow.h>
+#include "protocol/protocol.h"
+#include "control/control.h"
+#include "gui/mainwindow.h"
 
 
 int main(int argc, char** argv) {
