@@ -1,9 +1,9 @@
-dist: bionic
+#dist: bionic
 language: cpp
 compiler: gcc
 sudo: required
 os:
-  - linux
+  #  - linux
   - windows
 
 matrix:
@@ -91,4 +91,3 @@ matrix:
           - mkdir ${BUILD_DIR} && cd ${BUILD_DIR}
           - cmake .. -G "MinGW Makefiles"
           - mingw32-make
-  
