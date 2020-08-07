@@ -1,21 +1,19 @@
 language: cpp
-os:
-  - windows
 
-before_install:
-  - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
-  - choco install python3 --params "/InstallDir:C:\Python"
-  - python.exe -m pip install --upgrade pip
-  - python.exe -m pip install requests
-
-install:
-  - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
-  - python.exe ./scripts/install_env.py
-
-env:
-  - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Python:/c/Python/Scripts:$PATH
-  - BUILD_DIR=build
-  
+matrix:
+  include:
+    - os: windows
+      env: 
+        - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Python:/c/Python/Scripts:$PATH
+        - BUILD_DIR=build
+      before_install:
+        - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
+        - choco install python3 --params "/InstallDir:C:\Python"
+        - python.exe -m pip install --upgrade pip
+        - python.exe -m pip install requests
+      install:
+        - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
+        - python.exe ./scripts/install_env.py  
 script:
   - mkdir ${BUILD_DIR}
   - cd ${BUILD_DIR}
