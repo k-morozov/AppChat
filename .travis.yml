@@ -3,7 +3,7 @@ os:
   - windows
 
 before_install:
-  - choco install python3 --params "/InstallDir:C:/Python"
+  - choco install python3 --params "/InstallDir:C:\Python"
   - C:/Python/python3.exe /scripts/install_env.py
 
 install:
