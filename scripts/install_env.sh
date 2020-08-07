@@ -11,5 +11,8 @@ install_boost() {
 
 #sudo apt-get update
 install_boost
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> install_env.sh restored
