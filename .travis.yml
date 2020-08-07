@@ -1,6 +1,4 @@
 language: cpp
-env:
-  - BUILD_DIR=build
 os:
   - windows
 
@@ -16,6 +14,7 @@ install:
 
 env:
   - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Python:/c/Python/Scripts:$PATH
+  - BUILD_DIR=build
   
 script:
   - mkdir ${BUILD_DIR}
