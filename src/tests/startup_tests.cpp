@@ -1,3 +1,3 @@
-//#define BOOST_TEST_MODULE app_chat_tests
+#define BOOST_TEST_MODULE app_chat_tests
 
-//#include <boost/test/unit_test.hpp>
+#include <boost/test/unit_test.hpp>

@@ -9,7 +9,10 @@ set(DIR_STORAGE     storage)
 set(DIR_PROTOCOL    protocol)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-include_directories(${Boost_INCLUDE_DIR})
+include_directories(
+    ${Boost_INCLUDE_DIR}
+    ${PROTOCOL_LIB_NAME}
+)
 
 set(CHANNELS_SRC
     ${DIR_CHANNEL}/iroom.h

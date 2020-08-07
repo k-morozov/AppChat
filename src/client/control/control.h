@@ -2,8 +2,8 @@
 #define CONTROL_H
 
 #include <QWidget>
-#include "client/client.h"
-#include <gui/mainwindow.h>
+#include "client/client/client.h"
+#include "client/gui/mainwindow.h"
 
 /**
  * @brief Controller
