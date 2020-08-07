@@ -1,8 +1,8 @@
 #ifndef CHANNELSMANAGER_H
 #define CHANNELSMANAGER_H
 
-#include <channel/channel.h>
-#include <logger.h>
+#include "channel.h"
+#include "server/log/logger.h"
 
 /**
  * @brief ChannelsManager

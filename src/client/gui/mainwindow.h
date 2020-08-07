@@ -9,7 +9,7 @@
 #include <QtCore>
 #include <QCloseEvent>
 
-#include <client/client.h>
+#include "client/client/client.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

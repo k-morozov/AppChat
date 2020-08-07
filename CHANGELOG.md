@@ -13,9 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add README.md [@k-morozov](https://github.com/k-morozov).
 - Add CHANGELOG.md [@k-morozov](https://github.com/k-morozov).
-- Georgian translation from [@k-morozov](https://github.com/tatocaster).
-- Add matrix ti travic-ci [@k-morozov](https://github.com/tatocaster)
-- Add ObjectPool for connections [@k-morozov](https://github.com/tatocaster)
+- Add matrix ti travic-ci [@k-morozov](https://github.com/k-morozov).
+- Add ObjectPool for connections [@k-morozov](https://github.com/k-morozov).
+- Add buildings deb packages (client and server) [@k-morozov](https://github.com/k-morozov).
 
 ### Changed
 - Remove stacktrace [@k-morozov](https://github.com/k-morozov).

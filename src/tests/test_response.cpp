@@ -1,8 +1,7 @@
 #include <boost/test/unit_test.hpp>
 
-#include <protocol.h>
+#include "protocol/protocol.h"
 #include <memory>
-
 /**
  * @brief Unit tests for AppChat project.
  */
