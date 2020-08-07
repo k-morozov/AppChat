@@ -35,8 +35,6 @@ set(LOGGER_SRC
     ${DIR_LOG}/logger.cpp
 )
 
-add_subdirectory(log/log4cplus)
-
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
 set(STORAGE_SRC
      ${DIR_STORAGE}/database.h
@@ -65,13 +63,12 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 )
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     ${SQLITE3_LIBRARY}
-    log4cplus
     ${PROTOCOL_LIB_NAME}
 )
 
