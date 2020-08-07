@@ -9,6 +9,7 @@ set(DIR_STORAGE     storage)
 set(DIR_PROTOCOL    protocol)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${PROTOCOL_LIB_NAME}
@@ -63,7 +64,8 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 )
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log REQUIRED)
+ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
