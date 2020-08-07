@@ -1,5 +1,5 @@
 #include "database.h"
-
+#include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 
 std::string Database::create_table_history = std::string("create table if not exists history ")
