@@ -1,9 +1,7 @@
-#dist: bionic
 language: cpp
-compiler: gcc
 sudo: required
 os:
-  #  - linux
+  - linux
   - windows
 
 matrix:
