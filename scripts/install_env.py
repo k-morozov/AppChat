@@ -23,7 +23,7 @@ class Win32BoostInstaller:
 
     command_1 = "cd " + path
     command_2 = "bootstrap.bat gcc"
-    command_3 = "b2.exe --prefix={} toolset=gcc -d0 -j 4 link=static runtime-link=shared install".format(boost_root)
+    command_3 = "b2.exe toolset=gcc -d0 -j 4 link=static runtime-link=shared install"
     command_4 = "setx /m BOOST_ROOT {}".format(boost_root)
     command_5 = "setx /m BOOST_INCLUDEDIR {}".format(boost_includedir)
 
