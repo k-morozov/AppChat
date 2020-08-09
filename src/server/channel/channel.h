@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <mutex>
 #include <deque>
-#include <channel/iroom.h>
-#include <database.h>
-#include <logger.h>
+#include "iroom.h"
+#include "server/storage/database.h"
+#include "server/log/logger.h"
 
 /**
  * @brief Channel class
@@ -28,10 +28,10 @@ public:
     Channel(identifier_t room, database_ptr db) : channel_id(room)
     {
         if (db == nullptr) {
-            LOG4CPLUS_ERROR(logger, "Failed to load history. Database pointer is nullptr.");
+            BOOST_LOG_TRIVIAL(info) << "Failed to load history. Database pointer is nullptr.";
         } else {
             history_room = db->load_history(channel_id);
-            LOG4CPLUS_INFO(logger, "Create channel_id=" << channel_id);
+            BOOST_LOG_TRIVIAL(info) << "Create channel_id=" << channel_id;
         }
     }
 
@@ -76,7 +76,6 @@ private:
     const identifier_t channel_id;
 
     std::deque<text_response_ptr> history_room;
-    log4cplus::Logger logger = LOGGER("Channel");
 };
 
 using channel_ptr = std::shared_ptr<Channel>;

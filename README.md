@@ -7,7 +7,8 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/k-morozov/AppChat?style=plastic)
 
 [![Build Status](https://travis-ci.org/k-morozov/AppChat.svg?branch=release)](https://travis-ci.org/k-morozov/AppChat)
-[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/Install-Linux/images/download.svg) ](https://bintray.com/k-morozov/AppChat/Install-Linux/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/server/images/download.svg) ](https://bintray.com/k-morozov/AppChat/server/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/client/images/download.svg) ](https://bintray.com/k-morozov/AppChat/client/_latestVersion)
 -----------
 ## Installation
 

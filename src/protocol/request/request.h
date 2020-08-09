@@ -2,7 +2,7 @@
 #define IREQUEST_H
 
 #include <memory>
-#include <command_table.h>
+#include "protocol/command_table.h"
 
 class Request : public IPacket {
 public:

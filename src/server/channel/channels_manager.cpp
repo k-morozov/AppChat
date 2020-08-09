@@ -1,8 +1,8 @@
-#include <channel/channels_manager.h>
+#include "server/channel/channels_manager.h"
 
 ChannelsManager::ChannelsManager()
 {
-    LOG4CPLUS_INFO(logger, "create ChannelsManager");
+    BOOST_LOG_TRIVIAL(info) << "create ChannelsManager";
 }
 
 void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, database_ptr db) {
@@ -11,25 +11,23 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, databas
         it->second->join(new_sub);
     }
     else {
-        LOG4CPLUS_INFO(logger, "ChannelsManager::join");
+        BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
         auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id, db));
         
         if (!flag) {
-            LOG4CPLUS_WARN(logger, "Non create");
+            BOOST_LOG_TRIVIAL(error) << "Non create";
         }
         // add check
         new_it->second->join(new_sub);
 
         auto [it2, error] = clients_in_room.emplace(new_sub->get_client_id(), room_id);
         if (!error) {
-            LOG4CPLUS_INFO(logger,
-                           "Non add subsciber client_id="<< it2->first
-                           << " in room_id=" << it2->second);
+            BOOST_LOG_TRIVIAL(info) << "Non add subsciber client_id="<< it2->first
+                                    << " in room_id=" << it2->second;
         }
         else {
-            LOG4CPLUS_INFO(logger,
-                            "New subsciber client_id="<< it2->first
-                            << " in room_id=" << it2->second);
+            BOOST_LOG_TRIVIAL(info) << "New subsciber client_id="<< it2->first
+                                    << " in room_id=" << it2->second;
         }
     }
 
@@ -41,7 +39,7 @@ void ChannelsManager::send(text_response_ptr response) {
         it->second->notification(response);
     }
     else {
-        LOG4CPLUS_ERROR(logger, "no room room_id=" << response->get_roomid());
+        BOOST_LOG_TRIVIAL(info) << "no room room_id=" << response->get_roomid();
     }
 }
 
@@ -54,12 +52,11 @@ void ChannelsManager::leave(subscriber_ptr sub) {
         clients_in_room.erase(sub->get_client_id());
         clientid_to_login.erase(sub->get_client_id());
 
-        LOG4CPLUS_INFO(logger,
-                       "client_id=" << sub->get_client_id()
-                       << " is leave from room_id=" << room_id);
+        BOOST_LOG_TRIVIAL(info) << "client_id=" << sub->get_client_id()
+                                << " is leave from room_id=" << room_id;
     }
     else {
-        LOG4CPLUS_ERROR(logger, "no room room_id=" << room_id);
+        BOOST_LOG_TRIVIAL(error) << "no room room_id=" << room_id;
     }
 
     sub->set_busy(false);

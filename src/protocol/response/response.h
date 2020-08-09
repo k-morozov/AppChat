@@ -1,7 +1,7 @@
 #ifndef IRESPONSE_H
 #define IRESPONSE_H
 
-#include <command_table.h>
+#include "protocol/command_table.h"
 
 class Response: public IPacket
 {
