@@ -8,22 +8,27 @@ boost_version_major = 1
 boost_version_minor = 73
 boost_version_patch = 0
 
-class LinuxBoostInstaller:
+class BoostInstaller:
+  def __init__(self):
+      self.boost_libs = ["system", "date_time", "unit_test_framework", "log_setup", "log"]
+      self.b2_options = "-j 4 link=static runtime-link=shared --with-libraries={}".format(','.join(self.boost_libs))
+
+class LinuxBoostInstaller(BoostInstaller):
   def install(self, path):
     command_1 = "cd " + path
     command_2 = "sudo ./bootstrap.sh --prefix=/usr/local"
-    command_3 = "sudo ./b2 -j 4 link=static runtime-link=shared install"
+    command_3 = "sudo ./b2 {} install".format(self.b2_options)
 
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
 
-class Win32BoostInstaller:
+class Win32BoostInstaller(BoostInsaller):
   def install(self, path):
     boost_root = "C\\:Boost\\"
     boost_includedir = "{}include\\boost_{}_{}_{}\\".format(boost_root, boost_version_major, boost_version_minor, boost_version_patch)
-
+    
     command_1 = "cd " + path
     command_2 = "bootstrap.bat gcc"
-    command_3 = "b2.exe toolset=gcc -j 4 link=static runtime-link=shared install"
+    command_3 = "b2.exe toolset=gcc {} install".format(self.b2_options)
     command_4 = "setx /m BOOST_ROOT {}".format(boost_root)
     command_5 = "setx /m BOOST_INCLUDEDIR {}".format(boost_includedir)
 
