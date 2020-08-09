@@ -12,15 +12,22 @@ class LinuxBoostInstaller:
   def install(self, path):
     command_1 = "cd " + path
     command_2 = "sudo ./bootstrap.sh --prefix=/usr/local"
-    command_3 = "sudo ./b2 link=static runtime-link=shared install"
+    command_3 = "sudo ./b2 -d0 -j 4 link=static runtime-link=shared install"
+
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
 
 class Win32BoostInstaller:
   def install(self, path):
+    boost_root = "C\\:Boost\\"
+    boost_includedir = "{}include\\boost_{}_{}_{}\\".format(boost_root, boost_version_major, boost_version_minor, boost_version_patch)
+
     command_1 = "cd " + path
-    command_2 = "bootstrap.bat"
-    command_3 = "b2.exe link=static runtime-link=shared install"
-    os.system("{} && {} && {}".format(command_1, command_2, command_3))
+    command_2 = "bootstrap.bat gcc"
+    command_3 = "b2.exe --prefix={} toolset=gcc -d0 -j 4 link=static runtime-link=shared install".format(boost_root)
+    command_4 = "setx /m BOOST_ROOT {}".format(boost_root)
+    command_5 = "setx /m BOOST_INCLUDEDIR {}".format(boost_includedir)
+
+    os.system("{} && {} && {} && {} && {}".format(command_1, command_2, command_3, command_4, command_5))
     
 
 def MakeBoostInstaller(platform):
