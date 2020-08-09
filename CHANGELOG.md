@@ -22,3 +22,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace google-test to boost test [@k-morozov](https://github.com/k-morozov).
 - Refactoring cmake [@k-morozov](https://github.com/k-morozov).
 - Add feature to Travic-CI to generate DEB pacakages (unstable) [@k-morozov](https://github.com/k-morozov).
+- change unit-test fraemwork (replace gtest to boost::test) [@k-morozov](https://github.com/k-morozov).
