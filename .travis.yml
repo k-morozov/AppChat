@@ -18,5 +18,5 @@ matrix:
         - python.exe ./scripts/install_env.py
       script:
         - mkdir ${BUILD_DIR} && cd ${BUILD_DIR}
-        - cmake .. -G "MinGW MakeFfiles"
+        - cmake .. -G "MinGW Makefiles"
         - mingw32-make
