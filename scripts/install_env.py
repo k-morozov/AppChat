@@ -18,8 +18,8 @@ class LinuxBoostInstaller:
 class Win32BoostInstaller:
   def install(self, path):
     command_1 = "cd " + path
-    command_2 = "bootstrap.bat"
-    command_3 = "b2.exe link=static runtime-link=shared install"
+    command_2 = "bootstrap.bat gcc"
+    command_3 = "b2.exe toolset=gcc link=static runtime-link=shared install"
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
     
 
