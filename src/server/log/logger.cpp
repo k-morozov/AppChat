@@ -14,6 +14,10 @@ void init_logger()
         keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0), /*< ...or at midnight >*/
         keywords::format = "[%TimeStamp%]- <%Severity%>: %Message%"                                 /*< log record format >*/
     );
+    boost::log::core::get()->set_filter
+        (
+            boost::log::trivial::severity >= boost::log::trivial::info
+        );
     logging::add_console_log(std::cout, boost::log::keywords::format = "[%TimeStamp%]- <%Severity%>: %Message%");
 
     logging::core::get()->set_filter

@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 set(SERVER_NAME appchat-server)
 
+set(Boost_USE_STATIC_LIBS ON)
+#add_definitions(-DBOOST_LOG_DYN_LINK)
+
 set(DIR_CONNECTION  connection)
 set(DIR_CHANNEL     channel)
 set(DIR_LOG         log)
@@ -42,7 +45,6 @@ set(STORAGE_SRC
      ${DIR_STORAGE}/database.cpp
 )
 
-
 set(SERVER_SOURCES
     startup_server.cpp
     server.h
@@ -60,22 +62,20 @@ set_target_properties(${SERVER_NAME} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
         LINK_LIBRARIES pthread
-        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
+        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic;-lboost_log_setup;-lboost_log;"
 )
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
-ADD_DEFINITIONS(-BOOST_ALL_DYN_LINK)
-
 find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
+#    ${Boost_LOG_LIBRARY}
+#    ${Boost_LOG_SETUP_LIBRARY}
     ${SQLITE3_LIBRARY}
     ${PROTOCOL_LIB_NAME}
 )
-
 
 install(TARGETS ${SERVER_NAME} RUNTIME DESTINATION bin)
 SET (CPACK_PACKAGE_NAME ${SERVER_NAME})

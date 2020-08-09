@@ -1,8 +1,11 @@
 #include "server.h"
 #include "log/logger.h"
+//#include <boost/log/core/core.hpp>
+//#include <boost/log/trivial.hpp>
 
 int main(int argc, char** argv) {
     init_logger();
+//    boost::log::core::get()->set_logging_enabled(true);
     BOOST_LOG_TRIVIAL(info) << "start server v.0.7";
 
     try {
