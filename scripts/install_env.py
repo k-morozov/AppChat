@@ -20,9 +20,7 @@ class Win32BoostInstaller:
     command_1 = "cd " + path
     command_2 = "bootstrap.bat"
     command_3 = "b2.exe link=static runtime-link=shared install"
-    command_4 = "setx /m BOOST_ROOT C:\\Boost\\"
-    command_5 = "setx /m BOOST_INCLUDEDIR C:\\Boost\\include\\boost_{}_{}_{}\\".format(boost_version_major, boost_version_minor, boost_version_patch)
-    os.system("{} && {} && {} && {} && {}".format(command_1, command_2, command_3, command_4, command_5))
+    os.system("{} && {} && {}".format(command_1, command_2, command_3))
     
 
 def MakeBoostInstaller(platform):
