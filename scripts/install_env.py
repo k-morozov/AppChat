@@ -10,12 +10,13 @@ boost_version_patch = 0
 
 class BoostInstaller:
   def __init__(self):
-      self.b2_options = "link=static runtime-link=shared"
+      self.boost_libs = ["system", "date_time", "log", "test"]
+      self.b2_options = "link=static runtime-link=shared -q -a -d0 -j2 threading=multi"
 
 class LinuxBoostInstaller(BoostInstaller):
   def install(self, path):
     command_1 = "cd " + path
-    command_2 = "sudo ./bootstrap.sh --prefix=/usr/local"
+    command_2 = "sudo ./bootstrap.sh --prefix=/usr/local --with-libraries={}".format(','.join(self.boost_libs))
     command_3 = "sudo ./b2 {} install".format(self.b2_options)
 
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
@@ -26,7 +27,7 @@ class Win32BoostInstaller(BoostInstaller):
     boost_includedir = "{}include\\boost_{}_{}_{}\\".format(boost_root, boost_version_major, boost_version_minor, boost_version_patch)
     
     command_1 = "cd " + path
-    command_2 = "bootstrap.bat gcc"
+    command_2 = "bootstrap.bat gcc --with-libraries={}".format(','.join(self.boost_libs))
     command_3 = "b2.exe toolset=gcc {} install".format(self.b2_options)
     command_4 = "setx /m BOOST_ROOT {}".format(boost_root)
     command_5 = "setx /m BOOST_INCLUDEDIR {}".format(boost_includedir)
