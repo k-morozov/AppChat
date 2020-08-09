@@ -21,7 +21,7 @@ class LinuxBoostInstaller(BoostInstaller):
 
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
 
-class Win32BoostInstaller(BoostInsaller):
+class Win32BoostInstaller(BoostInstaller):
   def install(self, path):
     boost_root = "C\\:Boost\\"
     boost_includedir = "{}include\\boost_{}_{}_{}\\".format(boost_root, boost_version_major, boost_version_minor, boost_version_patch)
