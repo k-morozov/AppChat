@@ -18,7 +18,7 @@ matrix:
             - graphviz
             - doxygen
             - sqlite3 libsqlite3-dev
-            - libboost-test-dev
+            - libboost-all-dev
             - qt5-default
 #          cache:
 #            directories:
