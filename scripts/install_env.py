@@ -11,7 +11,7 @@ boost_version_patch = 0
 class BoostInstaller:
   def __init__(self):
       self.boost_libs = ["system", "date_time", "log", "test"]
-      self.b2_options = "link=static runtime-link=shared -q -a -d0 -j2 threading=multi"
+      self.b2_options = "link=static runtime-link=shared -q -a -d0 -j2 threading=multi --disable-filesystem2"
 
 class LinuxBoostInstaller(BoostInstaller):
   def install(self, path):
