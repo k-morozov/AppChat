@@ -22,8 +22,7 @@ set(CLIENT_SOURCES
     ${Control_dir}/control.cpp
 )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package (Threads)
 
