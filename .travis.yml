@@ -44,7 +44,7 @@ script:
   - cmake --build . --target package
 
 after_success:
-- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin
+- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
 - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
 - >-
     if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
@@ -55,8 +55,8 @@ after_success:
     fi
 
     if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
-        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
-        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/release/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/release/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
     fi
 
 before_deploy:
@@ -77,4 +77,3 @@ deploy:
       token: $GITHUB_API_KEY
       keep_history: true
       local_dir: docs/html
-

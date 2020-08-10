@@ -25,7 +25,7 @@ public:
     identifier_t check_client(std::string login, std::string password) const;
 
 private:
-    const std::string db_name = "history.db";
+    const std::string db_name = "file:///home/appchat/history.db";
     sqlite3* db_ptr;
     static std::string create_table_history;
     static std::string create_table_logins;

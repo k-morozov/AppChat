@@ -20,7 +20,7 @@ std::string Database::create_table_logins = std::string("create table if not exi
 Database::Database(const std::string& _db_name)
     : db_name(_db_name)
 {
-    int rc = sqlite3_open(db_name.c_str(), &db_ptr);
+    int rc = sqlite3_open_v2(db_name.c_str(), &db_ptr, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_URI, NULL);
     if(rc) {
         BOOST_LOG_TRIVIAL(error) << "Cannot open database " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
