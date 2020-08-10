@@ -16,9 +16,9 @@ matrix:
       install:
         - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
         - python.exe ./scripts/install_env.py
-        - wget -q -o sqlite-amalgamation-3320300.zip https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip
+        - wget -q https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip
         - 7z.exe e sqlite-amalgamation-3320300.zip -oc:\sqlite\include
-        - wget -q -O sqlite-dll-win64-x64-3320300.zip https://www.sqlite.org/2020/sqlite-dll-win64-x64-3320300.zip
+        - wget -q https://www.sqlite.org/2020/sqlite-dll-win64-x64-3320300.zip
         - 7z.exe e sqlite-dll-win64-x64-3320300.zip -oc:\sqlite\lib
         - choco install doxygen.install
         - choco install graphviz
