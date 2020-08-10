@@ -18,6 +18,7 @@ matrix:
         - python.exe ./scripts/install_env.py
         - choco install sqlite
         - choco install doxygen.install
+        - choco install graphviz
       cache:
         directories:
           - /c/Python
