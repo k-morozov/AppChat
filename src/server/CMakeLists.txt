@@ -73,9 +73,6 @@ target_link_libraries (${SERVER_NAME}
     ${SQLITE3_LIBRARY}
     ${PROTOCOL_LIB_NAME}
 )
-if (WIN32)
-  target_include_directories(${SERVER_NAME} SQLITE3_INCLUDE_DIRS)
-endif (WIN32)
 
 install(TARGETS ${SERVER_NAME} RUNTIME DESTINATION bin)
 set(CPACK_PACKAGE_NAME ${SERVER_NAME})
