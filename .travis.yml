@@ -17,7 +17,7 @@ matrix:
         - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
         - python.exe ./scripts/install_env.py
         - wget -q -O sqlite-dll-win64-x64-3320300.zip https://www.sqlite.org/download.html
-        - 7z.exe e sqilte-dll-win64-x64-3320300.zip -oc:\sqlite
+        - 7z.exe e sqlite-dll-win64-x64-3320300.zip -oc:\sqlite
         - choco install doxygen.install
         - choco install graphviz
       cache:
