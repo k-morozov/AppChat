@@ -4,19 +4,20 @@ matrix:
   include:
     - os: windows
       env:
-        - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Qt/Tools/mingw730_64/bin:/c/Python/:/c/Python/Scripts:/c/ProgramData/chocolatey/lib/SQLite/:$PATH
+        - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Qt/Tools/mingw730_64/bin:/c/Python/:/c/Python/Scripts:/c/sqlite/:$PATH
         - BUILD_DIR=build
         - BOOST_ROOT=/c/Boost
         - BOOST_INCLUDEDIR=/c/Boost/include/boost_1_73_0/
-      before_install:
-        - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
-        - choco install python2 --params="/InstallDir:C:\Python"
-        - python.exe -m pip install --upgrade pip
-        - python.exe -m pip install requests
+      #before_install:
+        #- wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
+        #- choco install python2 --params="/InstallDir:C:\Python"
+        #- python.exe -m pip install --upgrade pip
+        #- python.exe -m pip install requests
       install:
-        - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
-        - python.exe ./scripts/install_env.py
-        - choco install sqlite --params "/NoTools"
+        #- ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
+        #- python.exe ./scripts/install_env.py
+        #- wget -q -O sqlite-dll-win64-x64-3320300.zip https://www.sqlite.org/download.html
+        - 7z.exe e sqlte-dll-win64-x64-3320300.zip -oc:\sqlite
         - choco install doxygen.install
         - choco install graphviz
       cache:
