@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add matrix ti travic-ci [@k-morozov](https://github.com/k-morozov).
 - Add ObjectPool for connections [@k-morozov](https://github.com/k-morozov).
 - Add buildings deb packages (client and server) [@k-morozov](https://github.com/k-morozov).
+- Add debug define and sanitize [@k-morozov](https://github.com/k-morozov).
 
 ### Changed
 - Remove stacktrace [@k-morozov](https://github.com/k-morozov).
