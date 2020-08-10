@@ -5,7 +5,7 @@
 #include <string>
 #include <deque>
 #include <boost/asio.hpp>
-#include <protocol.h>
+#include "protocol/protocol.h"
 #include <QWidget>
 
 /**

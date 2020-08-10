@@ -1,17 +1,17 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <protocol.h>
+#include "protocol/protocol.h"
 #include <deque>
 #include <sqlite3.h>
-#include <logger.h>
-
+#include "server/log/logger.h"
 #include <memory>
+#include <boost/filesystem.hpp>
 
 class Database
 {
 public:
-    Database(const std::string& _db_name);
+    Database();
     ~Database();
 
     void save_text_message(text_request_ptr message);
@@ -25,12 +25,11 @@ public:
     identifier_t check_client(std::string login, std::string password) const;
 
 private:
-    const std::string db_name = "history.db";
+    std::string db_name;
     sqlite3* db_ptr;
     static std::string create_table_history;
     static std::string create_table_logins;
 
-    log4cplus::Logger logger = LOGGER("Database");
 };
 
 using database_ptr = std::shared_ptr<Database>;

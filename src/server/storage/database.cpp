@@ -1,6 +1,7 @@
 #include "database.h"
-
+#include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
+#include <cstdlib>
 
 std::string Database::create_table_history = std::string("create table if not exists history ")
         + std::string("(author varchar[") + std::to_string(Block::LoginName) + std::string("], ")
@@ -16,22 +17,34 @@ std::string Database::create_table_logins = std::string("create table if not exi
         + std::string("password varchar[") + std::to_string(Block::Password) + std::string("]);");
 
 
+/**
+ * @brief Database::Database
+ * @todo add checks for create_directory
+ */
+Database::Database() {
+    const auto dir_path = std::string(std::getenv("HOME")) + "/Appchat/";
+    BOOST_LOG_TRIVIAL(info) << "Home dir: " << dir_path;
 
-Database::Database(const std::string& _db_name)
-    : db_name(_db_name)
-{
-    int rc = sqlite3_open(db_name.c_str(), &db_ptr);
+    if (!boost::filesystem::exists(dir_path)) {
+        boost::filesystem::create_directory(dir_path);
+        BOOST_LOG_TRIVIAL(info) << "create dir for appchat: " << dir_path;
+    }
+
+
+    db_name = "file://" + dir_path + "history.db";
+    int rc = sqlite3_open_v2(db_name.c_str(), &db_ptr, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_URI, NULL);
     if(rc) {
-        LOG4CPLUS_ERROR(logger, "Cannot open database " << sqlite3_errmsg(db_ptr));
+        BOOST_LOG_TRIVIAL(info) << "Cannot open database " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
     }
     else {
+        BOOST_LOG_TRIVIAL(error) << "success open database";
         char* err_msg1 = 0;
         rc = sqlite3_exec(db_ptr, create_table_history.c_str(),
                              [](void*, int, char**, char**){ return 0;},
                              0, &err_msg1);
         if(rc != SQLITE_OK) {
-            LOG4CPLUS_ERROR(logger, "SQL error " << err_msg1);
+            BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg1;
             sqlite3_free(err_msg1);
             sqlite3_close(db_ptr);
         }
@@ -40,7 +53,7 @@ Database::Database(const std::string& _db_name)
                                  [](void*, int, char**, char**){ return 0;},
                                  0, &err_msg1);
             if(rc != SQLITE_OK) {
-                LOG4CPLUS_ERROR(logger, "SQL error " << err_msg1);
+                BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg1;
                 sqlite3_free(err_msg1);
                 sqlite3_close(db_ptr);
             }
@@ -69,7 +82,7 @@ void Database::save_text_message(text_request_ptr message) {
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
-        LOG4CPLUS_ERROR(logger, "SQL error " << err_msg2);
+        BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg2;
         sqlite3_free(err_msg2);
         sqlite3_close(db_ptr);
         return;
@@ -87,7 +100,7 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
             + std::string(";");
 
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
-        LOG4CPLUS_ERROR(logger, "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr));
+        BOOST_LOG_TRIVIAL(error) << "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
         sqlite3_finalize(stmt);
     }
@@ -98,19 +111,18 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
         std::string dt = (const char *)sqlite3_column_blob(stmt, 2);
         std::string message = (const char *)sqlite3_column_blob(stmt, 3);
 
-        LOG4CPLUS_INFO(logger, author << " " << room_id << " " << dt << " " << message);
+        BOOST_LOG_TRIVIAL(info) << author << " " << room_id << " " << dt << " " << message;
         text_response_ptr response = std::make_shared<TextResponse>(author, DateTime(boost::posix_time::time_from_string(dt)), message, room_id);
 
         history_room.push_back(response);
         found=true;
     }
     if(ret_code != SQLITE_DONE) {
-        LOG4CPLUS_ERROR(logger, "ERROR: while performing sql: " << sqlite3_errmsg(db_ptr)
-                        << " ret_code = " << ret_code);
+        BOOST_LOG_TRIVIAL(info) << "ERROR: while performing sql: " << sqlite3_errmsg(db_ptr)
+                                 << " ret_code = " << ret_code;
     }
 
-    LOG4CPLUS_INFO(logger, "entry " << (found ? "found history" : "not found history"));
-
+    BOOST_LOG_TRIVIAL(info) << "entry " << (found ? "found history" : "not found history");
     sqlite3_finalize(stmt);
     return history_room;
 }
@@ -125,7 +137,7 @@ void Database::add_logins(std::string login, identifier_t login_id, std::string 
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
-        LOG4CPLUS_ERROR(logger, "SQL error " << err_msg2);
+        BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg2;
         sqlite3_free(err_msg2);
         sqlite3_close(db_ptr);
         return;
@@ -142,25 +154,23 @@ identifier_t Database::get_loginid(std::string login) const {
             + std::string("';");
 
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
-        LOG4CPLUS_ERROR(logger, "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr));
+        BOOST_LOG_TRIVIAL(error) << "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
         sqlite3_finalize(stmt);
     }
     int ret_code = 0;
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
-        LOG4CPLUS_INFO(logger,
-                       (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
-                       << (const char *)sqlite3_column_blob(stmt, 2));
+        BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
+                                 << (const char *)sqlite3_column_blob(stmt, 2);
         result = sqlite3_column_int(stmt, 1);
         found = true;
     }
     if(ret_code != SQLITE_DONE) {
-        LOG4CPLUS_ERROR(logger, "ERROR: while performing sql: " << sqlite3_errmsg(db_ptr)
-                        << " ret_code = " << ret_code);
+        BOOST_LOG_TRIVIAL(error) << "ERROR: while performing sql: " << sqlite3_errmsg(db_ptr)
+                                 << " ret_code = " << ret_code;
     }
 
-    LOG4CPLUS_INFO(logger, "login " << (found ? "found client" : "not found client"));
-
+    BOOST_LOG_TRIVIAL(info) << "login " << (found ? "found client" : "not found client");
     sqlite3_finalize(stmt);
 
     return result;
@@ -176,28 +186,26 @@ identifier_t Database::check_client(std::string login, std::string password) con
             + std::string("';");
 
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
-        LOG4CPLUS_ERROR(logger, "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr));
+        BOOST_LOG_TRIVIAL(error) << "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
         sqlite3_finalize(stmt);
     }
     int ret_code = 0;
 
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
-        LOG4CPLUS_INFO(logger,
-                       (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
-                       << (const char *)sqlite3_column_blob(stmt, 2));
+        BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
+                                 << (const char *)sqlite3_column_blob(stmt, 2);
         if ( password == (const char*)sqlite3_column_blob(stmt, 2)) {
             result = sqlite3_column_int(stmt, 1);
         }
         found = true;
     }
     if(ret_code != SQLITE_DONE) {
-        LOG4CPLUS_ERROR(logger, "ERROR: while performing sql: " << sqlite3_errmsg(db_ptr)
-                        << " ret_code = " << ret_code);
+        BOOST_LOG_TRIVIAL(error) << "ERROR: while performing sql: " << sqlite3_errmsg(db_ptr)
+                                 << " ret_code = " << ret_code;
     }
 
-    LOG4CPLUS_INFO(logger, "login " << (found ? "found client" : "not found client"));
-
+    BOOST_LOG_TRIVIAL(info) << "login " << (found ? "found client" : "not found client");
     sqlite3_finalize(stmt);
 
     return result;

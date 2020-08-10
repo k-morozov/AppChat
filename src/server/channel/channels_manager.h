@@ -1,8 +1,8 @@
 #ifndef CHANNELSMANAGER_H
 #define CHANNELSMANAGER_H
 
-#include <channel/channel.h>
-#include <logger.h>
+#include "channel.h"
+#include "server/log/logger.h"
 
 /**
  * @brief ChannelsManager
@@ -52,7 +52,6 @@ private:
     std::unordered_map<identifier_t, identifier_t> clients_in_room;
     std::unordered_map<identifier_t, std::string> clientid_to_login;
 
-    log4cplus::Logger logger = LOGGER("ChannelsManager");
 };
 
 #endif // CHANNELSMANAGER_H

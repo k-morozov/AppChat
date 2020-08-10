@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <protocol.h>
+#include "protocol/protocol.h"
 
 /**
  * @brief Channel Subscriber Interface 

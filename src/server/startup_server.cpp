@@ -1,16 +1,16 @@
-#include <server.h>
-#include <logger.h>
+#include "server.h"
+#include "log/logger.h"
 
-
-int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
+int main(int argc, char** argv) {
     init_logger();
-    auto logger = LOGGER("Main");
-    LOG4CPLUS_INFO(logger, "Server started. Version: 0.5");
+    BOOST_LOG_TRIVIAL(info) << "start server v.0.7";
 
     try {
-        Server server;
+        Server server((argc>1 ? std::stoi(argv[1]) : SERVER_DEFAULT_PORT));
         server.run();
     } catch (const std::exception & ex) {
-        LOG4CPLUS_ERROR(logger, "exception " << ex.what());
+        BOOST_LOG_TRIVIAL(info) << "Exception " << ex.what();
     }
+
+    BOOST_LOG_TRIVIAL(info) << "Server is shutting down now with EXIT_SUCCESS";
 }

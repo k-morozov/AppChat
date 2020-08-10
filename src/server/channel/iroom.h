@@ -4,8 +4,8 @@
 #include <memory>
 #include <string_view>
 
-#include <connection/isubscriber.h>
-#include <protocol.h>
+#include "server/connection/isubscriber.h"
+#include "protocol/protocol.h"
 
 /**
  * @brief Room interface

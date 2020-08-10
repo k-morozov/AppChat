@@ -18,7 +18,7 @@ matrix:
             - graphviz
             - doxygen
             - sqlite3 libsqlite3-dev
-            - libboost-test-dev
+            - libboost-all-dev
             - qt5-default
 #          cache:
 #            directories:
@@ -44,8 +44,8 @@ script:
   - cmake --build . --target package
 
 after_success:
-- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin
-- tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar server client
+- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
+- tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
 - >-
     if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
       cd $TRAVIS_BUILD_DIR
@@ -55,8 +55,8 @@ after_success:
     fi
 
     if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
-        curl -T ${TRAVIS_BUILD_DIR}/build/bin/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar -uk-morozov:$BINTRAY_API_KEY https://api.bintray.com/content/k-morozov/AppChat/Download/0.7.$TRAVIS_BUILD_NUMBER/AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/${PROJECT_NAME}-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/Install-Linux/0.7.$TRAVIS_BUILD_NUMBER/${PROJECT_NAME}-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
     fi
 
 before_deploy:
@@ -73,8 +73,7 @@ deploy:
 
 deploy:
     - provider: pages
-      skip-cleanup: true
-      github-token: $GITHUB_API_KEY
-      keep-history: true
-      local-dir: docs/html
-
+      skip_cleanup: true
+      token: $GITHUB_API_KEY
+      keep_history: true
+      local_dir: docs/html
