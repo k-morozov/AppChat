@@ -59,7 +59,6 @@ matrix:
     #      token: $GITHUB_API_KEY
     #      keep_history: true
     #      local_dir: docs/html
-
     - os: windows
         env:
           - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Qt/Tools/mingw730_64/bin:/c/Python:/c/Python/Scripts:/c/sqlite/:$PATH
