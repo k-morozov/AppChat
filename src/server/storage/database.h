@@ -5,8 +5,8 @@
 #include <deque>
 #include <sqlite3.h>
 #include "server/log/logger.h"
-
 #include <memory>
+#include <boost/filesystem.hpp>
 
 class Database
 {

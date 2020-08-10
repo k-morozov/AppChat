@@ -1,7 +1,6 @@
 #include "database.h"
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
-#include <filesystem>
 #include <cstdlib>
 
 std::string Database::create_table_history = std::string("create table if not exists history ")
@@ -25,12 +24,14 @@ std::string Database::create_table_logins = std::string("create table if not exi
 Database::Database() {
     const auto dir_path = std::string(std::getenv("HOME")) + "/Appchat/";
     BOOST_LOG_TRIVIAL(info) << "Home dir: " << dir_path;
-    db_name = "file://" + dir_path + "history.db";
-    if (!std::filesystem::exists(dir_path)) {
-        std::filesystem::create_directory(dir_path);
+
+    if (!boost::filesystem::exists(dir_path)) {
+        boost::filesystem::create_directory(dir_path);
         BOOST_LOG_TRIVIAL(info) << "create dir for appchat: " << dir_path;
     }
 
+
+    db_name = "file://" + dir_path + "history.db";
     int rc = sqlite3_open_v2(db_name.c_str(), &db_ptr, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_URI, NULL);
     if(rc) {
         BOOST_LOG_TRIVIAL(info) << "Cannot open database " << sqlite3_errmsg(db_ptr);

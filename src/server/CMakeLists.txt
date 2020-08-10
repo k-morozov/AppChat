@@ -63,7 +63,7 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 )
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log filesystem REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
