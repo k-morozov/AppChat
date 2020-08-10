@@ -9,10 +9,4 @@ install_boost() {
     sudo ./b2 link=static runtime-link=shared install
 }
 
-#sudo apt-get update
 install_boost
-<<<<<<< HEAD
-
-
-=======
->>>>>>> install_env.sh restored
