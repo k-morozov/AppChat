@@ -2,7 +2,6 @@ language: cpp
 
 matrix:
   include:
-    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
