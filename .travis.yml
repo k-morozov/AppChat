@@ -44,7 +44,7 @@ script:
   - cmake --build . --target package
 
 after_success:
-- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin
+- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
 - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
 - >-
     if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
@@ -77,4 +77,3 @@ deploy:
       token: $GITHUB_API_KEY
       keep_history: true
       local_dir: docs/html
-

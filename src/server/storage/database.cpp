@@ -1,6 +1,7 @@
 #include "database.h"
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
+#include <cstdlib>
 
 std::string Database::create_table_history = std::string("create table if not exists history ")
         + std::string("(author varchar[") + std::to_string(Block::LoginName) + std::string("], ")
@@ -16,16 +17,28 @@ std::string Database::create_table_logins = std::string("create table if not exi
         + std::string("password varchar[") + std::to_string(Block::Password) + std::string("]);");
 
 
+/**
+ * @brief Database::Database
+ * @todo add checks for create_directory
+ */
+Database::Database() {
+    const auto dir_path = std::string(std::getenv("HOME")) + "/Appchat/";
+    BOOST_LOG_TRIVIAL(info) << "Home dir: " << dir_path;
 
-Database::Database(const std::string& _db_name)
-    : db_name(_db_name)
-{
-    int rc = sqlite3_open(db_name.c_str(), &db_ptr);
+    if (!boost::filesystem::exists(dir_path)) {
+        boost::filesystem::create_directory(dir_path);
+        BOOST_LOG_TRIVIAL(info) << "create dir for appchat: " << dir_path;
+    }
+
+
+    db_name = "file://" + dir_path + "history.db";
+    int rc = sqlite3_open_v2(db_name.c_str(), &db_ptr, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_URI, NULL);
     if(rc) {
-        BOOST_LOG_TRIVIAL(error) << "Cannot open database " << sqlite3_errmsg(db_ptr);
+        BOOST_LOG_TRIVIAL(info) << "Cannot open database " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
     }
     else {
+        BOOST_LOG_TRIVIAL(error) << "success open database";
         char* err_msg1 = 0;
         rc = sqlite3_exec(db_ptr, create_table_history.c_str(),
                              [](void*, int, char**, char**){ return 0;},
