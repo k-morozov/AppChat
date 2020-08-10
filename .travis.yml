@@ -6,6 +6,8 @@ matrix:
       env: 
         - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Qt/Tools/mingw730_64/bin:/c/Python:/c/Python/Scripts:$PATH
         - BUILD_DIR=build
+        - BOOST_ROOT=/c/Boost/
+        - BOOST_INCLUDEDIR=/c/Boost/include/boost_1_73_0/
       before_install:
         - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
         - choco install python3 --params "/InstallDir:C:\Python"
