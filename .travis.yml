@@ -10,7 +10,7 @@ matrix:
         - BOOST_INCLUDEDIR=/c/Boost/include/boost_1_73_0/
       before_install:
         - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
-        - choco install python2 --params="/InstallDir:C:\Python"
+        - choco install python --version=3.7.2 --params="/InstallDir:C:\Python"
         - python.exe -m pip install --upgrade pip
         - python.exe -m pip install requests
       install:
