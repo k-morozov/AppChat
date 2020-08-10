@@ -28,7 +28,6 @@ class Win32BoostInstaller(BoostInstaller):
     command_3 = "b2.exe toolset=gcc {} install".format(self.b2_options)
 
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
-    
 
 def MakeBoostInstaller(platform):
   if platform == "linux":
