@@ -1,0 +1,5 @@
+<map id="AutorisationRequest" name="AutorisationRequest">
+<area shape="rect" id="node2" href="$classInputRequest.html" title="InputRequest" alt="" coords="29,155,135,181"/>
+<area shape="rect" id="node3" href="$classRequest.html" title="Request" alt="" coords="45,80,119,107"/>
+<area shape="rect" id="node4" href="$classIPacket.html" title="IPacket" alt="" coords="47,5,117,32"/>
+</map>

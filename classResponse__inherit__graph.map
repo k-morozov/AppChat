@@ -1,0 +1,8 @@
+<map id="Response" name="Response">
+<area shape="rect" id="node3" href="$classInputResponse.html" title="InputResponse" alt="" coords="215,155,332,181"/>
+<area shape="rect" id="node6" href="$classTransportResponse.html" title="TransportResponse" alt="" coords="359,155,503,181"/>
+<area shape="rect" id="node2" href="$classIPacket.html" title="IPacket" alt="" coords="316,5,385,32"/>
+<area shape="rect" id="node4" href="$classAutorisationResponse.html" title="The AutorisationResponse class. " alt="" coords="5,229,168,256"/>
+<area shape="rect" id="node5" href="$classRegistrationResponse.html" title="The RegistrationResponse class. " alt="" coords="192,229,355,256"/>
+<area shape="rect" id="node7" href="$classTextResponse.html" title="TextResponse" alt="" coords="379,229,490,256"/>
+</map>

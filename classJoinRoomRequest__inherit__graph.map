@@ -1,0 +1,5 @@
+<map id="JoinRoomRequest" name="JoinRoomRequest">
+<area shape="rect" id="node2" href="$classControlRequest.html" title="ControlRequest" alt="" coords="12,155,133,181"/>
+<area shape="rect" id="node3" href="$classRequest.html" title="Request" alt="" coords="35,80,110,107"/>
+<area shape="rect" id="node4" href="$classIPacket.html" title="IPacket" alt="" coords="38,5,107,32"/>
+</map>

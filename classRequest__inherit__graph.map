@@ -1,0 +1,10 @@
+<map id="Request" name="Request">
+<area shape="rect" id="node3" href="$classControlRequest.html" title="ControlRequest" alt="" coords="72,155,193,181"/>
+<area shape="rect" id="node5" href="$classInputRequest.html" title="InputRequest" alt="" coords="233,155,339,181"/>
+<area shape="rect" id="node8" href="$classTransportRequest.html" title="TransportRequest" alt="" coords="455,155,589,181"/>
+<area shape="rect" id="node2" href="$classIPacket.html" title="IPacket" alt="" coords="251,5,321,32"/>
+<area shape="rect" id="node4" href="$classJoinRoomRequest.html" title="JoinRoomRequest" alt="" coords="5,229,140,256"/>
+<area shape="rect" id="node6" href="$classAutorisationRequest.html" title="AutorisationRequest" alt="" coords="164,229,317,256"/>
+<area shape="rect" id="node7" href="$classRegistrationRequest.html" title="The RegistrationRequest class. " alt="" coords="342,229,494,256"/>
+<area shape="rect" id="node9" href="$classTextRequest.html" title="TextRequest" alt="" coords="518,229,619,256"/>
+</map>
