@@ -13,7 +13,7 @@ class ConnectionManager
 {
 public:
     ConnectionManager():
-        db(std::make_shared<Database>("history.db"))
+        db(std::make_shared<Database>())
     {
         BOOST_LOG_TRIVIAL(info) << "create ConnectionManager";
     }

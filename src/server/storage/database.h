@@ -11,7 +11,7 @@
 class Database
 {
 public:
-    Database(const std::string& _db_name);
+    Database();
     ~Database();
 
     void save_text_message(text_request_ptr message);
@@ -25,7 +25,7 @@ public:
     identifier_t check_client(std::string login, std::string password) const;
 
 private:
-    const std::string db_name = "file:///home/appchat/history.db";
+    std::string db_name;
     sqlite3* db_ptr;
     static std::string create_table_history;
     static std::string create_table_logins;
