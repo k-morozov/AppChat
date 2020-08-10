@@ -8,18 +8,25 @@ boost_version_major = 1
 boost_version_minor = 73
 boost_version_patch = 0
 
-class LinuxBoostInstaller:
+class BoostInstaller:
+  def __init__(self):
+    self.boost_libs = ["system", "date_time", "log", "test"]
+    self.b2_options = "link=static runtime-link=shared -q -j2 threading=multi {}".format(' '.join(list(map(lambda x: '--with-{}'.format(x), self.boost_libs))))
+
+class LinuxBoostInstaller(BoostInstaller):
   def install(self, path):
     command_1 = "cd " + path
     command_2 = "sudo ./bootstrap.sh --prefix=/usr/local"
-    command_3 = "sudo ./b2 link=static runtime-link=shared install"
+    command_3 = "sudo ./b2 {} install".format(self.b2_options)
+
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
 
-class Win32BoostInstaller:
+class Win32BoostInstaller(BoostInstaller):
   def install(self, path):
     command_1 = "cd " + path
     command_2 = "bootstrap.bat gcc"
-    command_3 = "b2.exe toolset=gcc link=static runtime-link=shared install"
+    command_3 = "b2.exe toolset=gcc {} install".format(self.b2_options)
+
     os.system("{} && {} && {}".format(command_1, command_2, command_3))
     
 
