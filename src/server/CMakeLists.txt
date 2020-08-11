@@ -12,7 +12,7 @@ set(DIR_STORAGE     storage)
 set(DIR_PROTOCOL    protocol)
 
 include_directories(
-    ${Boost_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
     ${PROTOCOL_LIB_NAME}
 )
 
