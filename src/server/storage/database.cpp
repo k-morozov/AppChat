@@ -20,8 +20,10 @@ std::string Database::create_table_logins = std::string("create table if not exi
 /**
  * @brief Database::Database
  * @todo add checks for create_directory
+ * @todo add open/close db methods
  */
 Database::Database() {
+    BOOST_LOG_TRIVIAL(info) << "Database()";
     const auto dir_path = std::string(std::getenv("HOME")) + "/Appchat/";
     BOOST_LOG_TRIVIAL(info) << "Home dir: " << dir_path;
 
@@ -30,39 +32,47 @@ Database::Database() {
         BOOST_LOG_TRIVIAL(info) << "create dir for appchat: " << dir_path;
     }
 
-
     db_name = "file://" + dir_path + "history.db";
     int rc = sqlite3_open_v2(db_name.c_str(), &db_ptr, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_URI, NULL);
     if(rc) {
-        BOOST_LOG_TRIVIAL(info) << "Cannot open database " << sqlite3_errmsg(db_ptr);
+        BOOST_LOG_TRIVIAL(fatal) << "Cannot open database " << sqlite3_errmsg(db_ptr);
         sqlite3_close(db_ptr);
+        db_ptr = NULL;
     }
     else {
-        BOOST_LOG_TRIVIAL(error) << "success open database";
-        char* err_msg1 = 0;
+        BOOST_LOG_TRIVIAL(info) << "Database has been successfully opened";
+        char* err_msg1 = nullptr;
         rc = sqlite3_exec(db_ptr, create_table_history.c_str(),
                              [](void*, int, char**, char**){ return 0;},
                              0, &err_msg1);
         if(rc != SQLITE_OK) {
-            BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg1;
-            sqlite3_free(err_msg1);
+            BOOST_LOG_TRIVIAL(error) << "SQL error create_table_history" << err_msg1;
+            if (err_msg1) sqlite3_free(err_msg1);
             sqlite3_close(db_ptr);
+            db_ptr = NULL;
         }
         else {
+            if (err_msg1) sqlite3_free(err_msg1);
+
             rc = sqlite3_exec(db_ptr, create_table_logins.c_str(),
                                  [](void*, int, char**, char**){ return 0;},
                                  0, &err_msg1);
             if(rc != SQLITE_OK) {
-                BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg1;
-                sqlite3_free(err_msg1);
+                BOOST_LOG_TRIVIAL(error) << "SQL error create_table_logins" << err_msg1;
+                if (err_msg1) sqlite3_free(err_msg1);
                 sqlite3_close(db_ptr);
+                db_ptr = NULL;
             }
+
         }
-    }
+    }   // finish open
+
 }
 
 Database::~Database() {
+    BOOST_LOG_TRIVIAL(info) << "~Database()";
     sqlite3_close(db_ptr);
+    db_ptr = NULL;
 }
 
 void Database::save_text_message(text_request_ptr message) {
@@ -77,14 +87,15 @@ void Database::save_text_message(text_request_ptr message) {
                                       + std::to_string(message->get_roomid()) + std::string(", strftime('%s','")
                                       + str_datetime + std::string("'), '")
                                       + std::string(message->get_message()) + std::string("');");
-    char* err_msg2 = 0;
+    char* err_msg2 = nullptr;
     int rc = sqlite3_exec(db_ptr, insert_query.c_str(),
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
-        BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg2;
-        sqlite3_free(err_msg2);
+        BOOST_LOG_TRIVIAL(error) << "SQL error save_text_message" << err_msg2;
+        if (err_msg2) sqlite3_free(err_msg2);
         sqlite3_close(db_ptr);
+        db_ptr = NULL;
         return;
     }
 
@@ -101,9 +112,12 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
 
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
         BOOST_LOG_TRIVIAL(error) << "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr);
-        sqlite3_close(db_ptr);
         sqlite3_finalize(stmt);
+        sqlite3_close(db_ptr);
+        db_ptr = NULL;
+
     }
+
     int ret_code = 0;
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
         std::string author = (const char *)sqlite3_column_blob(stmt, 0);
@@ -111,7 +125,7 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
         std::string dt = (const char *)sqlite3_column_blob(stmt, 2);
         std::string message = (const char *)sqlite3_column_blob(stmt, 3);
 
-        BOOST_LOG_TRIVIAL(info) << author << " " << room_id << " " << dt << " " << message;
+        BOOST_LOG_TRIVIAL(info) <<"Db: " << author << " " << room_id << " " << dt << " " << message;
         text_response_ptr response = std::make_shared<TextResponse>(author, DateTime(boost::posix_time::time_from_string(dt)), message, room_id);
 
         history_room.push_back(response);
@@ -124,6 +138,7 @@ std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
 
     BOOST_LOG_TRIVIAL(info) << "entry " << (found ? "found history" : "not found history");
     sqlite3_finalize(stmt);
+
     return history_room;
 }
 
@@ -132,16 +147,15 @@ void Database::add_logins(std::string login, identifier_t login_id, std::string 
                                       + login + std::string("', ")
                                       + std::to_string(login_id) + std::string(", '")
                                       + password + std::string("');");
-    char* err_msg2 = 0;
+    char* err_msg2 = nullptr;
     int rc = sqlite3_exec(db_ptr, insert_query.c_str(),
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
         BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg2;
-        sqlite3_free(err_msg2);
-        sqlite3_close(db_ptr);
-        return;
+        if (err_msg2) sqlite3_free(err_msg2);
     }
+    if (err_msg2 && db_ptr) sqlite3_free(err_msg2);
 }
 
 identifier_t Database::get_loginid(std::string login) const {
@@ -155,9 +169,9 @@ identifier_t Database::get_loginid(std::string login) const {
 
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
         BOOST_LOG_TRIVIAL(error) << "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr);
-        sqlite3_close(db_ptr);
         sqlite3_finalize(stmt);
     }
+
     int ret_code = 0;
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
         BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
@@ -187,7 +201,6 @@ identifier_t Database::check_client(std::string login, std::string password) con
 
     if (sqlite3_prepare_v2(db_ptr, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
         BOOST_LOG_TRIVIAL(error) << "ERROR: while compiling sql: " << sqlite3_errmsg(db_ptr);
-        sqlite3_close(db_ptr);
         sqlite3_finalize(stmt);
     }
     int ret_code = 0;

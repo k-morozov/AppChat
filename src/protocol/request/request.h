@@ -22,7 +22,7 @@ public:
     virtual uint16_t get_protocol_version() const override { return *(uint16_t*)header; }
 
     virtual TypeCommand get_type() const override { return TypeCommand::Unknown; }
-    virtual TypeCommand get_type_data() const override { return (TypeCommand) *(header + Block::VersionProtocol) ; }
+    virtual TypeCommand get_type_data() const override { return *(TypeCommand*)(header + Block::VersionProtocol) ; }
 
     virtual DateTime get_datetime() const override
     {
