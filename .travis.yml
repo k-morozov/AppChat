@@ -1,13 +1,34 @@
-dist: bionic
 language: cpp
-compiler: gcc
-sudo: required
-os:
-  - linux
 
 matrix:
   include:
-    # works on Precise and Trusty
+    - os: windows
+      env:
+        - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Qt/Tools/mingw730_64/bin:/c/Python/:/c/Python/Scripts:$PATH
+        - BUILD_DIR=build
+        - BOOST_ROOT=/c/Boost/
+      before_install:
+        - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
+        - choco install python2 --params="/InstallDir:C:\Python"
+        - python.exe -m pip install --upgrade pip
+        - python.exe -m pip install requests
+      install:
+        - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
+        - python.exe ./scripts/install_env.py
+        #- wget -q https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip
+        #- 7z.exe e sqlite-amalgamation-3320300.zip -oc:\sqlite\include
+        #- wget -q https://www.sqlite.org/2020/sqlite-dll-win64-x64-3320300.zip
+        #- 7z.exe e sqlite-dll-win64-x64-3320300.zip -oc:\sqlite\lib
+        - choco install doxygen.install
+        - choco install graphviz
+      cache:
+        directories:
+          - boost_1_73_0/
+      script:
+        - mkdir ${BUILD_DIR} && cd ${BUILD_DIR}
+        - cmake .. -G "MinGW Makefiles"
+        - mingw32-make
+
     - os: linux
       addons:
         apt:
@@ -18,62 +39,47 @@ matrix:
             - graphviz
             - doxygen
             - sqlite3 libsqlite3-dev
-            - libboost-all-dev
             - qt5-default
-#          cache:
-#            directories:
-#              - $HOME/boost_1_67_0/boost
-#              - $HOME/boost_1_67_0/stage/lib
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
         - BUILD_DIR=build
         - PROJECT_NAME=AppChat
-
-before_install:
-    - eval "${MATRIX_EVAL}"
-
-before_script:
-    - if [ $TRAVIS_OS_NAME == linux ]; then sudo ./scripts/install_env.sh; fi
-
-script:
-  - mkdir ${BUILD_DIR}
-  - cd ${BUILD_DIR}
-  - cmake ..
-  - cmake --build .
-  - cmake --build . --target test
-  - cmake --build . --target package
-
-after_success:
-- cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
-- tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
-- >-
-    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
-      cd $TRAVIS_BUILD_DIR
-      echo 'Generating Doxygen code documentation...'
-      # Redirect both stderr and stdout to the log file AND the console.
-      doxygen doc/Doxyfile 2>&1 | tee doxygen.log
-    fi
-
-    if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
-        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
-        curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
-    fi
-
-before_deploy:
-    - git config --local user.name "k-morozov"
-    - git config --local user.email "morozov-kst@yandex.ru"
-    - git tag 0.7.$TRAVIS_BUILD_NUMBER-Linux
-deploy:
-    - provider: releases
-      api_key: $GITHUB_API_KEY
-      file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
-      skip_cleanup: true
-      on:
-        branch: release
-
-deploy:
-    - provider: pages
-      skip_cleanup: true
-      token: $GITHUB_API_KEY
-      keep_history: true
-      local_dir: docs/html
+      before_install:
+        - eval "${MATRIX_EVAL}"
+      before_script:
+        - sudo python3 ./scripts/install_env.py
+      script:
+        - mkdir ${BUILD_DIR}
+        - cd ${BUILD_DIR}
+        - cmake ..
+        - cmake --build .
+      after_success:
+        - cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
+        - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
+        - >-
+            if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
+              cd $TRAVIS_BUILD_DIR
+              echo 'Generating Doxygen code documentation...'
+              # Redirect both stderr and stdout to the log file AND the console.
+              doxygen doc/Doxyfile 2>&1 | tee doxygen.log
+            fi
+            if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
+              curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+              curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+            fi
+      before_deploy:
+        - git config --local user.name "k-morozov"
+        - git config --local user.email "morozov-kst@yandex.ru"
+        - git tag 0.7.$TRAVIS_BUILD_NUMBER-Linux
+      deploy:
+        - provider: releases
+          api_key: $GITHUB_API_KEY
+          file: AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar
+          skip_cleanup: true
+          on:
+            branch: release
+        - provider: pages
+          skip_cleanup: true
+          token: $GITHUB_API_KEY
+          keep_history: true
+          local_dir: docs/html
