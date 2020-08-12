@@ -3,6 +3,13 @@
 #include <boost/program_options.hpp>
 
 namespace {
+    /**
+     * @brief set_parametrs - parser command line.
+     * @param argc
+     * @param argv
+     * @param port
+     * @return results for starts server
+     */
     bool set_parametrs(int argc, char** argv, int32_t& port) {
         namespace po = boost::program_options;
         try {
@@ -28,13 +35,13 @@ namespace {
             }
         }
         catch(std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "error: " << e.what();
+            BOOST_LOG_TRIVIAL(error) << e.what();
             BOOST_LOG_TRIVIAL(error) << "use --help for more information.";
             return false;
         }
         catch(...) {
             BOOST_LOG_TRIVIAL(error) << "Exception of unknown type!";
-             BOOST_LOG_TRIVIAL(error) << "use --help for more information.";
+            BOOST_LOG_TRIVIAL(error) << "use --help for more information.";
             return false;
         }
 
@@ -42,7 +49,7 @@ namespace {
         return true;
     }
 
-}
+}   // anonymous namespace
 
 
 int main(int argc, char** argv) {
