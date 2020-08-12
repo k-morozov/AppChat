@@ -1,5 +1,43 @@
 #include "server/connection/connection.h"
 
+void Connection::reuse(boost::asio::ip::tcp::socket&& _socket) {
+    if (busy) {
+        BOOST_LOG_TRIVIAL(fatal) << "reuse not free connection";
+        free_connection();
+    }
+    socket = std::move(_socket);
+    busy = true;
+    BOOST_LOG_TRIVIAL(info) << "reuse connection from " << socket.remote_endpoint().address().to_string()
+                            << ":" << socket.remote_endpoint().port();
+}
+
+void Connection::free_connection() {
+    ChannelsManager::Instance().leave(shared_from_this());
+
+    mtx_sock.lock();
+    if(socket.is_open()) {
+        boost::system::error_code ec;
+        socket.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+        if (ec) {
+            BOOST_LOG_TRIVIAL(error) << "Error when shutdown socket.";
+        }
+        socket.close(ec);
+        if (ec) {
+            BOOST_LOG_TRIVIAL(error) << "Error when close socket.";
+        }
+        BOOST_LOG_TRIVIAL(info) << "Close socket.";
+    }
+    mtx_sock.unlock();
+
+    packets_to_client.clear();
+    client_id = -1;
+    login.clear();
+    password.clear();
+    busy = false;
+
+    BOOST_LOG_TRIVIAL(warning) << "User exit. Leave from channels. Close socket. Connection saved. ";
+}
+
 void Connection::sendme(text_response_ptr response) {
     bool write_in_progress = !packets_to_client.empty();
     packets_to_client.push_back(response);
@@ -13,10 +51,8 @@ void Connection::read_request_header() {
 
     boost::asio::async_read(socket, boost::asio::buffer(request->get_header(), Block::Header),
                             [this, request](boost::system::error_code error, std::size_t) {
+        BOOST_LOG_TRIVIAL(info) << "\n\n";
         if (!error) {
-            auto dt = DateTime::from_universal_to_local(request->get_datetime());
-            std::cout << "[" << dt.to_simple_date() << " " << dt.to_simple_time() << "] New request.\n";
-
             switch (request->get_type_data()) {
                 case TypeCommand::Unknown:
                     BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
@@ -47,10 +83,8 @@ void Connection::read_request_header() {
                     break;
             }
         } else {
-            ChannelsManager::Instance().leave(shared_from_this());
-            if (socket.is_open()) {
-                socket.close();
-            }
+            BOOST_LOG_TRIVIAL(error) << "error read_request_header()";
+            free_connection();
         }
     });
 
@@ -73,8 +107,7 @@ void Connection::read_request_body(registr_request_ptr request) {
                 }
                 else {
                     BOOST_LOG_TRIVIAL(warning) << "this client was add to db early";
-                    client_id=-1;
-                    busy = false;
+                    client_id = -1;
                 }
 
                 input_res_ptr response = std::make_shared<RegistrationResponse>(client_id);
@@ -86,13 +119,18 @@ void Connection::read_request_body(registr_request_ptr request) {
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
 
-                read_request_header();
+                if (client_id != -1) {
+                    BOOST_LOG_TRIVIAL(info) << "Registration successfully completed";
+                    read_request_header();
+                }
+                else {
+                    BOOST_LOG_TRIVIAL(error) << "Registration failed";
+                    free_connection();
+                }
             }
             else {
-                ChannelsManager::Instance().leave(shared_from_this());
-                if (socket.is_open()) {
-                    socket.close();
-                }
+                BOOST_LOG_TRIVIAL(error) << "error read_request_body(registr)";
+                free_connection();
             }
     });
 }
@@ -114,19 +152,22 @@ void Connection::read_request_body(autor_request_ptr request) {
                                         << ", logid=" << response->get_loginid();
                 if (client_id!=-1) {
                     db->add_logins(login, response->get_loginid(), password);
-                } else {
-                    busy = false;
                 }
                 boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
                 boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
 
-                if (client_id!=-1) read_request_header();
+                if (client_id!=-1) {
+                    BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
+                    read_request_header();
+                }
+                else {
+                    BOOST_LOG_TRIVIAL(error) << "Authorization failed";
+                    free_connection();
+                }
             }
             else {
-                ChannelsManager::Instance().leave(shared_from_this());
-                if (socket.is_open()) {
-                    socket.close();
-                }
+                BOOST_LOG_TRIVIAL(error) << "error read_request_body(autor)";
+                free_connection();
             }
     });
 }
@@ -144,15 +185,14 @@ void Connection::read_request_body(text_request_ptr request) {
 
                 text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
                 ChannelsManager::Instance().send(response);
+
                 db->save_text_message(request);
 
                 read_request_header();
             }
             else {
-                ChannelsManager::Instance().leave(shared_from_this());
-                if (socket.is_open()) {
-                    socket.close();
-                }
+                BOOST_LOG_TRIVIAL(error) << "error read_request_body()";
+                free_connection();
             }
     });
 
@@ -164,19 +204,15 @@ void Connection::read_request_body(join_room_request_ptr request) {
         [this, self, request](boost::system::error_code error, std::size_t) {
             if (!error) {
                 ChannelsManager::Instance().leave(shared_from_this());
-
                 auto new_roomid = request->get_roomid();
-
                 BOOST_LOG_TRIVIAL(info) << "roomid=" << new_roomid;
                 ChannelsManager::Instance().join(self, new_roomid, db);
 
                 read_request_header();
             }
             else {
-                ChannelsManager::Instance().leave(shared_from_this());
-                if (socket.is_open()) {
-                    socket.close();
-                }
+                BOOST_LOG_TRIVIAL(error) << "error read_request_body()";
+                free_connection();
             }
     });
 
@@ -191,8 +227,8 @@ void Connection::send_response_header() {
                 if (!error) {
                     send_response_data();
                 } else {
-                    BOOST_LOG_TRIVIAL(info) << "error send_response_header()";
-                    ChannelsManager::Instance().leave(self);
+                    BOOST_LOG_TRIVIAL(error) << "error send_response_header()";
+                    free_connection();
                 }
             }
     );
@@ -210,8 +246,8 @@ void Connection::send_response_data() {
                         send_response_header();
                     }
                 } else {
-                    BOOST_LOG_TRIVIAL(info) << "error send_response_data()";
-                    ChannelsManager::Instance().leave(self);
+                    BOOST_LOG_TRIVIAL(error) << "error send_response_data()";
+                    free_connection();
                 }
             }
     );
