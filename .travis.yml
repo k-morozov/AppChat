@@ -16,8 +16,8 @@ matrix:
       install:
         - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
         - python.exe ./scripts/install_env.py
-        - setx BOOST_ROOT "C:\Boost\"
-        - setx BOOST_INCLUDEDIR "C:\Boost\include\boost-1_73\"
+        - export BOOST_ROOT=/C/Boost
+        - export BOOST_INCLUDEDIR=/C/Boost/include/boost-1-73
         #- wget -q https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip
         #- 7z.exe e sqlite-amalgamation-3320300.zip -oc:\sqlite\include
         #- wget -q https://www.sqlite.org/2020/sqlite-dll-win64-x64-3320300.zip
