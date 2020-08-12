@@ -26,6 +26,6 @@ set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
 )
 
 find_package(Boost COMPONENTS date_time REQUIRED)
-include_directories(${Boost_INCLUDE_LIBS})
+include_directories(${Boost_INCLUDE_DIRS})
 
 install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)
