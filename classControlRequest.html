@@ -97,8 +97,7 @@ virtual const void *&#160;</td><td class="memItemRight" valign="bottom"><b>get_d
 <tr class="memitem:af6f8a377a15cfa5769a5c90008bcf433"><td class="memItemLeft" align="right" valign="top"><a id="af6f8a377a15cfa5769a5c90008bcf433"></a>
 virtual void *&#160;</td><td class="memItemRight" valign="bottom"><b>get_data</b> () override</td></tr>
 <tr class="separator:af6f8a377a15cfa5769a5c90008bcf433"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77c8f3841a28cd1a8e3eda650e9cc15f"><td class="memItemLeft" align="right" valign="top"><a id="a77c8f3841a28cd1a8e3eda650e9cc15f"></a>
-virtual identifier_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_roomid</b> () const</td></tr>
+<tr class="memitem:a77c8f3841a28cd1a8e3eda650e9cc15f"><td class="memItemLeft" align="right" valign="top">virtual identifier_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classControlRequest.html#a77c8f3841a28cd1a8e3eda650e9cc15f">get_roomid</a> () const</td></tr>
 <tr class="separator:a77c8f3841a28cd1a8e3eda650e9cc15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab076bbd0194d1c9aedc9208ca84184ef"><td class="memItemLeft" align="right" valign="top"><a id="ab076bbd0194d1c9aedc9208ca84184ef"></a>
 virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_length_data</b> () const override</td></tr>
@@ -139,6 +138,33 @@ Static Protected Attributes</h2></td></tr>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>LengthRequest</b> = Block::RoomId</td></tr>
 <tr class="separator:a24d3093fe938a023ee684839212578d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a77c8f3841a28cd1a8e3eda650e9cc15f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77c8f3841a28cd1a8e3eda650e9cc15f">&#9670;&nbsp;</a></span>get_roomid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual identifier_t ControlRequest::get_roomid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>replace -&gt; return *(identifier_t *)(__data); Misaligned Integer Pointer Assignment in C The compiler can often safely optimize calls to memcpy, even if the arguments are unaligned.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/protocol/request/<a class="el" href="control__request_8h_source.html">control_request.h</a></li>
 </ul>

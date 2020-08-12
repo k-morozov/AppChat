@@ -94,9 +94,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6ba21b4a9175fd5d04ea2969c85e81fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConnection.html#a6ba21b4a9175fd5d04ea2969c85e81fb">Connection</a> (boost::asio::ip::tcp::socket &amp;&amp;_socket, database_ptr _db)</td></tr>
 <tr class="memdesc:a6ba21b4a9175fd5d04ea2969c85e81fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classConnection.html" title="Connection class. ">Connection</a> object.  <a href="#a6ba21b4a9175fd5d04ea2969c85e81fb">More...</a><br /></td></tr>
 <tr class="separator:a6ba21b4a9175fd5d04ea2969c85e81fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af31bf6455abccd47a9619248fb209779"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConnection.html#af31bf6455abccd47a9619248fb209779">init</a> (boost::asio::ip::tcp::socket &amp;&amp;_socket)</td></tr>
-<tr class="memdesc:af31bf6455abccd47a9619248fb209779"><td class="mdescLeft">&#160;</td><td class="mdescRight">reuse connection for Object Pool  <a href="#af31bf6455abccd47a9619248fb209779">More...</a><br /></td></tr>
-<tr class="separator:af31bf6455abccd47a9619248fb209779"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a771acbf9f5bda1b79065078ec6c86ff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConnection.html#a771acbf9f5bda1b79065078ec6c86ff7">reuse</a> (boost::asio::ip::tcp::socket &amp;&amp;_socket) override</td></tr>
+<tr class="memdesc:a771acbf9f5bda1b79065078ec6c86ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">reuse connection for Object Pool  <a href="#a771acbf9f5bda1b79065078ec6c86ff7">More...</a><br /></td></tr>
+<tr class="separator:a771acbf9f5bda1b79065078ec6c86ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9abe8c2edfb2989957d16c2152867bbb"><td class="memItemLeft" align="right" valign="top"><a id="a9abe8c2edfb2989957d16c2152867bbb"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConnection.html#a9abe8c2edfb2989957d16c2152867bbb">start</a> () override</td></tr>
 <tr class="memdesc:a9abe8c2edfb2989957d16c2152867bbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Entry point to handle incoming requests. <br /></td></tr>
@@ -116,8 +116,9 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_busy</b> (
 <tr class="memitem:aa583e48dfd994bed6e02ab15f4c9e226"><td class="memItemLeft" align="right" valign="top"><a id="aa583e48dfd994bed6e02ab15f4c9e226"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> (bool flag=true) noexcept override</td></tr>
 <tr class="separator:aa583e48dfd994bed6e02ab15f4c9e226"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e4352edf667bea83001569e9da8a24d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConnection.html#a2e4352edf667bea83001569e9da8a24d">~Connection</a> ()</td></tr>
-<tr class="separator:a2e4352edf667bea83001569e9da8a24d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a85ca9ece3af882f6789f2d1bea54ff"><td class="memItemLeft" align="right" valign="top"><a id="a5a85ca9ece3af882f6789f2d1bea54ff"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>free_connection</b> () override</td></tr>
+<tr class="separator:a5a85ca9ece3af882f6789f2d1bea54ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classConnection.html" title="Connection class. ">Connection</a> class. </p>
@@ -168,32 +169,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
 
 </div>
 </div>
-<a id="a2e4352edf667bea83001569e9da8a24d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e4352edf667bea83001569e9da8a24d">&#9670;&nbsp;</a></span>~Connection()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Connection::~Connection </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>double close socket?</dd></dl>
-
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="ada8c3ce99e005bce63c6cd86310ca5c8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada8c3ce99e005bce63c6cd86310ca5c8">&#9670;&nbsp;</a></span>get_client_id()</h2>
@@ -219,8 +194,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
 </div><div class="memdoc">
 
 <p>Get the client id object. </p>
-<p>Returns current client id</p>
-<dl class="section return"><dt>Returns</dt><dd>identifier_t </dd></dl>
+<p>Returns current client id </p><dl class="section return"><dt>Returns</dt><dd>identifier_t </dd></dl>
 
 <p>Implements <a class="el" href="classISubscriber.html#a176e45383c29328e20381540798b6c90">ISubscriber</a>.</p>
 
@@ -250,15 +224,14 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
 </div><div class="memdoc">
 
 <p>Get the login. </p>
-<p>Return client's login</p>
-<dl class="section return"><dt>Returns</dt><dd>const std::string&amp; </dd></dl>
+<p>Return client's login </p><dl class="section return"><dt>Returns</dt><dd>const std::string&amp; </dd></dl>
 
 <p>Implements <a class="el" href="classISubscriber.html#a0ed9b660a420d28f3df6ee0a3dc2cc11">ISubscriber</a>.</p>
 
 </div>
 </div>
-<a id="af31bf6455abccd47a9619248fb209779"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af31bf6455abccd47a9619248fb209779">&#9670;&nbsp;</a></span>init()</h2>
+<a id="a771acbf9f5bda1b79065078ec6c86ff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a771acbf9f5bda1b79065078ec6c86ff7">&#9670;&nbsp;</a></span>reuse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -267,7 +240,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Connection::init </td>
+          <td class="memname">void Connection::reuse </td>
           <td>(</td>
           <td class="paramtype">boost::asio::ip::tcp::socket &amp;&amp;&#160;</td>
           <td class="paramname"><em>_socket</em></td><td>)</td>
@@ -276,7 +249,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -288,6 +261,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
   </table>
   </dd>
 </dl>
+
+<p>Implements <a class="el" href="classISubscriber.html">ISubscriber</a>.</p>
 
 </div>
 </div>

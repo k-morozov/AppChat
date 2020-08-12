@@ -102,6 +102,12 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_busy</b> (
 <tr class="memitem:abbead992d54b2da9d6c73fac7648b515"><td class="memItemLeft" align="right" valign="top"><a id="abbead992d54b2da9d6c73fac7648b515"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> (bool flag=true) noexcept=0</td></tr>
 <tr class="separator:abbead992d54b2da9d6c73fac7648b515"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5821607a46c91bf6b2691a0336f05822"><td class="memItemLeft" align="right" valign="top"><a id="a5821607a46c91bf6b2691a0336f05822"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reuse</b> (boost::asio::ip::tcp::socket &amp;&amp;_socket)=0</td></tr>
+<tr class="separator:a5821607a46c91bf6b2691a0336f05822"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a723037d5e860f69a4468fe5f6f1c034d"><td class="memItemLeft" align="right" valign="top"><a id="a723037d5e860f69a4468fe5f6f1c034d"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>free_connection</b> ()=0</td></tr>
+<tr class="separator:a723037d5e860f69a4468fe5f6f1c034d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classChannel.html" title="Channel class. ">Channel</a> Subscriber Interface. </p>
@@ -130,8 +136,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
 </div><div class="memdoc">
 
 <p>Get the client id object. </p>
-<p>Returns current client id</p>
-<dl class="section return"><dt>Returns</dt><dd>identifier_t </dd></dl>
+<p>Returns current client id </p><dl class="section return"><dt>Returns</dt><dd>identifier_t </dd></dl>
 
 <p>Implemented in <a class="el" href="classConnection.html#ada8c3ce99e005bce63c6cd86310ca5c8">Connection</a>.</p>
 
@@ -161,8 +166,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_busy</b> 
 </div><div class="memdoc">
 
 <p>Get the login. </p>
-<p>Return client's login</p>
-<dl class="section return"><dt>Returns</dt><dd>const std::string&amp; </dd></dl>
+<p>Return client's login </p><dl class="section return"><dt>Returns</dt><dd>const std::string&amp; </dd></dl>
 
 <p>Implemented in <a class="el" href="classConnection.html#a8b2755786350d889aea9ae86d939808c">Connection</a>.</p>
 
