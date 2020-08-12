@@ -3,18 +3,14 @@
 
 #include "connection.h"
 
-
 /**
  * @brief ConnectionManager
- *
  * @details Manager to control connections from clinets. Use ObjectPool.
  */
 class ConnectionManager
 {
 public:
-    ConnectionManager():
-        db(std::make_shared<Database>())
-    {
+    ConnectionManager(database_ptr db): db(db) {
         BOOST_LOG_TRIVIAL(info) << "create ConnectionManager";
     }
     ConnectionManager(const ConnectionManager&) = delete;

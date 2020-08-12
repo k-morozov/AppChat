@@ -54,7 +54,6 @@ namespace {
 
 }   // anonymous namespace
 
-
 int main(int argc, char** argv) {
     init_logger();
     int32_t port = SERVER_DEFAULT_PORT;
@@ -62,10 +61,11 @@ int main(int argc, char** argv) {
     if (set_parametrs(argc, argv, port)) {
         BOOST_LOG_TRIVIAL(info) << "starting server v.0.7";
         try {
-            Server server(port);
-            server.run();
+            database_ptr db_sqlite = std::make_shared<Database>();
+            std::unique_ptr<Server> server = std::make_unique<Server>(port, db_sqlite);
+            server->run();
         } catch (const std::exception & ex) {
-            BOOST_LOG_TRIVIAL(info) << "Exception " << ex.what();
+            BOOST_LOG_TRIVIAL(fatal) << "Exception " << ex.what();
         }
     }
 
