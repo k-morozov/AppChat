@@ -1,6 +1,7 @@
 #include "client/control/control.h"
 
 Control::Control(int argc, char** argv) {
+    std::cout << "Ctor Control" << std::endl;
     if (argc>1) {
         ip = std::string(argv[1]);
         if (argc>2) {
@@ -22,9 +23,9 @@ Control::Control(int argc, char** argv) {
 }
 
 void Control::connect_to_server(const std::string& login, const std::string& password, TypeCommand command) {
+    std::cout << "open connect_to_server" << std::endl;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::resolver resolver(io_service);
-
     auto endpoints = resolver.resolve(ip, std::to_string(port));
 
     input_request_ptr request;
@@ -42,5 +43,9 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
         io_service.run();
     });
     th.join();
-    client->close();
+
+    if (client) {
+        client->close_connection();
+    }
+    std::cout << "close connect_to_server" << std::endl;
 }

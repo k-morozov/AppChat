@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CHECK_SANITIZE OFF)
+set(CHECK_SANITIZE ON)
+
 
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
     project(AppChat VERSION 0.7.$ENV{TRAVIS_BUILD_NUMBER})
@@ -18,7 +19,11 @@ if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/debug/)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG -Og -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -D_LIBCPP_DEBUG=1")
     if (${CHECK_SANITIZE} STREQUAL ON)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=address -fsanitize=leak -fsanitize=undefined")
+#        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+        add_compile_options("-fsanitize=address")
+        link_libraries("-fsanitize=address")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=address -fsanitize=leak")
+#         -fsanitize=undefined
     endif()
 else ()
     message("Release mode")

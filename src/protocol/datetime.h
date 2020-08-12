@@ -21,8 +21,10 @@ struct DateTime
     std::string to_simple_time() const;
 
     static DateTime from_universal_to_local(DateTime dt);
+
+    friend bool operator== (DateTime lhs, DateTime rhs);
+    friend bool operator< (DateTime lhs, DateTime rhs);
 };
 
-bool operator== (DateTime lhs, DateTime rhs);
-bool operator< (DateTime lhs, DateTime rhs);
+
 #endif // DATETIME_H
