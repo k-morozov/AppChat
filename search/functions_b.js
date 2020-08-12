@@ -9,7 +9,7 @@ var searchData=
   ['send_5ftext_5fdata',['send_text_data',['../classMainWindow.html#aebf6cf3220be00296f2a28f23524d7d9',1,'MainWindow']]],
   ['send_5ftext_5fto_5fgui',['send_text_to_gui',['../classControl.html#a3cd26e48a8c805f77b65b60934408e6a',1,'Control']]],
   ['sendme',['sendme',['../classConnection.html#a8eb2c0a972d66449554c4b10c0e25f1f',1,'Connection::sendme()'],['../classISubscriber.html#aa08b473982b84d99aeedcd148a68316b',1,'ISubscriber::sendme()']]],
-  ['server',['Server',['../classServer.html#ab44d983f5b9a2a202fc2db6b0737fd57',1,'Server']]],
+  ['server',['Server',['../classServer.html#aad12d86f7aa0a3cf195fb888b44b65c0',1,'Server']]],
   ['set_5flogin_5fid',['set_login_id',['../classClient.html#a20fc72a90d6ac9071bbde25e493a6a44',1,'Client']]],
   ['start',['start',['../classConnection.html#a9abe8c2edfb2989957d16c2152867bbb',1,'Connection::start()'],['../classISubscriber.html#a5069c5f696ba5b660de7749d80a32d13',1,'ISubscriber::start()']]]
 ];
