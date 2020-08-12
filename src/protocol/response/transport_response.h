@@ -17,7 +17,15 @@ public:
     }
 
     virtual identifier_t get_roomid() const {
-        return *(identifier_t *)(__data+Block::LoginName);
+        /**
+          * @note replace -> *(identifier_t *)(__data+offset);
+          * Misaligned Integer Pointer Assignment in C
+          * The compiler can often safely optimize calls to memcpy,
+          * even if the arguments are unaligned.
+          * */
+        identifier_t roomid;
+        std::memcpy(&roomid, __data + Block::LoginName, sizeof(identifier_t));
+        return roomid;
     }
 
     virtual uint32_t get_length_data() const override { return LengthResponse;}

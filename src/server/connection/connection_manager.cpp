@@ -2,13 +2,12 @@
 
 
 connection_ptr ConnectionManager::get_connection(boost::asio::ip::tcp::socket&& _socket) {
-
+    BOOST_LOG_TRIVIAL(info) << "get_connection()";
     auto it = std::find_if(pool_connections.begin(), pool_connections.end(), [](const connection_ptr& ptr) {
        return !ptr->is_busy();
     });
     if (it!=pool_connections.end()) {
-        (*it)->set_busy();
-        (*it)->init(std::move(_socket));
+        (*it)->reuse(std::move(_socket));
 
         BOOST_LOG_TRIVIAL(info) << "use old connection, current size pool = " << pool_connections.size();
         print_pool();
