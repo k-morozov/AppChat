@@ -172,6 +172,7 @@ void Connection::read_request_body(text_request_ptr request) {
 
                 text_response_ptr response = std::make_shared<TextResponse>(login, text, roomid);
                 ChannelsManager::Instance().send(response);
+
                 db->save_text_message(request);
 
                 read_request_header();

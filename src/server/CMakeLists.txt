@@ -4,6 +4,7 @@ set(SERVER_NAME appchat-server)
 
 set(Boost_USE_STATIC_LIBS ON)
 #add_definitions(-DBOOST_LOG_DYN_LINK)
+set(CMAKE_CXX_FLAGS "-lboost_program_options")
 
 set(DIR_CONNECTION  connection)
 set(DIR_CHANNEL     channel)
@@ -63,13 +64,14 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 )
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log filesystem program_options REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework program_options log_setup log filesystem REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
 #    ${Boost_LOG_LIBRARY}
 #    ${Boost_LOG_SETUP_LIBRARY}
+    ${BOOST_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
     ${PROTOCOL_LIB_NAME}
 )

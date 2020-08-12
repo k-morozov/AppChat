@@ -53,7 +53,11 @@ public slots:
      */
     void autorisation(const std::string& login, const std::string& password) {
         std::thread th([this, login, password]() {
-            connect_to_server(login, password, TypeCommand::AuthorisationRequest);
+            try {
+                connect_to_server(login, password, TypeCommand::AuthorisationRequest);
+            } catch (std::exception &ex) {
+                std::cout << "exception from thread: " << ex.what() << std::endl;;
+            }
         });
         th.detach();
     }
@@ -66,7 +70,11 @@ public slots:
      */
     void registration(const std::string& login, const std::string& password) {
         std::thread th([this, login, password]() {
-            connect_to_server(login, password, TypeCommand::RegistrationRequest);
+            try {
+                connect_to_server(login, password, TypeCommand::RegistrationRequest);
+            } catch (std::exception &ex) {
+                std::cout << "exception from thread: " << ex.what() << std::endl;;
+            }
         });
         th.detach();
     }

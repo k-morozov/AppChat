@@ -1,6 +1,9 @@
 #include "server.h"
 #include "log/logger.h"
-#include <boost/program_options.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/option.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
 
 namespace {
     /**
