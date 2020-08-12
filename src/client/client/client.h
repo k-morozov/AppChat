@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
+#include <mutex>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
 #include <QWidget>
@@ -75,6 +76,7 @@ public:
 private:
     boost::asio::io_service &io_service;
     boost::asio::ip::tcp::socket sock;
+    std::mutex mtx_sock;
     const boost::asio::ip::tcp::resolver::results_type& eps;
 
     std::deque<packet_ptr> packets_to_server;

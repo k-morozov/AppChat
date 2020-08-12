@@ -1,16 +1,26 @@
 #include "client/client/client.h"
 
 void Client::close_connection() {
-    std::cout << "Close connection" << std::endl;
-    io_service.reset();
+    mtx_sock.lock();
     if(sock.is_open()) {
-        sock.close();
+        boost::system::error_code ec;
+        sock.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+        if (ec) {
+            std::cout << "Error when shutdown socket." << std::endl;
+        }
+        sock.close(ec);
+        if (ec) {
+            std::cout << "Error when close socket." << std::endl;
+        }
+        std::cout << "Close socket." << std::endl;
     }
-    packets_to_server.clear();
-    std::memset(login, 0, Block::LoginName);
-    std::memset(password, 0, Block::Password);
-    client_id = -1;
-    room_id = 0;
+    mtx_sock.unlock();
+
+//    packets_to_server.clear();
+//    std::memset(login, 0, Block::LoginName);
+//    std::memset(password, 0, Block::Password);
+//    client_id = -1;
+//    room_id = 0;
 }
 
 void Client::write(const std::string& message) {

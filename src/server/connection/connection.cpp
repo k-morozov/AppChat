@@ -13,9 +13,22 @@ void Connection::reuse(boost::asio::ip::tcp::socket&& _socket) {
 
 void Connection::free_connection() {
     ChannelsManager::Instance().leave(shared_from_this());
-    if (socket.is_open()) {
-        socket.close();
+
+    mtx_sock.lock();
+    if(socket.is_open()) {
+        boost::system::error_code ec;
+        socket.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+        if (ec) {
+            BOOST_LOG_TRIVIAL(error) << "Error when shutdown socket.";
+        }
+        socket.close(ec);
+        if (ec) {
+            BOOST_LOG_TRIVIAL(error) << "Error when close socket.";
+        }
+        BOOST_LOG_TRIVIAL(info) << "Close socket.";
     }
+    mtx_sock.unlock();
+
     packets_to_client.clear();
     client_id = -1;
     login.clear();
