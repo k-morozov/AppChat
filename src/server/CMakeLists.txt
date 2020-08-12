@@ -88,4 +88,3 @@ set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 include(CPack)
 
-
