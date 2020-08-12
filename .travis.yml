@@ -6,8 +6,8 @@ matrix:
       env:
         - PATH=/c/Qt/5.14.2/mingw73_64/bin:/c/Qt/Tools/mingw730_64/bin:/c/Python/:/c/Python/Scripts:$PATH
         - BUILD_DIR=build
-        - BOOST_ROOT=/c/Boost/
-        - BOOST_INCLUDEDIR=/c/Boost/include/boost-1_73/
+        #- BOOST_ROOT=/c/Boost/
+        #- BOOST_INCLUDEDIR=/c/Boost/include/boost-1_73/
       before_install:
         - wget -q https://download.qt.io/official_releases/qt/5.14/5.14.2/qt-opensource-windows-x86-5.14.2.exe
         - choco install python2 --params="/InstallDir:C:\Python"
@@ -16,8 +16,8 @@ matrix:
       install:
         - ./qt-opensource-windows-x86-5.14.2.exe --script ./scripts/qt_windows_installer.qs
         - python.exe ./scripts/install_env.py
-        - dir /C/Boost/
-        - dir /C/Boost/include/
+        - setx /m BOOST_ROOT C:\Boost\
+        - setx /m BOOST_INCLUDEDIR C:\Boost\include\boost-1_73\
         #- wget -q https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip
         #- 7z.exe e sqlite-amalgamation-3320300.zip -oc:\sqlite\include
         #- wget -q https://www.sqlite.org/2020/sqlite-dll-win64-x64-3320300.zip
