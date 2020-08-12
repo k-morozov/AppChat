@@ -62,6 +62,7 @@ public slots:
      * @brief User registration
      * @param login user's login
      * @param password user's password
+     * @todo replace to async?
      */
     void registration(const std::string& login, const std::string& password) {
         std::thread th([this, login, password]() {
