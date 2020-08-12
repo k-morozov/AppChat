@@ -152,7 +152,7 @@ void Database::add_logins(std::string login, identifier_t login_id, std::string 
                          [](void*, int, char**, char**){ return 0;},
                          0, &err_msg2);
     if(rc != SQLITE_OK) {
-        BOOST_LOG_TRIVIAL(error) << "SQL error " << err_msg2;
+        BOOST_LOG_TRIVIAL(error) << "SQL error add_logins" << err_msg2;
         if (err_msg2) sqlite3_free(err_msg2);
     }
     if (err_msg2 && db_ptr) sqlite3_free(err_msg2);
