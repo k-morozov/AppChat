@@ -10,7 +10,7 @@ boost_version_patch = 0
 
 class BoostInstaller:
   def __init__(self):
-    self.boost_libs = ["system", "date_time", "log", "test"]
+    self.boost_libs = ["system", "date_time", "log", "test", "program_options"]
     self.b2_options = "link=static runtime-link=shared -q -j2 threading=multi {}".format(' '.join(list(map(lambda x: '--with-{}'.format(x), self.boost_libs))))
 
 class LinuxBoostInstaller(BoostInstaller):
