@@ -44,6 +44,11 @@ target_link_libraries (${CLIENT_NAME}
     ${PROTOCOL_LIB_NAME}
 )
 
+if (WIN32)
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+    target_link_libraries(${CLIENT_NAME} -lws2_32)
+endif (WIN32)
+
 #install(TARGETS ${CLIENT_NAME} RUNTIME DESTINATION bin)
 #SET (CPACK_PACKAGE_NAME ${CLIENT_NAME})
 #set(CPACK_GENERATOR DEB)

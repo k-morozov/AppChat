@@ -25,4 +25,7 @@ set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
         COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic;-fPIC"
 )
 
+find_package(Boost COMPONENTS date_time REQUIRED)
+include_directories(${Boost_INCLUDE_LIBS})
+
 install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)

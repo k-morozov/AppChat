@@ -11,7 +11,10 @@ set(DIR_LOG         log)
 set(DIR_STORAGE     storage)
 set(DIR_PROTOCOL    protocol)
 
-include_directories(${PROTOCOL_LIB_NAME})
+include_directories(
+    ${Boost_INCLUDE_DIRS}
+    ${PROTOCOL_LIB_NAME}
+)
 
 set(CHANNELS_SRC
     ${DIR_CHANNEL}/iroom.h
@@ -61,8 +64,6 @@ set_target_properties(${SERVER_NAME} PROPERTIES
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
 find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework log_setup log filesystem REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-message("Boost headers were found here: ${Boost_INCLUDE_DIRS}")
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
