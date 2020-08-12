@@ -54,12 +54,12 @@ namespace {
 
 int main(int argc, char** argv) {
     init_logger();
-    int32_t current_work_port;
+    int32_t port = SERVER_DEFAULT_PORT;
 
-    if (set_parametrs(argc, argv, current_work_port)) {
+    if (set_parametrs(argc, argv, port)) {
         BOOST_LOG_TRIVIAL(info) << "starting server v.0.7";
         try {
-            Server server(current_work_port);
+            Server server(port);
             server.run();
         } catch (const std::exception & ex) {
             BOOST_LOG_TRIVIAL(info) << "Exception " << ex.what();
