@@ -30,7 +30,7 @@ public:
         if (db == nullptr) {
             BOOST_LOG_TRIVIAL(info) << "Failed to load history. Database pointer is nullptr.";
         } else {
-            history_room = db->load_history(channel_id);
+            history_room = db->get_history(channel_id);
             BOOST_LOG_TRIVIAL(info) << "Create channel_id=" << channel_id;
         }
     }

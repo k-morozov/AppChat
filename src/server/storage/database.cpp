@@ -101,7 +101,7 @@ void Database::save_text_message(text_request_ptr message) {
 
 }
 
-std::deque<text_response_ptr> Database::load_history(identifier_t roomid) {
+std::deque<text_response_ptr> Database::get_history(identifier_t roomid) {
     std::deque<text_response_ptr> history_room;
     bool found = false;
     sqlite3_stmt* stmt;
