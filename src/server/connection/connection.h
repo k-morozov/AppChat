@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <deque>
-
+#include <mutex>
 #include "server/connection/isubscriber.h"
 #include "server/channel/channels_manager.h"
 #include "protocol/protocol.h"
@@ -78,6 +78,7 @@ public:
 private:
 
     boost::asio::ip::tcp::socket socket;
+    std::mutex mtx_sock;
     std::deque<response_ptr> packets_to_client;
 
     identifier_t client_id;
