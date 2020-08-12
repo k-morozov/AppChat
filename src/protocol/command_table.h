@@ -13,21 +13,22 @@
 #include "datetime.h"
 
 constexpr uint32_t PROTOCOL_VERS = 2;
+constexpr int32_t SERVER_DEFAULT_PORT = 7777;
 
 using identifier_t = int32_t;
 
 namespace Block {
-    constexpr uint8_t VersionProtocol   = 2;
-    constexpr uint8_t Command           = 2;
-    constexpr uint8_t Datetime          = sizeof(DateTime);
-    constexpr uint8_t LoginName         = 16;
-    constexpr uint8_t Password          = 32;
-    constexpr uint8_t LoginId           = sizeof(identifier_t);
-    constexpr uint8_t RoomId            = sizeof(identifier_t);
-    constexpr uint8_t TextMessage       = 255;
+    constexpr uint32_t VersionProtocol   = 2;
+    constexpr uint32_t Command           = 2;
+    constexpr uint32_t Datetime          = sizeof(DateTime);
+    constexpr uint32_t LoginName         = 16;
+    constexpr uint32_t Password          = 32;
+    constexpr uint32_t LoginId           = sizeof(identifier_t);
+    constexpr uint32_t RoomId            = sizeof(identifier_t);
+    constexpr uint32_t TextMessage       = 255;
 
-    constexpr uint8_t Header            = VersionProtocol + Command + Datetime;
-    constexpr uint8_t InputOption       = LoginName + Password;
+    constexpr uint32_t Header            = VersionProtocol + Command + Datetime;
+    constexpr uint32_t InputOption       = LoginName + Password;
 }
 
 enum class TypeCommand : uint16_t {

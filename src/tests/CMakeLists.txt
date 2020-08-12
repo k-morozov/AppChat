@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
-set(TESTS_BIN app_chat_tests)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(TESTS_BIN app_chat_tests)
 set(TESTS_SOURSES
     startup_tests.cpp
     test_request.cpp
@@ -18,10 +20,14 @@ set_target_properties(${TESTS} PROPERTIES
 add_executable(${TESTS_BIN}
     ${TESTS_SOURSES}
 )
-
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework REQUIRED)
 target_link_libraries (${TESTS_BIN}
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
+    ${PROTOCOL_LIB_NAME}
+)
+include_directories(
+    ${Boost_INCLUDE_DIR}
     ${PROTOCOL_LIB_NAME}
 )
 

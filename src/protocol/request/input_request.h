@@ -1,7 +1,7 @@
 #ifndef CONTROLREQUEST_H
 #define CONTROLREQUEST_H
 
-#include <request/request.h>
+#include "request.h"
 
 class InputRequest : public Request {
 public:

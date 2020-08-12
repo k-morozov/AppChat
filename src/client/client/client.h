@@ -5,7 +5,7 @@
 #include <string>
 #include <deque>
 #include <boost/asio.hpp>
-#include <protocol.h>
+#include "protocol/protocol.h"
 #include <QWidget>
 
 /**
@@ -19,7 +19,6 @@ class Client: public QObject {
 public:
     /**
      * @brief Construct a new Client object
-     * 
      * @param io boost::asio::io_service
      * @param eps 
      * @param request initial request the server
@@ -28,12 +27,12 @@ public:
            input_request_ptr request)
         : io_service(io), sock(io), eps(eps)
     {
+        std::cout << "ctor client" << std::endl;
         do_connect(eps, request);
     }
 
     /**
      * @brief Send text message
-     * 
      * @param message 
      */
     void write(const std::string& message);
@@ -49,34 +48,29 @@ public:
     void write(join_room_request_ptr);
 
     /**
-     * @brief Finish the communication with server
-     */
-    void close() {
-        boost::asio::post(io_service, [this]() {
-            if (sock.is_open()) {
-                sock.close();
-            }
-        });
-    }
-
-    /**
      * @brief Setter for client_id
-     * 
      * @param id 
      */
     void set_login_id(identifier_t id)   { client_id = id;}
 
     /**
      * @brief Login getter
-     * 
      * @return const char* 
      */
     const char* get_login() const { return login; }
 
     /**
-     * @brief Default destructor
+     * @brief Finish the communication with server
      */
-    ~Client() = default;
+    void close_connection();
+
+    /**
+     * @brief destructor
+     */
+    ~Client() {
+        std::cout << "Destr client" << std::endl;
+        close_connection();
+    }
 
 private:
     boost::asio::io_service &io_service;
@@ -88,15 +82,14 @@ private:
     char login[Block::LoginName];
     char password[Block::Password];
     identifier_t client_id;
-
     identifier_t room_id = 0;
 
 private:
     /**
      * @brief Log in scenario implementation
-     * 
      * @return input_request_ptr 
      */
+    [[deprecated]]
     input_request_ptr logon();
 
     /**
@@ -106,10 +99,9 @@ private:
 
     /**
      * @brief Log in on the server
-     * 
-     * @param packet 
+     * @param request
      */
-    void send_login_packet(packet_ptr packet);
+    void send_login_request(input_request_ptr request);
 
     /**
      * @brief Entry point for handling server response
@@ -140,7 +132,6 @@ private:
 
     /**
      * @brief Send request data to server
-     * 
      * @note Do not call it manually,
      * it must be called from the @link Client::send_request_header "send_reqest_header".
      */
@@ -150,7 +141,6 @@ private:
 signals:
     /**
      * @brief 
-     * 
      * @param from sender's login
      * @param text 
      * @param dt date and time of sending the text
@@ -161,7 +151,6 @@ signals:
      * @brief send input code
      */
     void send_input_code(InputCode);
-//    void good_input();
 };
 
 #endif // CLIENT_H

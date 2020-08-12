@@ -1,18 +1,16 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
-#include <boost/asio.hpp>
 #include <memory>
 #include <deque>
 
-#include <connection/isubscriber.h>
-#include <channel/channels_manager.h>
-#include <protocol.h>
-#include <logger.h>
+#include "server/connection/isubscriber.h"
+#include "server/channel/channels_manager.h"
+#include "protocol/protocol.h"
+#include "server/log/logger.h"
 
 /**
  * @brief Connection class
- * 
  * @details It serves connected tcp client
  */
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
@@ -20,65 +18,42 @@ class Connection : public ISubscriber, public std::enable_shared_from_this<Conne
 public:
     /**
      * @brief Construct a new Connection object
-     * 
      * @param _socket Accepted client socket.
      * @param _db
      */
     explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
         socket(std::move(_socket)),
         db(_db),
-        busy(true),
-        logger(LOGGER("Connection"))
+        busy(true)
 
     {
-        LOG4CPLUS_INFO(logger,
-                       "new connection from " << socket.remote_endpoint().address().to_string()
-                       << ":" << socket.remote_endpoint().port()
-                       );
+        BOOST_LOG_TRIVIAL(info) << "new connection from " << socket.remote_endpoint().address().to_string()
+                                << ":" << socket.remote_endpoint().port();
     }
 
     /**
      * @brief reuse connection for Object Pool
-     *
      * @param _socket Accepted client socket.
      */
-    void init(boost::asio::ip::tcp::socket&& _socket) {
-        packets_to_client.clear();
-        client_id = -1;
-        login.clear();
-        password.clear();
-
-        if (socket.is_open()) {
-            socket.close();
-        }
-        socket = std::move(_socket);
-
-        busy = true;
-        LOG4CPLUS_INFO(logger,
-                       "init connection from " << socket.remote_endpoint().address().to_string()
-                       << ":" << socket.remote_endpoint().port()
-                       );
-    }
+    void reuse(boost::asio::ip::tcp::socket&& _socket) override;
 
     /**
      * @brief Entry point to handle incoming requests
      */
     virtual void start() override {
+        BOOST_LOG_TRIVIAL(info) << "Connection start read_request_header().";
         read_request_header();
    }
 
     /**
      * @brief Send response message to the client
-     * 
      * @param response response needs to be sent
      */
     virtual void sendme(text_response_ptr response) override;
 
     /**
      * @brief Get the client id object
-     * 
      * @details Returns current client id
-     * 
      * @return identifier_t 
      */
     virtual identifier_t get_client_id() const override {
@@ -87,24 +62,18 @@ public:
 
     /**
      * @brief Get the login
-     * 
      * @details Return client's login
-     * 
      * @return const std::string& 
      */
     virtual const std::string& get_login() const override { return login; }
 
     virtual bool is_busy() const noexcept override { return busy; }
     virtual void set_busy(bool flag = true) noexcept override { busy = flag; }
-    /**
-      *
-      * @todo double close socket?
-      *
-      * */
+
+    virtual void free_connection() override;
+
     ~Connection() {
-        if (socket.is_open()) {
-            socket.close();
-        }
+         free_connection();
     }
 private:
 
@@ -116,19 +85,15 @@ private:
     std::string password;
 
     database_ptr db;
-    bool busy;
-
-    log4cplus::Logger logger;
+    std::atomic<bool> busy;
 
 private:
     /**
      * @brief Parse headers of request.
-     * 
      * @details It parses requests headers and
      * calls parsing methods for request body when it is neccessary.
      */
     void read_request_header();
-
 
     /**
      * @brief Handle registration request.
@@ -152,7 +117,6 @@ private:
 
     /**
      * @brief Entry point for sending response.
-     * 
      * @details It sends response headers and
      * if successeed call sending response data.
      */
@@ -165,9 +129,7 @@ private:
 
     /**
      * @brief Client id generator.
-     * 
      * @details It is quite simple and return incremented integer value every time.
-     * 
      * @return identifier_t 
      */
     identifier_t generate_client_id() {

@@ -1,4 +1,17 @@
-#include <client/client.h>
+#include "client/client/client.h"
+
+void Client::close_connection() {
+    std::cout << "Close connection" << std::endl;
+    io_service.reset();
+    if(sock.is_open()) {
+        sock.close();
+    }
+    packets_to_server.clear();
+    std::memset(login, 0, Block::LoginName);
+    std::memset(password, 0, Block::Password);
+    client_id = -1;
+    room_id = 0;
+}
 
 void Client::write(const std::string& message) {
     text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
@@ -28,10 +41,15 @@ void Client::write(join_room_request_ptr request) {
 }
 
 void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps, input_request_ptr request) {
+    std::cout << "start do_connect" << std::endl;
     boost::asio::async_connect(sock, eps,
         [this, request](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
            if (!ec) {
-               send_login_packet(request);
+               send_login_request(request);
+               std::cout << "finish do_connect" << std::endl;
+           }
+           else {
+               std::cout << "error do_connect()" << std::endl;
            }
     });
 }
@@ -50,19 +68,27 @@ input_request_ptr Client::logon() {
     return std::make_shared<AutorisationRequest>(login, password);
 }
 
-void Client::send_login_packet(packet_ptr packet) {
+void Client::send_login_request(input_request_ptr request) {
     boost::system::error_code error_code;
-    boost::asio::write(sock, boost::asio::buffer(packet->get_header(),
+    boost::asio::write(sock, boost::asio::buffer(request->get_header(),
                                                  Block::Header), error_code);
-
-    boost::asio::write(sock, boost::asio::buffer(packet->get_data(),
-                                                 packet->get_length_data()), error_code);
-
     if (error_code) {
-        if (sock.is_open()) {
-            sock.close();
-        }
-        std::cout << "error when send login" << std::endl;
+        std::cout << "error send_login_request(header)" << std::endl;
+        close_connection();
+        return ;
+    }
+    boost::asio::write(sock, boost::asio::buffer(request->get_data(),
+                                                 request->get_length_data()), error_code);
+    if (error_code) {
+        std::cout << "error send_login_request(data)" << std::endl;
+        close_connection();
+        return ;
+    }
+    std::cout << "login=" << request->get_login() << ", password=" << request->get_password()
+              << ", time=" << request->get_datetime().to_simple_date() << std::endl;
+    if (error_code) {
+        std::cout << "error when send input_request" << std::endl;
+        close_connection();
         return ;
     }
 
@@ -70,10 +96,8 @@ void Client::send_login_packet(packet_ptr packet) {
     boost::asio::read(sock, boost::asio::buffer(response->get_header(),
                                                 Block::Header), error_code);
     if (error_code) {
-        if (sock.is_open()) {
-            sock.close();
-        }
-        std::cout << "error when read login-id" << std::endl;
+        std::cout << "error when read response(input_res_ptr)" << std::endl;
+        close_connection();
         return ;
     }
     if (response->get_type_data()==TypeCommand::RegistrationResponse
@@ -82,26 +106,28 @@ void Client::send_login_packet(packet_ptr packet) {
         boost::asio::read(sock, boost::asio::buffer(response->get_data(),
                                                     response->get_length_data()), error_code);
 
-
+        if (error_code) {
+            std::cout << "error when read response(data)" << std::endl;
+            close_connection();
+            return ;
+        }
         if (response->get_type_data()==TypeCommand::RegistrationResponse)
             if (response->get_loginid()==-1) {
-//                emit bad_client_is_registred();
                 emit send_input_code(InputCode::BusyRegistr);
-                this->close();
+                std::cout << "another login" << std::endl;
+                close_connection();
                 return;
-            }
-            else
-            {
+            } else {
                 emit send_input_code(InputCode::RegistrOK);
             }
         else {
             if (response->get_loginid()==-1) {
                 emit send_input_code(InputCode::IncorrectAutor);
-                this->close();
+                std::cout << "Not found login/password" << std::endl;
+                close_connection();
                 return;
             }
-            else
-            {
+            else {
                 emit send_input_code(InputCode::AutorOK);
             }
         }
@@ -112,10 +138,10 @@ void Client::send_login_packet(packet_ptr packet) {
         if (!error_code) {
             read_response_header();
         }
-
     }
     else {
-        std::cout << " No response from server" << std::endl;
+        std::cout << " No innput response from server" << std::endl;
+        close_connection();
     }
 
 }
@@ -154,9 +180,8 @@ void Client::read_response_header() {
                 }
             }
             else {
-                if (sock.is_open()) {
-                    sock.close();
-                }
+                std::cout << "Error read_response_header()" << std::endl;
+                close_connection();
             }
     });
 }
@@ -170,9 +195,8 @@ void Client::read_response_data(registr_response_ptr packet) {
                 read_response_header();
             }
             else {
-                if (sock.is_open()) {
-                    sock.close();
-                }
+                std::cout << "Error read_response_data(registr)" << std::endl;
+                close_connection();
             }
     });
 }
@@ -186,9 +210,8 @@ void Client::read_response_data(autor_response_ptr packet) {
                 read_response_header();
             }
             else {
-                if (sock.is_open()) {
-                    sock.close();
-                }
+                std::cout << "Error read_response_data(autor)" << std::endl;
+                close_connection();
             }
     });
 }
@@ -207,9 +230,8 @@ void Client::read_response_data(text_response_ptr packet) {
                 read_response_header();
             }
             else {
-                if (sock.is_open()) {
-                    sock.close();
-                }
+                std::cout << "Error read_response_data(text)" << std::endl;
+                close_connection();
             }
     });
 }
@@ -221,10 +243,8 @@ void Client::send_request_header() {
             send_request_data();
         }
         else {
-            std::cout << "error start_sending" << std::endl;
-            if (sock.is_open()) {
-                sock.close();
-            }
+            std::cout << "Error send_request_header()" << std::endl;
+            close_connection();
         }
     });
 }
@@ -238,9 +258,8 @@ void Client::send_request_data() {
             if (!packets_to_server.empty()) send_request_header();
         }
         else {
-            if (sock.is_open()) {
-                sock.close();
-            }
+            std::cout << "Error send_request_data()" << std::endl;
+            close_connection();
         }
     });
 }

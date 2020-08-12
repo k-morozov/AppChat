@@ -2,21 +2,21 @@
 #define CONTROL_H
 
 #include <QWidget>
-#include <client/client.h>
-#include <gui/mainwindow.h>
+#include "client/client/client.h"
+#include "client/gui/mainwindow.h"
 
 /**
  * @brief Controller
+ * @param ip and port server
  */
 class Control: public QObject
 {
     Q_OBJECT
 public:
-    Control();
+    Control(int argc, char** argv);
 
     /**
      * @brief Start communication with server
-     * 
      * @param login user's login
      * @param password user's password
      * @param command request code that would have sent on opened connection
@@ -29,15 +29,15 @@ public:
      * @brief Close client socket when destroy UI controller.
      */
     ~Control() {
+        std::cout << "Destr Control" << std::endl;
         if (client) {
-            client->close();
+            client->close_connection();
         }
     }
 
 signals:
     /**
      * @brief Show reveived message
-     * 
      * @param login message sender's login
      * @param text message content
      * @param dt date and time of sending the text
@@ -47,36 +47,40 @@ signals:
 public slots:
     /**
      * @brief User autorization
-     * 
      * @param login user's login
-     * 
      * @param password user's password
-     * 
      * @todo fix typo autorisation -> authorization
      */
     void autorisation(const std::string& login, const std::string& password) {
         std::thread th([this, login, password]() {
-            connect_to_server(login, password, TypeCommand::AuthorisationRequest);
+            try {
+                connect_to_server(login, password, TypeCommand::AuthorisationRequest);
+            } catch (std::exception &ex) {
+                std::cout << "exception from thread: " << ex.what() << std::endl;;
+            }
         });
         th.detach();
     }
 
     /**
      * @brief User registration
-     * 
      * @param login user's login
      * @param password user's password
+     * @todo replace to async?
      */
     void registration(const std::string& login, const std::string& password) {
         std::thread th([this, login, password]() {
-            connect_to_server(login, password, TypeCommand::RegistrationRequest);
+            try {
+                connect_to_server(login, password, TypeCommand::RegistrationRequest);
+            } catch (std::exception &ex) {
+                std::cout << "exception from thread: " << ex.what() << std::endl;;
+            }
         });
         th.detach();
     }
 
     /**
      * @brief Send message
-     * 
      * @param login sender's login
      * @param text message content
      * @param room_id sender's room
@@ -87,7 +91,6 @@ public slots:
 
     /**
      * @brief Notify UI about received message
-     * 
      * @param from sender's login
      * @param text message content
      * @param dt date and time of sending the text
@@ -98,7 +101,6 @@ public slots:
 
     /**
      * @brief Change chat room to another one
-     * 
      * @param new_room_id room where user is switching
      */
     void change_room(int new_room_id) {
@@ -108,6 +110,12 @@ public slots:
 private:
     std::unique_ptr<Client> client;
     MainWindow w;
+
+    /**
+     * @todo convert to 4 bytes
+     */
+    std::string ip = "127.0.0.1";
+    int32_t port = SERVER_DEFAULT_PORT;
 };
 
 #endif // CONTROL_H

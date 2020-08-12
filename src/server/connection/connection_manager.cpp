@@ -2,16 +2,14 @@
 
 
 connection_ptr ConnectionManager::get_connection(boost::asio::ip::tcp::socket&& _socket) {
-
+    BOOST_LOG_TRIVIAL(info) << "get_connection()";
     auto it = std::find_if(pool_connections.begin(), pool_connections.end(), [](const connection_ptr& ptr) {
        return !ptr->is_busy();
     });
     if (it!=pool_connections.end()) {
-        (*it)->set_busy();
-        (*it)->init(std::move(_socket));
+        (*it)->reuse(std::move(_socket));
 
-        LOG4CPLUS_INFO(logger,
-                       "use old connection, current size pool = " << pool_connections.size());
+        BOOST_LOG_TRIVIAL(info) << "use old connection, current size pool = " << pool_connections.size();
         print_pool();
         return (*it);
     }
@@ -19,8 +17,7 @@ connection_ptr ConnectionManager::get_connection(boost::asio::ip::tcp::socket&& 
         auto block = std::make_shared<Connection>(std::move(_socket), db);
         pool_connections.push_back(block);
 
-        LOG4CPLUS_INFO(logger,
-                       "create new connection, current size pool = " << pool_connections.size());
+        BOOST_LOG_TRIVIAL(info) << "create new connection, current size pool = " << pool_connections.size();
         print_pool();
         return block;
     }
@@ -28,15 +25,13 @@ connection_ptr ConnectionManager::get_connection(boost::asio::ip::tcp::socket&& 
 }
 
 void ConnectionManager::print_pool() const noexcept {
-    LOG4CPLUS_INFO(logger, "[connections]");
+    BOOST_LOG_TRIVIAL(info) << "[connections]";
     for(const auto& obj:pool_connections) {
         if (obj->get_client_id()>0) {
-            LOG4CPLUS_INFO(logger,
-                       "obj: login=" << obj->get_login() << ", id=" << obj->get_client_id() << ", status: " <<
-                        (obj->is_busy() ? "busy" : "free"));
+            BOOST_LOG_TRIVIAL(info) << "obj: login=" << obj->get_login() << ", id=" << obj->get_client_id() << ", status: " <<
+                                       (obj->is_busy() ? "busy" : "free");
         } else {
-            LOG4CPLUS_INFO(logger,
-                       "obj: current connection not init");
+            BOOST_LOG_TRIVIAL(info) << "obj: current connection not init";
         }
     }
 }
