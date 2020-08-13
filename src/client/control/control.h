@@ -1,9 +1,11 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include <string>
 #include <QWidget>
 #include "client/client/client.h"
 #include "client/gui/mainwindow.h"
+#include <boost/program_options/variables_map.hpp>
 
 /**
  * @brief Controller
@@ -13,7 +15,7 @@ class Control: public QObject
 {
     Q_OBJECT
 public:
-    Control(int argc, char** argv);
+    Control(const boost::program_options::variables_map& vm);
 
     /**
      * @brief Start communication with server
@@ -114,8 +116,8 @@ private:
     /**
      * @todo convert to 4 bytes
      */
-    std::string ip = "127.0.0.1";
-    int32_t port = SERVER_DEFAULT_PORT;
+    std::string m_ip = "127.0.0.1";
+    int32_t m_port = SERVER_DEFAULT_PORT;
 };
 
 #endif // CONTROL_H
