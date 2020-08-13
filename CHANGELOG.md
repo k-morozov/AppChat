@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.7.380] - 2020-08-06
+## [0.7.4] - 2020-08-06
 
 ### Added
 
@@ -17,10 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ObjectPool for connections [@k-morozov](https://github.com/k-morozov).
 - Add buildings deb packages (client and server) [@k-morozov](https://github.com/k-morozov).
 - Add debug define and sanitize [@k-morozov](https://github.com/k-morozov).
+- Add Windows client build (Travic CI) [@tuminskiy](https://github.com/tuminskiy).
 
 ### Changed
 - Remove stacktrace [@k-morozov](https://github.com/k-morozov).
 - Replace google-test to boost test [@k-morozov](https://github.com/k-morozov).
 - Refactoring cmake [@k-morozov](https://github.com/k-morozov).
 - Add feature to Travic-CI to generate DEB pacakages (unstable) [@k-morozov](https://github.com/k-morozov).
-- change unit-test fraemwork (replace gtest to boost::test) [@k-morozov](https://github.com/k-morozov).
+- Change unit-test fraemwork (replace gtest to boost::test) [@k-morozov](https://github.com/k-morozov).
+- Rewrite install-boost script to Python [@tuminskiy](https://github.com/tuminskiy).
