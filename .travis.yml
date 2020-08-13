@@ -64,7 +64,7 @@ matrix:
           on:
             branch: master
           script:
-          - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/linux/0.7.$TRAVIS_BUILD_NUMBER/appchat-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1" && ls
+          - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/${PROJECT_NAME}-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/${PROJECT_NAME}/linux/0.7.$TRAVIS_BUILD_NUMBER/${PROJECT_NAME}-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1" && ls
 
 #        - >-
 #            if [[ "$TRAVIS_BRANCH" = "dev" && -n "$TRAVIS_BUILD_DOCS" ]] ; then
