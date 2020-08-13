@@ -55,7 +55,7 @@ matrix:
         - cmake --build .
         - cmake --build . --target test
         - cmake --build . --target package
-      after_success:
+        after_success:
         - cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
         - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
         - >-
@@ -65,10 +65,11 @@ matrix:
               # Redirect both stderr and stdout to the log file AND the console.
               doxygen doc/Doxyfile 2>&1 | tee doxygen.log
             fi
-            if [[ "$TRAVIS_BRANCH" = "dev" ]] ; then
-              curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
-              curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+            if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
+                curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+                curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
             fi
+
       before_deploy:
         - git config --local user.name "k-morozov"
         - git config --local user.email "morozov-kst@yandex.ru"
