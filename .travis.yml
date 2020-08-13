@@ -64,10 +64,8 @@ matrix:
               echo 'Generating Doxygen code documentation...'
               # Redirect both stderr and stdout to the log file AND the console.
               doxygen doc/Doxyfile 2>&1 | tee doxygen.log
-            fi
-            if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
-                curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
-                curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+              curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+              curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/client/client-linux/appchat-client-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
             fi
       before_deploy:
         - git config --local user.name "k-morozov"
