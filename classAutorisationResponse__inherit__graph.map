@@ -1,5 +1,5 @@
 <map id="AutorisationResponse" name="AutorisationResponse">
-<area shape="rect" id="node2" href="$classInputResponse.html" title="InputResponse" alt="" coords="28,155,145,181"/>
-<area shape="rect" id="node3" href="$classResponse.html" title="Response" alt="" coords="45,80,129,107"/>
-<area shape="rect" id="node4" href="$classIPacket.html" title="IPacket" alt="" coords="52,5,121,32"/>
+<area shape="rect" id="node2" href="$classInputResponse.html" title="InputResponse" alt="" coords="28,155,143,181"/>
+<area shape="rect" id="node3" href="$classResponse.html" title="Response" alt="" coords="44,80,127,107"/>
+<area shape="rect" id="node4" href="$classIPacket.html" title="IPacket" alt="" coords="52,5,119,32"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="ControlRequest" name="ControlRequest">
-<area shape="rect" id="node4" href="$classJoinRoomRequest.html" title="JoinRoomRequest" alt="" coords="5,229,140,256"/>
-<area shape="rect" id="node2" href="$classRequest.html" title="Request" alt="" coords="35,80,110,107"/>
-<area shape="rect" id="node3" href="$classIPacket.html" title="IPacket" alt="" coords="38,5,107,32"/>
+<area shape="rect" id="node4" href="$classJoinRoomRequest.html" title="JoinRoomRequest" alt="" coords="5,229,136,256"/>
+<area shape="rect" id="node2" href="$classRequest.html" title="Request" alt="" coords="34,80,107,107"/>
+<area shape="rect" id="node3" href="$classIPacket.html" title="IPacket" alt="" coords="37,5,104,32"/>
 </map>

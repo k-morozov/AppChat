@@ -1,5 +1,5 @@
 <map id="TextRequest" name="TextRequest">
-<area shape="rect" id="node2" href="$classTransportRequest.html" title="TransportRequest" alt="" coords="5,155,140,181"/>
-<area shape="rect" id="node3" href="$classRequest.html" title="Request" alt="" coords="35,80,110,107"/>
-<area shape="rect" id="node4" href="$classIPacket.html" title="IPacket" alt="" coords="38,5,107,32"/>
+<area shape="rect" id="node2" href="$classTransportRequest.html" title="TransportRequest" alt="" coords="5,155,137,181"/>
+<area shape="rect" id="node3" href="$classRequest.html" title="Request" alt="" coords="35,80,108,107"/>
+<area shape="rect" id="node4" href="$classIPacket.html" title="IPacket" alt="" coords="38,5,105,32"/>
 </map>
