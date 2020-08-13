@@ -55,16 +55,16 @@ matrix:
         - cmake --build .
         - cmake --build . --target test
         - cmake --build . --target package
-      after_success:
-        - cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
-        - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
+#      after_success:
+#        - cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
+#        - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
       deploy:
           provider: script
           skip_cleanup: true
           on:
             branch: master
           script:
-          - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/linux/0.7.$TRAVIS_BUILD_NUMBER/appchat-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+          - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/linux/0.7.$TRAVIS_BUILD_NUMBER/appchat-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1" && ls
 
 #        - >-
 #            if [[ "$TRAVIS_BRANCH" = "dev" && -n "$TRAVIS_BUILD_DOCS" ]] ; then

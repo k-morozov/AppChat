@@ -7,21 +7,15 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/k-morozov/AppChat?style=plastic)
 
 [![Build Status](https://travis-ci.org/k-morozov/AppChat.svg?branch=release)](https://travis-ci.org/k-morozov/AppChat)
-[[current]]
 [ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/linux/images/download.svg) ](https://bintray.com/k-morozov/AppChat/linux/_latestVersion)
 
-[[deprecated]]
-[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/server/images/download.svg) ](https://bintray.com/k-morozov/AppChat/server/_latestVersion)
-[ ![Download](https://api.bintray.com/packages/k-morozov/AppChat/client/images/download.svg) ](https://bintray.com/k-morozov/AppChat/client/_latestVersion)
 -----------
 ## Installation
 
 #### Windows
 * in progress
 #### Linux/Unix
-Deb package installs the server and the client.
-The server is installed without errors, but the problem with creating logs and database. This does not prevent the server from working during one session.
-For now it is better to run the client as a separate file rather than through the deb package.
+Deb package installs the server and the client. For client need Qt5 so lib.
 #### Android
 * in progress
 ------------
