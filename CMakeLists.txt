@@ -4,7 +4,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CHECK_SANITIZE OFF)
 
-
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
     project(AppChat VERSION 0.7.$ENV{TRAVIS_BUILD_NUMBER})
 else ()
@@ -40,6 +39,8 @@ endif()
 
 enable_testing()
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/protocol)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
+if (NOT WIN32)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
+endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/client)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
