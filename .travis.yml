@@ -62,7 +62,7 @@ matrix:
           provider: script
           skip_cleanup: true
           on:
-            branch: dev
+            branch: master
           script:
           - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
 
