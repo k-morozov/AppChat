@@ -1,3 +1,3 @@
 #pragma once
 
-/* #undef PROJECT_VERSION_PATCH */
+#cmakedefine PROJECT_VERSION_PATCH @PROJECT_VERSION_PATCH@
