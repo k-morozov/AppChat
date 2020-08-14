@@ -2,10 +2,6 @@
 
 #include "protocol/protocol.h"
 #include <memory>
-/**
- * @brief Unit tests for AppChat project.
- */
-BOOST_AUTO_TEST_SUITE(test_request)
 
 BOOST_AUTO_TEST_CASE(response_registration_basic) {
     identifier_t id = 12345;
@@ -54,5 +50,4 @@ BOOST_AUTO_TEST_CASE(response_autorisation_basic_change_id) {
     BOOST_CHECK(response.get_protocol_version() == PROTOCOL_VERS);
     BOOST_CHECK(response.get_type_data() == TypeCommand::AutorisationResponse);
     BOOST_CHECK(response.get_loginid() == 0);
-}
 }

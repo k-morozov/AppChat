@@ -2,11 +2,6 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "protocol/datetime.h"
 
-/**
- * @brief Unit tests for AppChat project.
- */
-BOOST_AUTO_TEST_SUITE(test_request)
-
 BOOST_AUTO_TEST_CASE(construction_by_default) {
     DateTime dt;
 
@@ -192,4 +187,3 @@ BOOST_AUTO_TEST_CASE(operator_less) {
     BOOST_CHECK(lhs < rhs);
 }
 
-}

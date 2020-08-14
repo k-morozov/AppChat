@@ -3,11 +3,6 @@
 #include "protocol/protocol.h"
 #include <memory>
 
-/**
- * @brief Unit tests for AppChat project.
- */
-BOOST_AUTO_TEST_SUITE(test_request)
-
 BOOST_AUTO_TEST_CASE(registration_basic) {
     std::string login = "vasiliy";
     std::string passsword = "a1s22g_1";
@@ -154,4 +149,3 @@ BOOST_AUTO_TEST_CASE(autorisation_basic_empty_ptr) {
     BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
     BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
 }
-} // end boost::test
