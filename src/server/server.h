@@ -40,9 +40,8 @@ private:
     boost::asio::ip::tcp::endpoint endpoint;
     boost::asio::ip::tcp::acceptor acceptor;
     database_ptr db;
-
     ConnectionManager connect_manager;
-private:
+
     /**
      * @brief Handle new connected clint.
      * @details It handles client and after that call new acception recursively.
