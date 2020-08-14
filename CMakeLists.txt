@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CHECK_SANITIZE OFF)
+set(CHECK_DOXYGEN OFF)
 
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
     project(AppChat VERSION 0.7.$ENV{TRAVIS_BUILD_NUMBER})
@@ -26,14 +27,16 @@ if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
 else ()
     message("Release mode")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/release/)
-    find_package(Doxygen)
-    if (DOXYGEN_FOUND)
-        set(DOXYFILE ${CMAKE_SOURCE_DIR}/Doxyfile)
-        add_custom_target(doc_doxygen ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            COMMENT "Generating API documentation with Doxygen")
-        unset(DOXYFILE)
+    if (${CHECK_DOXYGEN} STREQUAL ON)
+        find_package(Doxygen)
+        if (DOXYGEN_FOUND)
+            set(DOXYFILE ${CMAKE_SOURCE_DIR}/Doxyfile)
+            add_custom_target(doc_doxygen ALL
+                COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                COMMENT "Generating API documentation with Doxygen")
+            unset(DOXYFILE)
+        endif()
     endif()
 endif()
 
