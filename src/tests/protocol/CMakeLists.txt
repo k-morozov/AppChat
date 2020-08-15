@@ -18,6 +18,8 @@ target_link_libraries (${TESTS_PROTOCOL}
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     protocol_lib
+    project_warnings
+    project_sanitizers
 )
 
 target_include_directories(${TESTS_PROTOCOL} PRIVATE

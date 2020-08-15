@@ -36,7 +36,12 @@ set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
 
 target_compile_options(${PROTOCOL_LIB_NAME} PRIVATE "-O2;-Wall;-Wextra;-Wpedantic;-fPIC")
 
-target_link_libraries(${PROTOCOL_LIB_NAME} PRIVATE pthread)
+target_link_libraries(${PROTOCOL_LIB_NAME}
+    PRIVATE
+        pthread
+        project_warnings
+        project_sanitizers
+)
 
 find_package(Boost COMPONENTS date_time REQUIRED)
 

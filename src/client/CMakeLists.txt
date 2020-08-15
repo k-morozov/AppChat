@@ -48,6 +48,7 @@ target_link_libraries (${CLIENT_NAME}
     Qt5::Widgets
     protocol_lib
     project_warnings
+    project_sanitizers
 )
 
 if (WIN32)

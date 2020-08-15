@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CHECK_SANITIZE OFF)
-set(CHECK_DOXYGEN OFF)
+option(CHECK_SANITIZE "enable sanitizers checks on debug mode" OFF)
+option(CHECK_DOXYGEN "enable doc generation" OFF)
 
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
     project(AppChat VERSION 0.7.$ENV{TRAVIS_BUILD_NUMBER})
@@ -9,15 +9,18 @@ else ()
     project(AppChat VERSION 0.7.1)
 endif ()
 
+# Adding sanitizers
+add_library(project_sanitizers INTERFACE)
+
 if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     message("DEBUG mode")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/debug/)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG -Og -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -D_LIBCPP_DEBUG=1")
-    if (${CHECK_SANITIZE} STREQUAL ON)
-        add_compile_options("-fsanitize=address")
-        link_libraries("-fsanitize=address")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=address -fsanitize=leak")
-#         -fsanitize=undefined
+    if (CHECK_SANITIZE)
+        include(${CMAKE_SOURCE_DIR}/cmake/Sanitizers.cmake)
+        message(ERROR "Check sanitize")
+        enable_sanitizers(project_sanitizers)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls")
     endif()
 else ()
     message("Release mode")

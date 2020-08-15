@@ -74,6 +74,7 @@ target_link_libraries (${SERVER_NAME}
     protocol_lib
     pthread
     project_warnings
+    project_sanitizers
 )
 
 if (NOT WIN32)
