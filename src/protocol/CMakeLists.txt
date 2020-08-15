@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(PROTOCOL_LIB_NAME protocol_lib)
-add_library(${PROTOCOL_LIB_NAME})
+add_library(${PROTOCOL_LIB_NAME} STATIC)
 
 target_sources(${PROTOCOL_LIB_NAME}
     PUBLIC
@@ -22,7 +22,12 @@ target_sources(${PROTOCOL_LIB_NAME}
 )
 
 # fixme: replace this with better statement
-target_include_directories(${PROTOCOL_LIB_NAME} PRIVATE include/protocol)
+target_include_directories(${PROTOCOL_LIB_NAME}
+    PUBLIC
+        ./include
+    PRIVATE
+        ./include/protocol
+)
 
 set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
         CXX_STANDARD 17
@@ -36,8 +41,5 @@ target_link_libraries(${PROTOCOL_LIB_NAME} PRIVATE pthread)
 find_package(Boost COMPONENTS date_time REQUIRED)
 
 target_include_directories(${PROTOCOL_LIB_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
-
-set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
-        PROTOCOL_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)
