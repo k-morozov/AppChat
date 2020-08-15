@@ -1,10 +1,10 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "protocol/protocol.h"
+#include <protocol/protocol.h>
 #include <deque>
 #include <sqlite3.h>
-#include "server/log/logger.h"
+#include "log/logger.h"
 #include <memory>
 #include <boost/filesystem.hpp>
 

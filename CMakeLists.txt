@@ -9,9 +9,6 @@ else ()
     project(AppChat VERSION 0.7.1)
 endif ()
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-set(PROTOCOL_LIB_NAME protocol_lib)
-
 if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     message("DEBUG mode")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/debug/)
@@ -38,17 +35,24 @@ else ()
     endif()
 endif()
 
+include(${CMAKE_SOURCE_DIR}/cmake/ProjectWarnings.cmake)
+add_library(project_warnings INTERFACE)
+enable_warnings(project_warnings)
+
 enable_testing()
 
+# Build protocol_lib
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/protocol)
 
-# BUild server
+# Build appchat-server
 if (NOT WIN32)
     add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
 endif()
 
+# Build appchat-client
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/client)
 
+# build tests
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
 
 if (NOT WIN32)

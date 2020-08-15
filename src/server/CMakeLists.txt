@@ -46,8 +46,10 @@ set(SERVER_SOURCES
     ${STORAGE_SRC}
 )
 
-target_include_directories(${SERVER_NAME} PRIVATE
-    ${Boost_INCLUDE_DIR}
+target_include_directories(${SERVER_NAME}
+    PRIVATE
+        ${Boost_INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 unset(PROTOCOL_INCLUDE_DIRECTORIES)
@@ -69,8 +71,9 @@ target_link_libraries (${SERVER_NAME}
     ${Boost_LIBRARIES}
     ${BOOST_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
-    ${PROTOCOL_LIB_NAME}
+    protocol_lib
     pthread
+    project_warnings
 )
 
 if (NOT WIN32)

@@ -2,7 +2,7 @@
 #define CHANNELSMANAGER_H
 
 #include "channel.h"
-#include "server/log/logger.h"
+#include "log/logger.h"
 
 /**
  * @brief ChannelsManager

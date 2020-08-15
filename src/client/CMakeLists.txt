@@ -37,11 +37,17 @@ set_target_properties(${CLIENT_NAME} PROPERTIES
         COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
 )
 
+target_include_directories(${CLIENT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 target_link_libraries (${CLIENT_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     Qt5::Widgets
-    ${PROTOCOL_LIB_NAME}
+    protocol_lib
+    project_warnings
 )
 
 if (WIN32)

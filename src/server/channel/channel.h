@@ -5,8 +5,8 @@
 #include <mutex>
 #include <deque>
 #include "iroom.h"
-#include "server/storage/database.h"
-#include "server/log/logger.h"
+#include "storage/database.h"
+#include "log/logger.h"
 
 /**
  * @brief Channel class
