@@ -39,6 +39,7 @@ else ()
 endif()
 
 enable_testing()
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/protocol)
 
 # BUild server
@@ -47,6 +48,7 @@ if (NOT WIN32)
 endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/client)
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
 
 if (NOT WIN32)
