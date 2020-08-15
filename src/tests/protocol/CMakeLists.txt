@@ -20,9 +20,9 @@ target_link_libraries (${TESTS_PROTOCOL}
     ${CMAKE_THREAD_LIBS_INIT}
     ${PROTOCOL_LIB_NAME}
 )
-include_directories(
+
+target_include_directories(${TESTS_PROTOCOL} PRIVATE
     ${Boost_INCLUDE_DIR}
-    ${PROTOCOL_LIB_NAME}
 )
 
 add_test(NAME ${TESTS_PROTOCOL} COMMAND ${TESTS_PROTOCOL})
