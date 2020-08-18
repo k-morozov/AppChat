@@ -4,7 +4,7 @@
 #include <memory>
 #include <string_view>
 
-#include "server/connection/isubscriber.h"
+#include "connection/isubscriber.h"
 #include "protocol/protocol.h"
 
 /**

@@ -9,7 +9,6 @@ set(TESTS_PROTOCOL_SOURSES
     test_response.cpp
     test_datetime.cpp
 )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 add_executable(${TESTS_PROTOCOL}
     ${TESTS_PROTOCOL_SOURSES}
@@ -18,11 +17,13 @@ find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework REQU
 target_link_libraries (${TESTS_PROTOCOL}
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${PROTOCOL_LIB_NAME}
+    protocol_lib
+    project_warnings
+    project_sanitizers
 )
-include_directories(
+
+target_include_directories(${TESTS_PROTOCOL} PRIVATE
     ${Boost_INCLUDE_DIR}
-    ${PROTOCOL_LIB_NAME}
 )
 
 add_test(NAME ${TESTS_PROTOCOL} COMMAND ${TESTS_PROTOCOL})

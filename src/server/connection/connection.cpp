@@ -1,4 +1,4 @@
-#include "server/connection/connection.h"
+#include "connection/connection.h"
 
 void Connection::reuse(boost::asio::ip::tcp::socket&& _socket) {
     if (busy) {
