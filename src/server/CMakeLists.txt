@@ -8,6 +8,7 @@ set(DIR_CHANNEL     channel)
 set(DIR_LOG         log)
 set(DIR_STORAGE     storage)
 
+set(CMAKE_CXX_FLAGS "-lboost_program_options")
 
 set(CHANNELS_SRC
     ${DIR_CHANNEL}/iroom.h
