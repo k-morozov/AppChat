@@ -37,26 +37,32 @@ set_target_properties(${CLIENT_NAME} PROPERTIES
         COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic"
 )
 
+target_include_directories(${CLIENT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 target_link_libraries (${CLIENT_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     Qt5::Widgets
-    ${PROTOCOL_LIB_NAME}
+    protocol_lib
+    project_warnings
+    project_sanitizers
 )
 
 if (WIN32)
     add_definitions(-DWIN32_LEAN_AND_MEAN)
     target_link_libraries(${CLIENT_NAME} -lws2_32)
-endif (WIN32)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-#install(TARGETS ${CLIENT_NAME} RUNTIME DESTINATION bin)
-#SET (CPACK_PACKAGE_NAME ${CLIENT_NAME})
-#set(CPACK_GENERATOR DEB)
+    include(${CMAKE_SOURCE_DIR}/cmake/DeployQt.cmake)
+    windeployqt(${CLIENT_NAME})
 
-#set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-#set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-#set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+    install(TARGETS ${CLIENT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
+    install(DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/windeployqt/" DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif()
 
-#set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
-#set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-#include(CPack)
+if (NOT WIN32)
+    install(TARGETS ${CLIENT_NAME} RUNTIME DESTINATION bin)
+endif()

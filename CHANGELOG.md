@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add buildings deb packages (client and server) [@k-morozov](https://github.com/k-morozov).
 - Add debug define and sanitize [@k-morozov](https://github.com/k-morozov).
 - Add Windows client build (Travic CI) [@tuminskiy](https://github.com/tuminskiy).
+- Rewritten CMake [@asminimulin](https://github.com/asminimulin).
 
 ### Changed
 - Remove stacktrace [@k-morozov](https://github.com/k-morozov).

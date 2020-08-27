@@ -1,20 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(SERVER_NAME appchat-server)
-
-set(Boost_USE_STATIC_LIBS ON)
-set(CMAKE_CXX_FLAGS "-lboost_program_options")
+add_executable(${SERVER_NAME})
 
 set(DIR_CONNECTION  connection)
 set(DIR_CHANNEL     channel)
 set(DIR_LOG         log)
 set(DIR_STORAGE     storage)
-set(DIR_PROTOCOL    protocol)
 
-include_directories(
-    ${Boost_INCLUDE_DIR}
-    ${PROTOCOL_LIB_NAME}
-)
+set(CMAKE_CXX_FLAGS "-lboost_program_options")
 
 set(CHANNELS_SRC
     ${DIR_CHANNEL}/iroom.h
@@ -53,14 +47,22 @@ set(SERVER_SOURCES
     ${STORAGE_SRC}
 )
 
-add_executable(${SERVER_NAME}  ${SERVER_SOURCES})
+target_include_directories(${SERVER_NAME}
+    PRIVATE
+        ${Boost_INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+unset(PROTOCOL_INCLUDE_DIRECTORIES)
+
+target_sources(${SERVER_NAME} PRIVATE ${SERVER_SOURCES})
 
 set_target_properties(${SERVER_NAME} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
-        LINK_LIBRARIES pthread
-        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic;-lboost_log_setup;-lboost_log;"
 )
+
+target_compile_options(${SERVER_NAME} PRIVATE "-O2;-Wall;-Wextra;-Wpedantic;-lboost_log_setup;-lboost_log;-lboost_program_options;")
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
 find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework program_options log_setup log filesystem REQUIRED)
@@ -70,20 +72,13 @@ target_link_libraries (${SERVER_NAME}
     ${Boost_LIBRARIES}
     ${BOOST_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
-    ${PROTOCOL_LIB_NAME}
+    protocol_lib
+    pthread
+    project_warnings
+    project_sanitizers
 )
 
 if (NOT WIN32)
     install(TARGETS ${SERVER_NAME} RUNTIME DESTINATION bin)
-    set(CPACK_PACKAGE_NAME ${SERVER_NAME})
-    set(CPACK_GENERATOR DEB)
-
-    set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-    set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-    set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-
-    set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
-    set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-    include(CPack)
 endif()
 

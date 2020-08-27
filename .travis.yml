@@ -19,15 +19,15 @@ matrix:
         #- 7z.exe e sqlite-amalgamation-3320300.zip -oc:\sqlite\include
         #- wget -q https://www.sqlite.org/2020/sqlite-dll-win64-x64-3320300.zip
         #- 7z.exe e sqlite-dll-win64-x64-3320300.zip -oc:\sqlite\lib
-        - choco install doxygen.install
-        - choco install graphviz
+        #- choco install doxygen.install
+        #- choco install graphviz
       cache:
         directories:
           - boost_1_73_0/
       script:
         - mkdir ${BUILD_DIR} && cd ${BUILD_DIR}
-        - cmake .. -G "MinGW Makefiles"
-        - mingw32-make
+        - cmake.exe .. -G "MinGW Makefiles"
+        - mingw32-make.exe install
 
     - os: linux
       addons:
@@ -58,16 +58,16 @@ matrix:
         - cmake --build .
         - cmake --build . --target test
         - cmake --build . --target package
-      after_success:
-        - cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
-        - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
+#      after_success:
+#        - cd ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/bin/release
+#        - tar -cf  AppChat-0.7.$TRAVIS_BUILD_NUMBER-Linux.tar appchat-server appchat-client
       deploy:
           provider: script
           skip_cleanup: true
           on:
             branch: master
           script:
-          - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/server/server-linux/appchat-server-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+          - curl -T ${TRAVIS_BUILD_DIR}/${BUILD_DIR}/${PROJECT_NAME}-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/${PROJECT_NAME}/linux/0.7.$TRAVIS_BUILD_NUMBER/${PROJECT_NAME}-0.7.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1" && ls
 
 #        - >-
 #            if [[ "$TRAVIS_BRANCH" = "dev" && -n "$TRAVIS_BUILD_DOCS" ]] ; then

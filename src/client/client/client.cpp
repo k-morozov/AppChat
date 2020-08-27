@@ -1,4 +1,4 @@
-#include "client/client/client.h"
+#include "client/client.h"
 
 void Client::close_connection() {
     mtx_sock.lock();
