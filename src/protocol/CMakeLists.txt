@@ -1,31 +1,50 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(PROTOCOL_SRC
-    protocol.h protocol.cpp
-    command_table.h
-    datetime.h datetime.cpp
+set(PROTOCOL_LIB_NAME protocol_lib)
+add_library(${PROTOCOL_LIB_NAME} STATIC)
 
-    request/request.h
-    request/input_request.h request/input_request.cpp
-    request/transport_request.h request/transport_request.cpp
-    request/control_request.h
+target_sources(${PROTOCOL_LIB_NAME}
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/protocol/protocol.h
 
-    response/response.h
-    response/input_response.h response/input_response.cpp
-    response/transport_response.h
+    PRIVATE
+        "include/protocol/command_table.h"
+        "include/protocol/datetime.h" datetime.cpp
+
+        "include/protocol/request/request.h"
+        "include/protocol/request/input_request.h" request/input_request.cpp
+        "include/protocol/request/transport_request.h" request/transport_request.cpp
+        "include/protocol/request/control_request.h"
+
+        "include/protocol/response/response.h"
+        "include/protocol/response/input_response.h" response/input_response.cpp
+        "include/protocol/response/transport_response.h"
 )
 
-add_library(${PROTOCOL_LIB_NAME}
-    ${PROTOCOL_SRC})
+# fixme: replace this with better statement
+target_include_directories(${PROTOCOL_LIB_NAME}
+    PUBLIC
+        ./include
+    PRIVATE
+        ./include/protocol
+)
 
 set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
-        LINK_LIBRARIES pthread
-        COMPILE_OPTIONS "-std=c++17;-O2;-Wall;-Wextra;-Wpedantic;-fPIC"
+)
+
+target_compile_options(${PROTOCOL_LIB_NAME} PRIVATE "-O2;-Wall;-Wextra;-Wpedantic;-fPIC")
+
+target_link_libraries(${PROTOCOL_LIB_NAME}
+    PRIVATE
+        pthread
+        project_warnings
+        project_sanitizers
 )
 
 find_package(Boost COMPONENTS date_time REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
+
+target_include_directories(${PROTOCOL_LIB_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
 
 install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)

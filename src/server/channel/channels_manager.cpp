@@ -1,4 +1,4 @@
-#include "server/channel/channels_manager.h"
+#include "channel/channels_manager.h"
 
 ChannelsManager::ChannelsManager()
 {

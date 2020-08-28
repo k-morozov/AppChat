@@ -1,4 +1,4 @@
-#include "client/control/control.h"
+#include "control/control.h"
 
 Control::Control(int argc, char** argv) {
     std::cout << "Ctor Control" << std::endl;
