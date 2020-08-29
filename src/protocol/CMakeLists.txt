@@ -48,3 +48,10 @@ find_package(Boost COMPONENTS date_time REQUIRED)
 target_include_directories(${PROTOCOL_LIB_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
 
 install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)
+
+add_library(messages_pb_lib STATIC include/protocol/messages.pb.cc)
+target_link_libraries(messages_pb_lib protobuf)
+set_target_properties(messages_pb_lib PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+)

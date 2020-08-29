@@ -7,7 +7,10 @@
 #include <mutex>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
+#include "protocol/messages.pb.h"
 #include <QWidget>
+
+#include "protocol/messages.pb.h"
 
 /**
  * @brief Client class
@@ -25,11 +28,11 @@ public:
      * @param request initial request the server
      */
     Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps,
-           input_request_ptr request)
+           std::vector<uint8_t> __buffer)
         : io_service(io), sock(io), eps(eps)
     {
         std::cout << "ctor client" << std::endl;
-        do_connect(eps, request);
+        do_connect(eps, __buffer);
     }
 
     /**
@@ -97,13 +100,13 @@ private:
     /**
      * @brief Start connection to the server
      */
-    void do_connect(const boost::asio::ip::tcp::resolver::results_type&, input_request_ptr);
+    void do_connect(const boost::asio::ip::tcp::resolver::results_type&, std::vector<uint8_t> __buffer);
 
     /**
      * @brief Log in on the server
      * @param request
      */
-    void send_login_request(input_request_ptr request);
+    void send_login_request(std::vector<uint8_t> __buffer);
 
     /**
      * @brief Entry point for handling server response

@@ -5,6 +5,8 @@
 #include "client/client.h"
 #include "gui/mainwindow.h"
 
+#include "protocol/messages.pb.h"
+#include <vector>
 /**
  * @brief Controller
  * @param ip and port server
@@ -110,6 +112,8 @@ public slots:
 private:
     std::unique_ptr<Client> client;
     MainWindow w;
+
+    std::vector<uint8_t> __buffer;
 
     /**
      * @todo convert to 4 bytes

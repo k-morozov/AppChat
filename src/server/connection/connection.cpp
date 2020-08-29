@@ -47,41 +47,15 @@ void Connection::sendme(text_response_ptr response) {
 }
 
 void Connection::read_request_header() {
-    request_ptr request = std::make_shared<Request>();
+    __read_buffer.resize(sizeof(Serialize::Header));
 
-    boost::asio::async_read(socket, boost::asio::buffer(request->get_header(), Block::Header),
-                            [this, request](boost::system::error_code error, std::size_t) {
+    boost::asio::async_read(socket, boost::asio::buffer(__read_buffer.data(), sizeof(Serialize::Header)),
+                            [this](boost::system::error_code error, std::size_t) {
+        Serialize::Header new_header;
+        new_header.ParseFromArray(__read_buffer.data(), sizeof(Serialize::Header));
         BOOST_LOG_TRIVIAL(info) << "\n\n";
         if (!error) {
-            switch (request->get_type_data()) {
-                case TypeCommand::Unknown:
-                    BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
-                    break;
-                case TypeCommand::RegistrationRequest:
-                    BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
-                    read_request_body(std::make_shared<RegistrationRequest>(request));
-                    break;
-                case TypeCommand::RegistrationResponse:
-                case TypeCommand::AuthorisationRequest:
-                    BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
-                    read_request_body(std::make_shared<AutorisationRequest>(request));
-                    break;
-                case TypeCommand::AutorisationResponse:
-                case TypeCommand::EchoRequest:
-                    BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
-                    read_request_body(std::make_shared<TextRequest>(request));
-                    break;
-                case TypeCommand::EchoResponse:
-                case TypeCommand::JoinRoomRequest:
-                    BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
-                    read_request_body(std::make_shared<JoinRoomRequest>(request));
-                    break;
-                case TypeCommand::JoinRoomResponse:
-                case TypeCommand::LeaveRoomRequest:
-                default:
-                    BOOST_LOG_TRIVIAL(info) << get_command_str(request->get_type_data()) << ": ";
-                    break;
-            }
+            read_proto_msg(new_header);
         } else {
             BOOST_LOG_TRIVIAL(error) << "error read_request_header()";
             free_connection();
@@ -251,4 +225,57 @@ void Connection::send_response_data() {
                 }
             }
     );
+}
+
+void Connection::read_proto_msg(Serialize::Header header) {
+    auto self(shared_from_this());
+    __read_buffer.resize(header.length());
+
+    switch (static_cast<TypeCommand>(header.command())) {
+        case TypeCommand::AuthorisationRequest:
+            BOOST_LOG_TRIVIAL(info) << "proto input request";
+            boost::asio::async_read(socket, boost::asio::buffer(__read_buffer.data(), static_cast<int>(header.length())),
+                                    std::bind(&Connection::read_pb_input_req,
+                                              self,
+                                              std::placeholders::_1,
+                                              std::placeholders::_2)
+                                    );
+            break;
+    default:
+        break;
+    }
+}
+
+void Connection::read_pb_input_req(boost::system::error_code error, std::size_t) {
+    if (!error) {
+        Serialize::Request new_request;
+        new_request.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
+
+        login = new_request.input_request().login();
+        password = new_request.input_request().password();
+        BOOST_LOG_TRIVIAL(info) << "login=" << login << ", pwd=" << password;
+        client_id = db->check_client(login, password);
+        input_res_ptr response = std::make_shared<AutorisationResponse>(client_id);
+
+        BOOST_LOG_TRIVIAL(info) << "AutorisationResponse: vers=" << response->get_protocol_version() << ", command="
+                                << get_command_str(response->get_type_data())
+                                << ", logid=" << response->get_loginid();
+        if (client_id!=-1) {
+            db->add_logins(login, response->get_loginid(), password);
+        }
+        boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
+        boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
+
+        if (client_id!=-1) {
+            BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
+            read_request_header();
+        }
+        else {
+            BOOST_LOG_TRIVIAL(error) << "Authorization failed";
+            free_connection();
+        }
+    }
+    else {
+        BOOST_LOG_TRIVIAL(error) << "error read_pb_input_req()";
+    }
 }

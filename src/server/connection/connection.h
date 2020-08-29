@@ -9,6 +9,8 @@
 #include "protocol/protocol.h"
 #include "log/logger.h"
 
+#include "protocol/messages.pb.h"
+#include <vector>
 /**
  * @brief Connection class
  * @details It serves connected tcp client
@@ -81,6 +83,8 @@ private:
     std::mutex mtx_sock;
     std::deque<response_ptr> packets_to_client;
 
+    std::vector<uint8_t> __read_buffer;
+
     identifier_t client_id;
     std::string login;
     std::string password;
@@ -104,6 +108,7 @@ private:
     /**
      * @brief Handle author request.
      */
+    [[deprecated]]
     void read_request_body(autor_request_ptr);
 
     /**
@@ -137,6 +142,9 @@ private:
         static identifier_t id = 0;
         return ++id;
     }
+
+    void read_proto_msg(Serialize::Header);
+    void read_pb_input_req(boost::system::error_code error, std::size_t);
 };
 
 using connection_ptr = std::shared_ptr<Connection>;

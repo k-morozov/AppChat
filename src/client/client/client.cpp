@@ -50,13 +50,13 @@ void Client::write(join_room_request_ptr request) {
     }
 }
 
-void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps, input_request_ptr request) {
+void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps, std::vector<uint8_t> __buffer) {
     std::cout << "start do_connect" << std::endl;
     boost::asio::async_connect(sock, eps,
-        [this, request](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
+        [this, __buffer](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
            if (!ec) {
-               send_login_request(request);
-               std::cout << "finish do_connect" << std::endl;
+               send_login_request(__buffer);
+               std::cout << "finish do_connect()" << std::endl;
            }
            else {
                std::cout << "error do_connect()" << std::endl;
@@ -78,24 +78,22 @@ input_request_ptr Client::logon() {
     return std::make_shared<AutorisationRequest>(login, password);
 }
 
-void Client::send_login_request(input_request_ptr request) {
+void Client::send_login_request(std::vector<uint8_t> __buffer) {
     boost::system::error_code error_code;
-    boost::asio::write(sock, boost::asio::buffer(request->get_header(),
-                                                 Block::Header), error_code);
+   ;
+    boost::asio::write(sock, boost::asio::buffer(__buffer.data(), __buffer.size()), error_code);
     if (error_code) {
         std::cout << "error send_login_request(header)" << std::endl;
         close_connection();
         return ;
     }
-    boost::asio::write(sock, boost::asio::buffer(request->get_data(),
-                                                 request->get_length_data()), error_code);
-    if (error_code) {
-        std::cout << "error send_login_request(data)" << std::endl;
-        close_connection();
-        return ;
-    }
-    std::cout << "login=" << request->get_login() << ", password=" << request->get_password()
-              << ", time=" << request->get_datetime().to_simple_date() << std::endl;
+    Serialize::Header new_header;
+    Serialize::Request new_request;
+    new_header.ParseFromArray(__buffer.data(), sizeof(Serialize::Header));
+    new_request.ParseFromArray(__buffer.data() + sizeof(Serialize::Header), new_header.length());
+
+    std::cout << "send: " << "login=" << new_request.input_request().login() << ", password="
+              << new_request.input_request().password() << std::endl;
     if (error_code) {
         std::cout << "error when send input_request" << std::endl;
         close_connection();
