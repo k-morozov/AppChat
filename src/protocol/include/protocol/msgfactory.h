@@ -42,6 +42,16 @@ public:
         return request;
     }
 
+    static ptr_proto_request_t join_room_request(int room_id) {
+        auto jr_request = std::make_unique<Serialize::JoinRoomRequest>();
+        jr_request->set_room_id(room_id);
+
+        auto request = std::make_unique<Serialize::Request>();
+        request->set_allocated_join_room_request(jr_request.release());
+
+        return request;
+    }
+
     static ptr_header_t create_header(TypeCommand command, int32_t length) {
         auto header = std::make_unique<Serialize::Header>();
         header->set_length(static_cast<google::protobuf::int32>(length));
@@ -87,6 +97,8 @@ public:
         return response;
     }
 
+
+
     static work_buf_res_t serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
         work_buf_res_t __buffer = std::make_unique<uint8_t[]>(BUF_RES_LEN);
         header_ptr->SerializeToArray(__buffer.get(), sizeof(Serialize::Header));
@@ -94,6 +106,15 @@ public:
 
         return __buffer;
     }
+
+    static work_buf_res_t serialize_request(ptr_header_t&& header_ptr, ptr_proto_request_t&& request_ptr) {
+        work_buf_req_t __buffer = std::make_unique<uint8_t[]>(BUF_REQ_LEN);
+        header_ptr->SerializeToArray(__buffer.get(), sizeof(Serialize::Header));
+        request_ptr->SerializeToArray(__buffer.get() + sizeof(Serialize::Header), header_ptr->length());
+
+        return __buffer;
+    }
+
 };
 
 #endif // MSGFACTORY_H

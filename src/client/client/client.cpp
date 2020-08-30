@@ -15,12 +15,6 @@ void Client::close_connection() {
         std::cout << "Close socket." << std::endl;
     }
     mtx_sock.unlock();
-
-//    packets_to_server.clear();
-//    std::memset(login, 0, Block::LoginName);
-//    std::memset(password, 0, Block::Password);
-//    client_id = -1;
-//    room_id = 0;
 }
 
 void Client::write(const std::string& message) {
@@ -79,45 +73,21 @@ input_request_ptr Client::logon() {
 }
 
 void Client::send_login_request(work_buf_req_t&& __buffer) {
-    if (__buffer) {
-        boost::system::error_code error_code;
-    //    bool flag_er_parse = false;
+    std::cout << "send_login_request()" << std::endl;
+    boost::system::error_code error_code;
 
-        boost::asio::write(sock, boost::asio::buffer(__buffer.get(), BUF_REQ_LEN), error_code);
-        if (error_code) {
-            std::cout << "error send_login_request(header)" << std::endl;
-            close_connection();
-            return ;
-        }
-
-        { //---> only for check send
-    //        Serialize::Header new_header;
-    //        Serialize::Request new_request;
-    //        flag_er_parse = new_header.ParseFromArray(__buffer.data(), sizeof(Serialize::Header));
-    //        if (flag_er_parse) {
-    //            std::cout << "error parse: " << __FILE__ << " " << __LINE__ << std::endl;
-    //            close_connection();
-    //            return ;
-    //        }
-    //        flag_er_parse = new_request.ParseFromArray(__buffer.data() + sizeof(Serialize::Header), new_header.length());
-    //        if (flag_er_parse) {
-    //            std::cout << "error parse: " << __FILE__ << " " << __LINE__ << std::endl;
-    //            close_connection();
-    //            return ;
-    //        }
-
-    //        std::cout << "send: " << "login=" << new_request.input_request().login() << ", password="
-    //                  << new_request.input_request().password() << std::endl;
-        } //---> end check send
-
-        read_input_response();
+    boost::asio::write(sock, boost::asio::buffer(__buffer.get(), BUF_REQ_LEN), error_code);
+    if (error_code) {
+        std::cout << "error send_login_request(header)" << std::endl;
+        close_connection();
+        return ;
     }
-    else {
-        std::cout << "error: ptr_buffer == nullptr" << std::endl;
-    }
+
+    read_input_response();
 }
 
 void Client::read_input_response() {
+    std::cout << "read_input_response()" << std::endl;
     boost::system::error_code error_code;
     bool flag_er_parse = false;
 
@@ -136,6 +106,7 @@ void Client::read_input_response() {
         close_connection();
         return ;
     }
+    std::cout << "full read response" << std::endl;
 
     if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)
         || header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::AutorisationResponse))
@@ -180,10 +151,16 @@ void Client::read_input_response() {
         }
 
         set_login_id(response.input_response().client_id());
-//        join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
-//        write(request);
 
-        std::cout << "Success send_login_request()" << std::endl;
+        auto request_ptr = MsgFactory::join_room_request(room_id);
+        auto header_ptr = MsgFactory::create_header(TypeCommand::JoinRoomRequest, sizeof(Serialize::Request));
+        auto request_to_send = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
+
+        std::cout << "finish serialize join_room" << std::endl;
+
+        add_msg_to_send(std::move(request_to_send));
+
+        std::cout << "Success send_join_room_request()" << std::endl;
         if (!error_code) {
             read_response_header();
         }
@@ -307,6 +284,31 @@ void Client::send_request_data() {
         }
         else {
             std::cout << "Error send_request_data()" << std::endl;
+            close_connection();
+        }
+    });
+}
+
+void Client::add_msg_to_send(work_buf_req_t&& request_ptr) {
+    bool process_write = !msg_to_server.empty();
+    msg_to_server.push_back(std::move(request_ptr));
+
+    if (!process_write) {
+        start_send_msgs();
+    }
+}
+
+void Client::start_send_msgs() {
+    boost::asio::async_write(sock, boost::asio::buffer(msg_to_server.front().get(), BUF_REQ_LEN),
+        [this](boost::system::error_code ec, std::size_t) {
+        if (!ec) {
+                msg_to_server.pop_front();
+                if (!msg_to_server.empty()) {
+                    start_send_msgs();
+                }
+        }
+        else {
+            std::cout << "Error send_request_header()" << std::endl;
             close_connection();
         }
     });

@@ -21,10 +21,15 @@ message InRequest {
 	string password = 2;
 };
 
+message JoinRoomRequest {
+	int32 room_id = 1;
+}
+
 message Request {
 	oneof msg {
 		RegRequest register_request = 1;
 		InRequest input_request = 2;
+		JoinRoomRequest join_room_request = 3;
 	}
 }
 
@@ -49,10 +54,16 @@ message RegResponse {
 	int32 chat_id = 4;
 }
 
+message JoinRoomResponse {
+	STATUS status = 1;
+	int32 room_id = 2;
+}
+
 message Response {
 	oneof msg {
 		InputResponse input_response = 1;
 		RegResponse reg_response = 2;
+		JoinRoomResponse join_room_response = 3;
 	}
 }
 

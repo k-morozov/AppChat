@@ -37,6 +37,9 @@ public:
      */
     void do_connect(work_buf_req_t&& __buffer);
 
+    void add_msg_to_send(work_buf_req_t &&);
+
+    void start_send_msgs();
     /**
      * @brief Send text message
      * @param message 
@@ -85,6 +88,7 @@ private:
     const boost::asio::ip::tcp::resolver::results_type& eps;
 
     std::deque<packet_ptr> packets_to_server;
+    std::deque<work_buf_req_t> msg_to_server;
 
     char login[Block::LoginName];
     char password[Block::Password];

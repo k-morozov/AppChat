@@ -47,6 +47,7 @@ void Connection::sendme(text_response_ptr response) {
 }
 
 void Connection::read_request_header() {
+    BOOST_LOG_TRIVIAL(info) << "read_request_header()";
     __read_buffer.resize(sizeof(Serialize::Header));
 
     boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
@@ -234,7 +235,7 @@ void Connection::read_proto_msg(Serialize::Header header) {
 
     switch (static_cast<TypeCommand>(header.command())) {
         case TypeCommand::AuthorisationRequest:
-            BOOST_LOG_TRIVIAL(info) << "read AuthorisationRequest";
+            BOOST_LOG_TRIVIAL(info) << "read pb_AuthorisationRequest";
             boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
                                     std::bind(&Connection::read_pb_input_req,
                                               self,
@@ -243,9 +244,18 @@ void Connection::read_proto_msg(Serialize::Header header) {
                                     );
             break;
         case TypeCommand::RegistrationRequest:
-            BOOST_LOG_TRIVIAL(info) << "read RegistrationRequest";
+            BOOST_LOG_TRIVIAL(info) << "read pb_RegistrationRequest";
             boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
                                 std::bind(&Connection::read_pb_reg_req,
+                                          self,
+                                          std::placeholders::_1,
+                                          std::placeholders::_2)
+                                );
+        break;
+        case TypeCommand::JoinRoomRequest:
+            BOOST_LOG_TRIVIAL(info) << "read pb_JoinRoomRequest";
+            boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
+                                std::bind(&Connection::read_pb_join_room_req,
                                           self,
                                           std::placeholders::_1,
                                           std::placeholders::_2)
@@ -323,6 +333,27 @@ void Connection::read_pb_reg_req(boost::system::error_code error, std::size_t) {
         }
     } else {
         BOOST_LOG_TRIVIAL(error) << "error read_request_body(registr)";
+        free_connection();
+    }
+}
+
+void Connection::read_pb_join_room_req(boost::system::error_code error, std::size_t) {
+    if (!error) {
+        auto self(shared_from_this());
+        BOOST_LOG_TRIVIAL(info) << "read_pb_join_room_req()";
+        ChannelsManager::Instance().leave(shared_from_this());
+
+        Serialize::Request new_request;
+        new_request.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
+
+        auto new_roomid = new_request.join_room_request().room_id();
+        BOOST_LOG_TRIVIAL(info) << "new roomid=" << new_roomid;
+        ChannelsManager::Instance().join(self, new_roomid, db);
+
+        read_request_header();
+    }
+    else {
+        BOOST_LOG_TRIVIAL(error) << "error read_pb_join_room_req()";
         free_connection();
     }
 }
