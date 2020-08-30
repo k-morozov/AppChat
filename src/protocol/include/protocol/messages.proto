@@ -9,6 +9,8 @@ message Header {
 	int32 length = 4;
 };
 
+// **************************************
+
 message RegRequest {
 	string login = 1;
 	string password = 2;
@@ -26,8 +28,30 @@ message Request {
 	}
 }
 
+// *************************************
+
+enum STATUS {	
+	FAIL = 0;
+	OK = 1;
+}
+
+message InputResponse {
+	STATUS status = 1;
+	int32 msg_id = 2;
+	int32 client_id = 3;
+	int32 chat_id =4;
+}
+
+message Response {
+	oneof msg {
+		InputResponse input_response = 1;
+	}
+}
+
+// *************************************
 message WrappedMessage {
 	oneof msg {
 		Request request = 1;
+		Response response = 2;
 	}
 }

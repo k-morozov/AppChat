@@ -31,6 +31,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
@@ -47,7 +48,7 @@ struct TableStruct_messages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[7]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -61,12 +62,18 @@ extern HeaderDefaultTypeInternal _Header_default_instance_;
 class InRequest;
 class InRequestDefaultTypeInternal;
 extern InRequestDefaultTypeInternal _InRequest_default_instance_;
+class InputResponse;
+class InputResponseDefaultTypeInternal;
+extern InputResponseDefaultTypeInternal _InputResponse_default_instance_;
 class RegRequest;
 class RegRequestDefaultTypeInternal;
 extern RegRequestDefaultTypeInternal _RegRequest_default_instance_;
 class Request;
 class RequestDefaultTypeInternal;
 extern RequestDefaultTypeInternal _Request_default_instance_;
+class Response;
+class ResponseDefaultTypeInternal;
+extern ResponseDefaultTypeInternal _Response_default_instance_;
 class WrappedMessage;
 class WrappedMessageDefaultTypeInternal;
 extern WrappedMessageDefaultTypeInternal _WrappedMessage_default_instance_;
@@ -74,12 +81,39 @@ extern WrappedMessageDefaultTypeInternal _WrappedMessage_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Serialize::Header* Arena::CreateMaybeMessage<::Serialize::Header>(Arena*);
 template<> ::Serialize::InRequest* Arena::CreateMaybeMessage<::Serialize::InRequest>(Arena*);
+template<> ::Serialize::InputResponse* Arena::CreateMaybeMessage<::Serialize::InputResponse>(Arena*);
 template<> ::Serialize::RegRequest* Arena::CreateMaybeMessage<::Serialize::RegRequest>(Arena*);
 template<> ::Serialize::Request* Arena::CreateMaybeMessage<::Serialize::Request>(Arena*);
+template<> ::Serialize::Response* Arena::CreateMaybeMessage<::Serialize::Response>(Arena*);
 template<> ::Serialize::WrappedMessage* Arena::CreateMaybeMessage<::Serialize::WrappedMessage>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Serialize {
 
+enum STATUS : int {
+  FAIL = 0,
+  OK = 1,
+  STATUS_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  STATUS_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool STATUS_IsValid(int value);
+constexpr STATUS STATUS_MIN = FAIL;
+constexpr STATUS STATUS_MAX = OK;
+constexpr int STATUS_ARRAYSIZE = STATUS_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* STATUS_descriptor();
+template<typename T>
+inline const std::string& STATUS_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, STATUS>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function STATUS_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    STATUS_descriptor(), enum_t_value);
+}
+inline bool STATUS_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, STATUS* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<STATUS>(
+    STATUS_descriptor(), name, value);
+}
 // ===================================================================
 
 class Header PROTOBUF_FINAL :
@@ -756,6 +790,336 @@ class Request PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class InputResponse PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.InputResponse) */ {
+ public:
+  inline InputResponse() : InputResponse(nullptr) {}
+  virtual ~InputResponse();
+
+  InputResponse(const InputResponse& from);
+  InputResponse(InputResponse&& from) noexcept
+    : InputResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline InputResponse& operator=(const InputResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InputResponse& operator=(InputResponse&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const InputResponse& default_instance();
+
+  static inline const InputResponse* internal_default_instance() {
+    return reinterpret_cast<const InputResponse*>(
+               &_InputResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(InputResponse& a, InputResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(InputResponse* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InputResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline InputResponse* New() const final {
+    return CreateMaybeMessage<InputResponse>(nullptr);
+  }
+
+  InputResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<InputResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const InputResponse& from);
+  void MergeFrom(const InputResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(InputResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.InputResponse";
+  }
+  protected:
+  explicit InputResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_messages_2eproto);
+    return ::descriptor_table_messages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kStatusFieldNumber = 1,
+    kMsgIdFieldNumber = 2,
+    kClientIdFieldNumber = 3,
+    kChatIdFieldNumber = 4,
+  };
+  // .Serialize.STATUS status = 1;
+  void clear_status();
+  ::Serialize::STATUS status() const;
+  void set_status(::Serialize::STATUS value);
+  private:
+  ::Serialize::STATUS _internal_status() const;
+  void _internal_set_status(::Serialize::STATUS value);
+  public:
+
+  // int32 msg_id = 2;
+  void clear_msg_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 msg_id() const;
+  void set_msg_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_msg_id() const;
+  void _internal_set_msg_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 client_id = 3;
+  void clear_client_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 client_id() const;
+  void set_client_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_client_id() const;
+  void _internal_set_client_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 chat_id = 4;
+  void clear_chat_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 chat_id() const;
+  void set_chat_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_chat_id() const;
+  void _internal_set_chat_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Serialize.InputResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  int status_;
+  ::PROTOBUF_NAMESPACE_ID::int32 msg_id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 client_id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 chat_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_messages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Response PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.Response) */ {
+ public:
+  inline Response() : Response(nullptr) {}
+  virtual ~Response();
+
+  Response(const Response& from);
+  Response(Response&& from) noexcept
+    : Response() {
+    *this = ::std::move(from);
+  }
+
+  inline Response& operator=(const Response& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Response& operator=(Response&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const Response& default_instance();
+
+  enum MsgCase {
+    kInputResponse = 1,
+    MSG_NOT_SET = 0,
+  };
+
+  static inline const Response* internal_default_instance() {
+    return reinterpret_cast<const Response*>(
+               &_Response_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(Response& a, Response& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Response* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Response* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Response* New() const final {
+    return CreateMaybeMessage<Response>(nullptr);
+  }
+
+  Response* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Response>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const Response& from);
+  void MergeFrom(const Response& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Response* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.Response";
+  }
+  protected:
+  explicit Response(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_messages_2eproto);
+    return ::descriptor_table_messages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kInputResponseFieldNumber = 1,
+  };
+  // .Serialize.InputResponse input_response = 1;
+  bool has_input_response() const;
+  private:
+  bool _internal_has_input_response() const;
+  public:
+  void clear_input_response();
+  const ::Serialize::InputResponse& input_response() const;
+  ::Serialize::InputResponse* release_input_response();
+  ::Serialize::InputResponse* mutable_input_response();
+  void set_allocated_input_response(::Serialize::InputResponse* input_response);
+  private:
+  const ::Serialize::InputResponse& _internal_input_response() const;
+  ::Serialize::InputResponse* _internal_mutable_input_response();
+  public:
+  void unsafe_arena_set_allocated_input_response(
+      ::Serialize::InputResponse* input_response);
+  ::Serialize::InputResponse* unsafe_arena_release_input_response();
+
+  void clear_msg();
+  MsgCase msg_case() const;
+  // @@protoc_insertion_point(class_scope:Serialize.Response)
+ private:
+  class _Internal;
+  void set_has_input_response();
+
+  inline bool has_msg() const;
+  inline void clear_has_msg();
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  union MsgUnion {
+    MsgUnion() {}
+    ::Serialize::InputResponse* input_response_;
+  } msg_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
+
+  friend struct ::TableStruct_messages_2eproto;
+};
+// -------------------------------------------------------------------
+
 class WrappedMessage PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.WrappedMessage) */ {
  public:
@@ -794,6 +1158,7 @@ class WrappedMessage PROTOBUF_FINAL :
 
   enum MsgCase {
     kRequest = 1,
+    kResponse = 2,
     MSG_NOT_SET = 0,
   };
 
@@ -802,7 +1167,7 @@ class WrappedMessage PROTOBUF_FINAL :
                &_WrappedMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(WrappedMessage& a, WrappedMessage& b) {
     a.Swap(&b);
@@ -874,6 +1239,7 @@ class WrappedMessage PROTOBUF_FINAL :
 
   enum : int {
     kRequestFieldNumber = 1,
+    kResponseFieldNumber = 2,
   };
   // .Serialize.Request request = 1;
   bool has_request() const;
@@ -893,12 +1259,31 @@ class WrappedMessage PROTOBUF_FINAL :
       ::Serialize::Request* request);
   ::Serialize::Request* unsafe_arena_release_request();
 
+  // .Serialize.Response response = 2;
+  bool has_response() const;
+  private:
+  bool _internal_has_response() const;
+  public:
+  void clear_response();
+  const ::Serialize::Response& response() const;
+  ::Serialize::Response* release_response();
+  ::Serialize::Response* mutable_response();
+  void set_allocated_response(::Serialize::Response* response);
+  private:
+  const ::Serialize::Response& _internal_response() const;
+  ::Serialize::Response* _internal_mutable_response();
+  public:
+  void unsafe_arena_set_allocated_response(
+      ::Serialize::Response* response);
+  ::Serialize::Response* unsafe_arena_release_response();
+
   void clear_msg();
   MsgCase msg_case() const;
   // @@protoc_insertion_point(class_scope:Serialize.WrappedMessage)
  private:
   class _Internal;
   void set_has_request();
+  void set_has_response();
 
   inline bool has_msg() const;
   inline void clear_has_msg();
@@ -909,6 +1294,7 @@ class WrappedMessage PROTOBUF_FINAL :
   union MsgUnion {
     MsgUnion() {}
     ::Serialize::Request* request_;
+    ::Serialize::Response* response_;
   } msg_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
@@ -1423,6 +1809,176 @@ inline Request::MsgCase Request::msg_case() const {
 }
 // -------------------------------------------------------------------
 
+// InputResponse
+
+// .Serialize.STATUS status = 1;
+inline void InputResponse::clear_status() {
+  status_ = 0;
+}
+inline ::Serialize::STATUS InputResponse::_internal_status() const {
+  return static_cast< ::Serialize::STATUS >(status_);
+}
+inline ::Serialize::STATUS InputResponse::status() const {
+  // @@protoc_insertion_point(field_get:Serialize.InputResponse.status)
+  return _internal_status();
+}
+inline void InputResponse::_internal_set_status(::Serialize::STATUS value) {
+  
+  status_ = value;
+}
+inline void InputResponse::set_status(::Serialize::STATUS value) {
+  _internal_set_status(value);
+  // @@protoc_insertion_point(field_set:Serialize.InputResponse.status)
+}
+
+// int32 msg_id = 2;
+inline void InputResponse::clear_msg_id() {
+  msg_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 InputResponse::_internal_msg_id() const {
+  return msg_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 InputResponse::msg_id() const {
+  // @@protoc_insertion_point(field_get:Serialize.InputResponse.msg_id)
+  return _internal_msg_id();
+}
+inline void InputResponse::_internal_set_msg_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  msg_id_ = value;
+}
+inline void InputResponse::set_msg_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_msg_id(value);
+  // @@protoc_insertion_point(field_set:Serialize.InputResponse.msg_id)
+}
+
+// int32 client_id = 3;
+inline void InputResponse::clear_client_id() {
+  client_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 InputResponse::_internal_client_id() const {
+  return client_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 InputResponse::client_id() const {
+  // @@protoc_insertion_point(field_get:Serialize.InputResponse.client_id)
+  return _internal_client_id();
+}
+inline void InputResponse::_internal_set_client_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  client_id_ = value;
+}
+inline void InputResponse::set_client_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_client_id(value);
+  // @@protoc_insertion_point(field_set:Serialize.InputResponse.client_id)
+}
+
+// int32 chat_id = 4;
+inline void InputResponse::clear_chat_id() {
+  chat_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 InputResponse::_internal_chat_id() const {
+  return chat_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 InputResponse::chat_id() const {
+  // @@protoc_insertion_point(field_get:Serialize.InputResponse.chat_id)
+  return _internal_chat_id();
+}
+inline void InputResponse::_internal_set_chat_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  chat_id_ = value;
+}
+inline void InputResponse::set_chat_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_chat_id(value);
+  // @@protoc_insertion_point(field_set:Serialize.InputResponse.chat_id)
+}
+
+// -------------------------------------------------------------------
+
+// Response
+
+// .Serialize.InputResponse input_response = 1;
+inline bool Response::_internal_has_input_response() const {
+  return msg_case() == kInputResponse;
+}
+inline bool Response::has_input_response() const {
+  return _internal_has_input_response();
+}
+inline void Response::set_has_input_response() {
+  _oneof_case_[0] = kInputResponse;
+}
+inline void Response::clear_input_response() {
+  if (_internal_has_input_response()) {
+    if (GetArena() == nullptr) {
+      delete msg_.input_response_;
+    }
+    clear_has_msg();
+  }
+}
+inline ::Serialize::InputResponse* Response::release_input_response() {
+  // @@protoc_insertion_point(field_release:Serialize.Response.input_response)
+  if (_internal_has_input_response()) {
+    clear_has_msg();
+      ::Serialize::InputResponse* temp = msg_.input_response_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    msg_.input_response_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Serialize::InputResponse& Response::_internal_input_response() const {
+  return _internal_has_input_response()
+      ? *msg_.input_response_
+      : reinterpret_cast< ::Serialize::InputResponse&>(::Serialize::_InputResponse_default_instance_);
+}
+inline const ::Serialize::InputResponse& Response::input_response() const {
+  // @@protoc_insertion_point(field_get:Serialize.Response.input_response)
+  return _internal_input_response();
+}
+inline ::Serialize::InputResponse* Response::unsafe_arena_release_input_response() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.Response.input_response)
+  if (_internal_has_input_response()) {
+    clear_has_msg();
+    ::Serialize::InputResponse* temp = msg_.input_response_;
+    msg_.input_response_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Response::unsafe_arena_set_allocated_input_response(::Serialize::InputResponse* input_response) {
+  clear_msg();
+  if (input_response) {
+    set_has_input_response();
+    msg_.input_response_ = input_response;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.Response.input_response)
+}
+inline ::Serialize::InputResponse* Response::_internal_mutable_input_response() {
+  if (!_internal_has_input_response()) {
+    clear_msg();
+    set_has_input_response();
+    msg_.input_response_ = CreateMaybeMessage< ::Serialize::InputResponse >(GetArena());
+  }
+  return msg_.input_response_;
+}
+inline ::Serialize::InputResponse* Response::mutable_input_response() {
+  // @@protoc_insertion_point(field_mutable:Serialize.Response.input_response)
+  return _internal_mutable_input_response();
+}
+
+inline bool Response::has_msg() const {
+  return msg_case() != MSG_NOT_SET;
+}
+inline void Response::clear_has_msg() {
+  _oneof_case_[0] = MSG_NOT_SET;
+}
+inline Response::MsgCase Response::msg_case() const {
+  return Response::MsgCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
 // WrappedMessage
 
 // .Serialize.Request request = 1;
@@ -1498,6 +2054,79 @@ inline ::Serialize::Request* WrappedMessage::mutable_request() {
   return _internal_mutable_request();
 }
 
+// .Serialize.Response response = 2;
+inline bool WrappedMessage::_internal_has_response() const {
+  return msg_case() == kResponse;
+}
+inline bool WrappedMessage::has_response() const {
+  return _internal_has_response();
+}
+inline void WrappedMessage::set_has_response() {
+  _oneof_case_[0] = kResponse;
+}
+inline void WrappedMessage::clear_response() {
+  if (_internal_has_response()) {
+    if (GetArena() == nullptr) {
+      delete msg_.response_;
+    }
+    clear_has_msg();
+  }
+}
+inline ::Serialize::Response* WrappedMessage::release_response() {
+  // @@protoc_insertion_point(field_release:Serialize.WrappedMessage.response)
+  if (_internal_has_response()) {
+    clear_has_msg();
+      ::Serialize::Response* temp = msg_.response_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    msg_.response_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Serialize::Response& WrappedMessage::_internal_response() const {
+  return _internal_has_response()
+      ? *msg_.response_
+      : reinterpret_cast< ::Serialize::Response&>(::Serialize::_Response_default_instance_);
+}
+inline const ::Serialize::Response& WrappedMessage::response() const {
+  // @@protoc_insertion_point(field_get:Serialize.WrappedMessage.response)
+  return _internal_response();
+}
+inline ::Serialize::Response* WrappedMessage::unsafe_arena_release_response() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.WrappedMessage.response)
+  if (_internal_has_response()) {
+    clear_has_msg();
+    ::Serialize::Response* temp = msg_.response_;
+    msg_.response_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void WrappedMessage::unsafe_arena_set_allocated_response(::Serialize::Response* response) {
+  clear_msg();
+  if (response) {
+    set_has_response();
+    msg_.response_ = response;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.WrappedMessage.response)
+}
+inline ::Serialize::Response* WrappedMessage::_internal_mutable_response() {
+  if (!_internal_has_response()) {
+    clear_msg();
+    set_has_response();
+    msg_.response_ = CreateMaybeMessage< ::Serialize::Response >(GetArena());
+  }
+  return msg_.response_;
+}
+inline ::Serialize::Response* WrappedMessage::mutable_response() {
+  // @@protoc_insertion_point(field_mutable:Serialize.WrappedMessage.response)
+  return _internal_mutable_response();
+}
+
 inline bool WrappedMessage::has_msg() const {
   return msg_case() != MSG_NOT_SET;
 }
@@ -1518,10 +2147,24 @@ inline WrappedMessage::MsgCase WrappedMessage::msg_case() const {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace Serialize
+
+PROTOBUF_NAMESPACE_OPEN
+
+template <> struct is_proto_enum< ::Serialize::STATUS> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::Serialize::STATUS>() {
+  return ::Serialize::STATUS_descriptor();
+}
+
+PROTOBUF_NAMESPACE_CLOSE
 
 // @@protoc_insertion_point(global_scope)
 

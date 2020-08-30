@@ -19,6 +19,7 @@ target_sources(${PROTOCOL_LIB_NAME}
         "include/protocol/response/response.h"
         "include/protocol/response/input_response.h" response/input_response.cpp
         "include/protocol/response/transport_response.h"
+        "include/protocol/msgfactory.h" include/protocol/msgfactory.cpp
 )
 
 # fixme: replace this with better statement

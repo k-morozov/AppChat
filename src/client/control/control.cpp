@@ -28,29 +28,22 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
     boost::asio::ip::tcp::resolver resolver(io_service);
     auto endpoints = resolver.resolve(ip, std::to_string(port));
 
-    std::unique_ptr<Serialize::InRequest> in_request = std::make_unique<Serialize::InRequest>();
-    in_request->set_login(login);
-    in_request->set_password(password);
+    ptr_proto_request_t ptr_request;
+    if (command == TypeCommand::RegistrationRequest) {
+        ptr_request = MsgFactory::create_reg_request(login, password);
+    }
+    else if (command == TypeCommand::AuthorisationRequest) {
+        ptr_request = MsgFactory::create_input_request(login, password);
+    }
 
-    Serialize::Request request;
-    request.set_allocated_input_request(in_request.release());
+    auto ptr_header = MsgFactory::create_header(command, sizeof(Serialize::Request));
+    work_buf_req_t unique_buffer = std::make_unique<uint8_t[]>(BUF_REQ_LEN);
 
-    std::cout << "conencting: " << request.input_request().login() << " and " << request.input_request().password()
-                  << ", size=" << sizeof(request) << std::endl;
-    const std::size_t length = sizeof(request);
+    ptr_header->SerializeToArray(unique_buffer.get(), sizeof(Serialize::Header));
+    ptr_request->SerializeToArray(unique_buffer.get()+sizeof(Serialize::Header), ptr_header->length());
 
-    Serialize::Header header;
-    header.set_length(static_cast<google::protobuf::int32>(length));
-
-    header.set_version(1);
-    header.set_command(static_cast<google::protobuf::uint64>(TypeCommand::AuthorisationRequest));
-    header.set_time(0);
-
-    __buffer.resize(sizeof(header) + length);
-    header.SerializeToArray(__buffer.data(), sizeof(header));
-    request.SerializeToArray(__buffer.data()+sizeof(header), header.length());
-
-    client = std::make_unique<Client>(io_service, endpoints, __buffer);
+    client = std::make_unique<Client>(io_service, endpoints);
+    client->do_connect(std::move(unique_buffer));
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
     QObject::connect(client.get(), SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));

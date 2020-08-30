@@ -50,13 +50,13 @@ void Client::write(join_room_request_ptr request) {
     }
 }
 
-void Client::do_connect(const boost::asio::ip::tcp::resolver::results_type& eps, std::vector<uint8_t> __buffer) {
-    std::cout << "start do_connect" << std::endl;
+void Client::do_connect(work_buf_req_t&&  __buffer) {
+    std::cout << "start do_connect()" << std::endl;
     boost::asio::async_connect(sock, eps,
-        [this, __buffer](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
+        [this, ptr_buffer = std::move(__buffer)](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) mutable {
            if (!ec) {
-               send_login_request(__buffer);
-               std::cout << "finish do_connect()" << std::endl;
+               send_login_request(std::move(ptr_buffer));
+               std::cout << "success finish do_connect()" << std::endl;
            }
            else {
                std::cout << "error do_connect()" << std::endl;
@@ -78,58 +78,97 @@ input_request_ptr Client::logon() {
     return std::make_shared<AutorisationRequest>(login, password);
 }
 
-void Client::send_login_request(std::vector<uint8_t> __buffer) {
+void Client::send_login_request(work_buf_req_t&& __buffer) {
+    if (__buffer) {
+        boost::system::error_code error_code;
+    //    bool flag_er_parse = false;
+
+        boost::asio::write(sock, boost::asio::buffer(__buffer.get(), sizeof(Serialize::Header) + sizeof(Serialize::Request)), error_code);
+        if (error_code) {
+            std::cout << "error send_login_request(header)" << std::endl;
+            close_connection();
+            return ;
+        }
+
+        { //---> only for check send
+    //        Serialize::Header new_header;
+    //        Serialize::Request new_request;
+    //        flag_er_parse = new_header.ParseFromArray(__buffer.data(), sizeof(Serialize::Header));
+    //        if (flag_er_parse) {
+    //            std::cout << "error parse: " << __FILE__ << " " << __LINE__ << std::endl;
+    //            close_connection();
+    //            return ;
+    //        }
+    //        flag_er_parse = new_request.ParseFromArray(__buffer.data() + sizeof(Serialize::Header), new_header.length());
+    //        if (flag_er_parse) {
+    //            std::cout << "error parse: " << __FILE__ << " " << __LINE__ << std::endl;
+    //            close_connection();
+    //            return ;
+    //        }
+
+    //        std::cout << "send: " << "login=" << new_request.input_request().login() << ", password="
+    //                  << new_request.input_request().password() << std::endl;
+        } //---> end check send
+
+        read_input_response();
+    }
+    else {
+        std::cout << "error: ptr_buffer == nullptr" << std::endl;
+    }
+}
+
+void Client::read_input_response() {
     boost::system::error_code error_code;
-   ;
-    boost::asio::write(sock, boost::asio::buffer(__buffer.data(), __buffer.size()), error_code);
-    if (error_code) {
-        std::cout << "error send_login_request(header)" << std::endl;
-        close_connection();
-        return ;
-    }
-    Serialize::Header new_header;
-    Serialize::Request new_request;
-    new_header.ParseFromArray(__buffer.data(), sizeof(Serialize::Header));
-    new_request.ParseFromArray(__buffer.data() + sizeof(Serialize::Header), new_header.length());
+    bool flag_er_parse = false;
 
-    std::cout << "send: " << "login=" << new_request.input_request().login() << ", password="
-              << new_request.input_request().password() << std::endl;
-    if (error_code) {
-        std::cout << "error when send input_request" << std::endl;
-        close_connection();
-        return ;
-    }
-
-    input_res_ptr response = std::make_shared<InputResponse>();
-    boost::asio::read(sock, boost::asio::buffer(response->get_header(),
-                                                Block::Header), error_code);
+    std::vector<uint8_t> __buffer;
+    __buffer.resize(sizeof(Serialize::Header));
+    boost::asio::read(sock, boost::asio::buffer(__buffer.data(), __buffer.size()), error_code);
     if (error_code) {
         std::cout << "error when read response(input_res_ptr)" << std::endl;
         close_connection();
         return ;
     }
-    if (response->get_type_data()==TypeCommand::RegistrationResponse
-        || response->get_type_data()==TypeCommand::AutorisationResponse)
-    {
-        boost::asio::read(sock, boost::asio::buffer(response->get_data(),
-                                                    response->get_length_data()), error_code);
+    Serialize::Header header_response;
+    flag_er_parse = header_response.ParseFromArray(__buffer.data(), static_cast<int>(__buffer.size()));
+    if (flag_er_parse) {
+        std::cout << "error parse: " << __FILE__ << " " << __LINE__ << std::endl;
+        close_connection();
+        return ;
+    }
 
+    if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)
+        || header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::AutorisationResponse))
+    {
+        // @todo one memory allocation
+        __buffer.resize(static_cast<std::size_t>(header_response.length()));
+        boost::asio::read(sock, boost::asio::buffer(__buffer.data(), __buffer.size()),
+                          error_code);
         if (error_code) {
             std::cout << "error when read response(data)" << std::endl;
             close_connection();
             return ;
         }
-        if (response->get_type_data()==TypeCommand::RegistrationResponse)
-            if (response->get_loginid()==-1) {
+        Serialize::Response response;
+        flag_er_parse = response.ParseFromArray(__buffer.data(), static_cast<int>(__buffer.size()));
+        if (flag_er_parse) {
+            std::cout << "error parse: " << __FILE__ << " " << __LINE__ << std::endl;
+            close_connection();
+            return ;
+        }
+
+        if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)) {
+            if (response.input_response().status() == Serialize::STATUS::FAIL) {
                 emit send_input_code(InputCode::BusyRegistr);
-                std::cout << "another login" << std::endl;
+                std::cout << "login is busy" << std::endl;
                 close_connection();
                 return;
             } else {
                 emit send_input_code(InputCode::RegistrOK);
             }
+        }
         else {
-            if (response->get_loginid()==-1) {
+            if (response.input_response().status() == Serialize::STATUS::FAIL) {
                 emit send_input_code(InputCode::IncorrectAutor);
                 std::cout << "Not found login/password" << std::endl;
                 close_connection();
@@ -140,18 +179,19 @@ void Client::send_login_request(std::vector<uint8_t> __buffer) {
             }
         }
 
-        set_login_id(response->get_loginid());
-        join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
-        write(request);
+        set_login_id(response.input_response().client_id());
+//        join_room_request_ptr request = std::make_shared<JoinRoomRequest>(room_id);
+//        write(request);
+
+        std::cout << "Success send_login_request()" << std::endl;
         if (!error_code) {
             read_response_header();
         }
     }
     else {
-        std::cout << " No innput response from server" << std::endl;
+        std::cout << "No innput response from server" << std::endl;
         close_connection();
     }
-
 }
 
 void Client::read_response_header() {

@@ -233,7 +233,7 @@ void Connection::read_proto_msg(Serialize::Header header) {
 
     switch (static_cast<TypeCommand>(header.command())) {
         case TypeCommand::AuthorisationRequest:
-            BOOST_LOG_TRIVIAL(info) << "proto input request";
+            BOOST_LOG_TRIVIAL(info) << "read_proto_msg()";
             boost::asio::async_read(socket, boost::asio::buffer(__read_buffer.data(), static_cast<int>(header.length())),
                                     std::bind(&Connection::read_pb_input_req,
                                               self,
@@ -248,24 +248,44 @@ void Connection::read_proto_msg(Serialize::Header header) {
 
 void Connection::read_pb_input_req(boost::system::error_code error, std::size_t) {
     if (!error) {
+        BOOST_LOG_TRIVIAL(info) << "read_pb_input_req()";
         Serialize::Request new_request;
         new_request.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
 
         login = new_request.input_request().login();
         password = new_request.input_request().password();
-        BOOST_LOG_TRIVIAL(info) << "login=" << login << ", pwd=" << password;
+        BOOST_LOG_TRIVIAL(info) << "read from request: login=" << login << ", pwd=" << password;
         client_id = db->check_client(login, password);
-        input_res_ptr response = std::make_shared<AutorisationResponse>(client_id);
 
-        BOOST_LOG_TRIVIAL(info) << "AutorisationResponse: vers=" << response->get_protocol_version() << ", command="
-                                << get_command_str(response->get_type_data())
-                                << ", logid=" << response->get_loginid();
+        std::unique_ptr<Serialize::InputResponse> in_response = std::make_unique<Serialize::InputResponse>();
+        in_response->set_client_id(client_id);
+        in_response->set_msg_id(0);
+        in_response->set_chat_id(0);
         if (client_id!=-1) {
-            db->add_logins(login, response->get_loginid(), password);
+            db->add_logins(login, client_id, password);
+            in_response->set_status(Serialize::STATUS::OK);
         }
-        boost::asio::write(socket, boost::asio::buffer(response->get_header(), Block::Header));
-        boost::asio::write(socket, boost::asio::buffer(response->get_data(), response->get_length_data()));
+        else {
+            in_response->set_status(Serialize::STATUS::FAIL);
+        }
 
+        Serialize::Response response;
+        response.set_allocated_input_response(in_response.release());
+
+        Serialize::Header header;
+        const auto length = sizeof(Serialize::Response);
+        header.set_length(static_cast<google::protobuf::int32>(length));
+        header.set_version(1);
+        header.set_command(static_cast<google::protobuf::uint64>(TypeCommand::AutorisationResponse));
+        header.set_time(0);
+
+        std::vector<uint8_t> __buffer;
+        __buffer.resize(sizeof(Serialize::Header) + length);
+        header.SerializeToArray(__buffer.data(), sizeof(Serialize::Header));
+        response.SerializeToArray(__buffer.data() + sizeof(Serialize::Header), header.length());
+
+        BOOST_LOG_TRIVIAL(info) << "AutorisationResponse: " << ", logid=" << response.input_response().client_id();
+        boost::asio::write(socket, boost::asio::buffer(__buffer.data(), __buffer.size()));
         if (client_id!=-1) {
             BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
             read_request_header();

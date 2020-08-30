@@ -48,6 +48,7 @@ matrix:
         - eval "${MATRIX_EVAL}"
       before_script:
         - sudo python3 ./scripts/install_env.py
+        - sudo apt-get -y libprotobuf-dev protobuf-compiler -t cosmic
       cache:
         directories:
           - boost_1_73_0/

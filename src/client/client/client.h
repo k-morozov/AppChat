@@ -7,17 +7,16 @@
 #include <mutex>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
-#include "protocol/messages.pb.h"
 #include <QWidget>
 
-#include "protocol/messages.pb.h"
+#include "protocol/msgfactory.h"
 
 /**
  * @brief Client class
  * 
  * @details Implement communication with server
  */
-class Client: public QObject {
+class Client: public QObject, public std::enable_shared_from_this<Client> {
    Q_OBJECT
 
 public:
@@ -27,13 +26,16 @@ public:
      * @param eps 
      * @param request initial request the server
      */
-    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps,
-           std::vector<uint8_t> __buffer)
-        : io_service(io), sock(io), eps(eps)
+    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& _eps)
+        : io_service(io), sock(io), eps(_eps)
     {
-        std::cout << "ctor client" << std::endl;
-        do_connect(eps, __buffer);
+        std::cout << "create client" << std::endl;
     }
+
+    /**
+     * @brief Start connection to the server
+     */
+    void do_connect(work_buf_req_t&& __buffer);
 
     /**
      * @brief Send text message
@@ -97,16 +99,13 @@ private:
     [[deprecated]]
     input_request_ptr logon();
 
-    /**
-     * @brief Start connection to the server
-     */
-    void do_connect(const boost::asio::ip::tcp::resolver::results_type&, std::vector<uint8_t> __buffer);
+    void read_input_response();
 
     /**
      * @brief Log in on the server
      * @param request
      */
-    void send_login_request(std::vector<uint8_t> __buffer);
+    void send_login_request(work_buf_req_t && __buffer);
 
     /**
      * @brief Entry point for handling server response

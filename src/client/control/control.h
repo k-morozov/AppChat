@@ -5,7 +5,8 @@
 #include "client/client.h"
 #include "gui/mainwindow.h"
 
-#include "protocol/messages.pb.h"
+#include "protocol/msgfactory.h"
+
 #include <vector>
 /**
  * @brief Controller
