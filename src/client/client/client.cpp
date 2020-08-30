@@ -17,32 +17,25 @@ void Client::close_connection() {
     mtx_sock.unlock();
 }
 
-void Client::write(const std::string& message) {
-    text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
+//void Client::write(const std::string& message) {
+//    text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
 
-    bool process_write = !packets_to_server.empty();
-    packets_to_server.push_back(text_request);
+//    bool process_write = !packets_to_server.empty();
+//    packets_to_server.push_back(text_request);
 
-    if (!process_write) {
-        send_request_header();
-    }
-}
+//    if (!process_write) {
+//        send_request_header();
+//    }
+//}
 
-void Client::write(text_request_ptr request) {
-    bool process_write = !packets_to_server.empty();
-    packets_to_server.push_back(request);
+//void Client::write(text_request_ptr request) {
+//    bool process_write = !packets_to_server.empty();
+//    packets_to_server.push_back(request);
 
-    if (!process_write) {
-        send_request_header();
-    }
-}
-void Client::write(join_room_request_ptr request) {
-    bool process_write = !packets_to_server.empty();
-    packets_to_server.push_back(request);
-    if (!process_write) {
-        send_request_header();
-    }
-}
+//    if (!process_write) {
+//        send_request_header();
+//    }
+//}
 
 void Client::do_connect(work_buf_req_t&&  __buffer) {
     std::cout << "start do_connect()" << std::endl;
@@ -56,20 +49,6 @@ void Client::do_connect(work_buf_req_t&&  __buffer) {
                std::cout << "error do_connect()" << std::endl;
            }
     });
-}
-
-input_request_ptr Client::logon() {
-    std::cout << "Enter your login: ";
-    std::cin.getline(login, Block::LoginName);
-    std::cout << "Enter your password: ";
-    std::cin.getline(password, Block::Password);
-    std::cout << "enter room_id=";
-    std::string room;
-    std::cin.getline(room.data(), Block::Password);
-    room_id = std::stoi(room);
-    std::cout << "************************************" << std::endl;
-//    }
-    return std::make_shared<AutorisationRequest>(login, password);
 }
 
 void Client::send_login_request(work_buf_req_t&& __buffer) {
@@ -152,13 +131,7 @@ void Client::read_input_response() {
 
         set_login_id(response.input_response().client_id());
 
-        auto request_ptr = MsgFactory::join_room_request(room_id);
-        auto header_ptr = MsgFactory::create_header(TypeCommand::JoinRoomRequest, sizeof(Serialize::Request));
-        auto request_to_send = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
-
-        std::cout << "finish serialize join_room" << std::endl;
-
-        add_msg_to_send(std::move(request_to_send));
+        change_room(room_id);
 
         std::cout << "Success send_join_room_request()" << std::endl;
         if (!error_code) {
@@ -177,20 +150,6 @@ void Client::read_response_header() {
         [this, packet](boost::system::error_code ec, std::size_t) {
             if (!ec) {
                 switch (packet->get_type_data()) {
-                    case TypeCommand::RegistrationRequest:
-                        std::cout << "RegistrationRequest not been here" << std::endl;
-                    break;
-                    case TypeCommand::RegistrationResponse:
-                        std::cout << "RegistrationResponse" << std::endl;
-//                        read_response_data(std::make_shared<RegistrationResponse>(packet));
-                        break;
-                    case TypeCommand::AuthorisationRequest:
-                        std::cout << "AuthorisationRequest not been here" << std::endl;
-                        break;
-                    case TypeCommand::AutorisationResponse:
-                        read_response_data(std::make_shared<AutorisationResponse>(packet));
-                        break;
-
                     case TypeCommand::EchoRequest:
                         std::cout << "EchoRequest: " << std::endl;
                     break;
@@ -198,7 +157,6 @@ void Client::read_response_header() {
                         read_response_data(std::make_shared<TextResponse>(packet));
                         break;
 
-                    case TypeCommand::JoinRoomResponse:
                     default:
                         std::cout << "Unknown command " << packet->get_protocol_version() << std::endl;
                         break;
@@ -206,36 +164,6 @@ void Client::read_response_header() {
             }
             else {
                 std::cout << "Error read_response_header()" << std::endl;
-                close_connection();
-            }
-    });
-}
-
-void Client::read_response_data(registr_response_ptr packet) {
-    std::cout << get_command_str(packet->get_type_data()) << ": ";
-
-    boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
-        [this, packet](boost::system::error_code error, std::size_t) {
-            if (!error) {
-                read_response_header();
-            }
-            else {
-                std::cout << "Error read_response_data(registr)" << std::endl;
-                close_connection();
-            }
-    });
-}
-
-void Client::read_response_data(autor_response_ptr packet) {
-    std::cout << get_command_str(packet->get_type_data()) << ": ";
-
-    boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
-        [this, packet](boost::system::error_code error, std::size_t) {
-            if (!error) {
-                read_response_header();
-            }
-            else {
-                std::cout << "Error read_response_data(autor)" << std::endl;
                 close_connection();
             }
     });
@@ -258,34 +186,6 @@ void Client::read_response_data(text_response_ptr packet) {
                 std::cout << "Error read_response_data(text)" << std::endl;
                 close_connection();
             }
-    });
-}
-
-void Client::send_request_header() {
-    boost::asio::async_write(sock, boost::asio::buffer(packets_to_server.front()->get_header(), Block::Header),
-        [this](boost::system::error_code ec, std::size_t) {
-        if (!ec) {
-            send_request_data();
-        }
-        else {
-            std::cout << "Error send_request_header()" << std::endl;
-            close_connection();
-        }
-    });
-}
-
-void Client::send_request_data() {
-    boost::asio::async_write(sock, boost::asio::buffer(packets_to_server.front()->get_data(),
-                                                       packets_to_server.front()->get_length_data()),
-        [this](boost::system::error_code ec, std::size_t) {
-        if (!ec) {
-            packets_to_server.pop_front();
-            if (!packets_to_server.empty()) send_request_header();
-        }
-        else {
-            std::cout << "Error send_request_data()" << std::endl;
-            close_connection();
-        }
     });
 }
 
@@ -312,4 +212,20 @@ void Client::start_send_msgs() {
             close_connection();
         }
     });
+}
+
+void Client::change_room(int new_room_id) {
+    auto request_ptr = MsgFactory::join_room_request(new_room_id);
+    auto header_ptr = MsgFactory::create_header(TypeCommand::JoinRoomRequest, sizeof(Serialize::Request));
+    auto request_to_send = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
+
+    add_msg_to_send(std::move(request_to_send));
+}
+
+void Client::send_msg_to_server(const std::string& text, int room_id) {
+    auto request_ptr = MsgFactory::create_text_request(login, room_id, text);
+    auto header_ptr = MsgFactory::create_header(TypeCommand::EchoRequest, sizeof(Serialize::Request));
+    auto request_to_send = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
+
+    add_msg_to_send(std::move(request_to_send));
 }

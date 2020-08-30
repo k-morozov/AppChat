@@ -149,6 +149,7 @@ private:
     void read_pb_input_req(boost::system::error_code, std::size_t);
     void read_pb_reg_req(boost::system::error_code, std::size_t);
     void read_pb_join_room_req(boost::system::error_code, std::size_t);
+    void read_pb_text_req(boost::system::error_code, std::size_t);
 };
 
 using connection_ptr = std::shared_ptr<Connection>;

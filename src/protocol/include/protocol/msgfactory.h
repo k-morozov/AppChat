@@ -52,6 +52,18 @@ public:
         return request;
     }
 
+    static ptr_proto_request_t create_text_request(const std::string& login, int room_id, const std::string& text) {
+        auto text_request = std::make_unique<Serialize::TextRequest>();
+        text_request->set_login(login);
+        text_request->set_room_id(room_id);
+        text_request->set_text(text);
+
+        auto request = std::make_unique<Serialize::Request>();
+        request->set_allocated_text_request(text_request.release());
+
+        return request;
+    }
+
     static ptr_header_t create_header(TypeCommand command, int32_t length) {
         auto header = std::make_unique<Serialize::Header>();
         header->set_length(static_cast<google::protobuf::int32>(length));
@@ -97,7 +109,17 @@ public:
         return response;
     }
 
+    static ptr_proto_response_t create_text_response(const std::string& login, int room_id, const std::string& text) {
+        auto text_response = std::make_unique<Serialize::TextResponse>();
+        text_response->set_login(login);
+        text_response->set_room_id(room_id);
+        text_response->set_text(text);
 
+        auto response = std::make_unique<Serialize::Response>();
+        response->set_allocated_text_response(text_response.release());
+
+        return response;
+    }
 
     static work_buf_res_t serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
         work_buf_res_t __buffer = std::make_unique<uint8_t[]>(BUF_RES_LEN);
@@ -114,6 +136,7 @@ public:
 
         return __buffer;
     }
+
 
 };
 

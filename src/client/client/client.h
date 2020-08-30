@@ -40,42 +40,20 @@ public:
     void add_msg_to_send(work_buf_req_t &&);
 
     void start_send_msgs();
-    /**
-     * @brief Send text message
-     * @param message 
-     */
+
+    void change_room(int room_id);
+
+    void send_msg_to_server(const std::string& text, int room_id);
+    //*****************************************************************************
+
     void write(const std::string& message);
 
-    /**
-     * @brief Send text request
-     */
-    void write(text_request_ptr);
-
-    /**
-     * @brief Send join room request
-     */
-    void write(join_room_request_ptr);
-
-    /**
-     * @brief Setter for client_id
-     * @param id 
-     */
     void set_login_id(identifier_t id)   { client_id = id;}
 
-    /**
-     * @brief Login getter
-     * @return const char* 
-     */
     const char* get_login() const { return login; }
 
-    /**
-     * @brief Finish the communication with server
-     */
     void close_connection();
 
-    /**
-     * @brief destructor
-     */
     ~Client() {
         std::cout << "Destr client" << std::endl;
         close_connection();
@@ -87,7 +65,6 @@ private:
     std::mutex mtx_sock;
     const boost::asio::ip::tcp::resolver::results_type& eps;
 
-    std::deque<packet_ptr> packets_to_server;
     std::deque<work_buf_req_t> msg_to_server;
 
     char login[Block::LoginName];
@@ -96,24 +73,10 @@ private:
     identifier_t room_id = 0;
 
 private:
-    /**
-     * @brief Log in scenario implementation
-     * @return input_request_ptr 
-     */
-    [[deprecated]]
-    input_request_ptr logon();
-
     void read_input_response();
 
-    /**
-     * @brief Log in on the server
-     * @param request
-     */
     void send_login_request(work_buf_req_t && __buffer);
 
-    /**
-     * @brief Entry point for handling server response
-     */
     void read_response_header();
 
     /**

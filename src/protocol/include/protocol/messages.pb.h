@@ -48,7 +48,7 @@ struct TableStruct_messages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[10]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -83,6 +83,12 @@ extern RequestDefaultTypeInternal _Request_default_instance_;
 class Response;
 class ResponseDefaultTypeInternal;
 extern ResponseDefaultTypeInternal _Response_default_instance_;
+class TextRequest;
+class TextRequestDefaultTypeInternal;
+extern TextRequestDefaultTypeInternal _TextRequest_default_instance_;
+class TextResponse;
+class TextResponseDefaultTypeInternal;
+extern TextResponseDefaultTypeInternal _TextResponse_default_instance_;
 class WrappedMessage;
 class WrappedMessageDefaultTypeInternal;
 extern WrappedMessageDefaultTypeInternal _WrappedMessage_default_instance_;
@@ -97,6 +103,8 @@ template<> ::Serialize::RegRequest* Arena::CreateMaybeMessage<::Serialize::RegRe
 template<> ::Serialize::RegResponse* Arena::CreateMaybeMessage<::Serialize::RegResponse>(Arena*);
 template<> ::Serialize::Request* Arena::CreateMaybeMessage<::Serialize::Request>(Arena*);
 template<> ::Serialize::Response* Arena::CreateMaybeMessage<::Serialize::Response>(Arena*);
+template<> ::Serialize::TextRequest* Arena::CreateMaybeMessage<::Serialize::TextRequest>(Arena*);
+template<> ::Serialize::TextResponse* Arena::CreateMaybeMessage<::Serialize::TextResponse>(Arena*);
 template<> ::Serialize::WrappedMessage* Arena::CreateMaybeMessage<::Serialize::WrappedMessage>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Serialize {
@@ -755,6 +763,178 @@ class JoinRoomRequest PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class TextRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.TextRequest) */ {
+ public:
+  inline TextRequest() : TextRequest(nullptr) {}
+  virtual ~TextRequest();
+
+  TextRequest(const TextRequest& from);
+  TextRequest(TextRequest&& from) noexcept
+    : TextRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline TextRequest& operator=(const TextRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TextRequest& operator=(TextRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const TextRequest& default_instance();
+
+  static inline const TextRequest* internal_default_instance() {
+    return reinterpret_cast<const TextRequest*>(
+               &_TextRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(TextRequest& a, TextRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TextRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TextRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TextRequest* New() const final {
+    return CreateMaybeMessage<TextRequest>(nullptr);
+  }
+
+  TextRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TextRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const TextRequest& from);
+  void MergeFrom(const TextRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TextRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.TextRequest";
+  }
+  protected:
+  explicit TextRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_messages_2eproto);
+    return ::descriptor_table_messages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLoginFieldNumber = 1,
+    kTextFieldNumber = 3,
+    kRoomIdFieldNumber = 2,
+  };
+  // string login = 1;
+  void clear_login();
+  const std::string& login() const;
+  void set_login(const std::string& value);
+  void set_login(std::string&& value);
+  void set_login(const char* value);
+  void set_login(const char* value, size_t size);
+  std::string* mutable_login();
+  std::string* release_login();
+  void set_allocated_login(std::string* login);
+  private:
+  const std::string& _internal_login() const;
+  void _internal_set_login(const std::string& value);
+  std::string* _internal_mutable_login();
+  public:
+
+  // string text = 3;
+  void clear_text();
+  const std::string& text() const;
+  void set_text(const std::string& value);
+  void set_text(std::string&& value);
+  void set_text(const char* value);
+  void set_text(const char* value, size_t size);
+  std::string* mutable_text();
+  std::string* release_text();
+  void set_allocated_text(std::string* text);
+  private:
+  const std::string& _internal_text() const;
+  void _internal_set_text(const std::string& value);
+  std::string* _internal_mutable_text();
+  public:
+
+  // int32 room_id = 2;
+  void clear_room_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 room_id() const;
+  void set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_room_id() const;
+  void _internal_set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Serialize.TextRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr login_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr text_;
+  ::PROTOBUF_NAMESPACE_ID::int32 room_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_messages_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Request PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.Request) */ {
  public:
@@ -795,6 +975,7 @@ class Request PROTOBUF_FINAL :
     kRegisterRequest = 1,
     kInputRequest = 2,
     kJoinRoomRequest = 3,
+    kTextRequest = 4,
     MSG_NOT_SET = 0,
   };
 
@@ -803,7 +984,7 @@ class Request PROTOBUF_FINAL :
                &_Request_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(Request& a, Request& b) {
     a.Swap(&b);
@@ -877,6 +1058,7 @@ class Request PROTOBUF_FINAL :
     kRegisterRequestFieldNumber = 1,
     kInputRequestFieldNumber = 2,
     kJoinRoomRequestFieldNumber = 3,
+    kTextRequestFieldNumber = 4,
   };
   // .Serialize.RegRequest register_request = 1;
   bool has_register_request() const;
@@ -932,6 +1114,24 @@ class Request PROTOBUF_FINAL :
       ::Serialize::JoinRoomRequest* join_room_request);
   ::Serialize::JoinRoomRequest* unsafe_arena_release_join_room_request();
 
+  // .Serialize.TextRequest text_request = 4;
+  bool has_text_request() const;
+  private:
+  bool _internal_has_text_request() const;
+  public:
+  void clear_text_request();
+  const ::Serialize::TextRequest& text_request() const;
+  ::Serialize::TextRequest* release_text_request();
+  ::Serialize::TextRequest* mutable_text_request();
+  void set_allocated_text_request(::Serialize::TextRequest* text_request);
+  private:
+  const ::Serialize::TextRequest& _internal_text_request() const;
+  ::Serialize::TextRequest* _internal_mutable_text_request();
+  public:
+  void unsafe_arena_set_allocated_text_request(
+      ::Serialize::TextRequest* text_request);
+  ::Serialize::TextRequest* unsafe_arena_release_text_request();
+
   void clear_msg();
   MsgCase msg_case() const;
   // @@protoc_insertion_point(class_scope:Serialize.Request)
@@ -940,6 +1140,7 @@ class Request PROTOBUF_FINAL :
   void set_has_register_request();
   void set_has_input_request();
   void set_has_join_room_request();
+  void set_has_text_request();
 
   inline bool has_msg() const;
   inline void clear_has_msg();
@@ -952,6 +1153,7 @@ class Request PROTOBUF_FINAL :
     ::Serialize::RegRequest* register_request_;
     ::Serialize::InRequest* input_request_;
     ::Serialize::JoinRoomRequest* join_room_request_;
+    ::Serialize::TextRequest* text_request_;
   } msg_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
@@ -1001,7 +1203,7 @@ class InputResponse PROTOBUF_FINAL :
                &_InputResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(InputResponse& a, InputResponse& b) {
     a.Swap(&b);
@@ -1170,7 +1372,7 @@ class RegResponse PROTOBUF_FINAL :
                &_RegResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(RegResponse& a, RegResponse& b) {
     a.Swap(&b);
@@ -1339,7 +1541,7 @@ class JoinRoomResponse PROTOBUF_FINAL :
                &_JoinRoomResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(JoinRoomResponse& a, JoinRoomResponse& b) {
     a.Swap(&b);
@@ -1445,6 +1647,178 @@ class JoinRoomResponse PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class TextResponse PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.TextResponse) */ {
+ public:
+  inline TextResponse() : TextResponse(nullptr) {}
+  virtual ~TextResponse();
+
+  TextResponse(const TextResponse& from);
+  TextResponse(TextResponse&& from) noexcept
+    : TextResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline TextResponse& operator=(const TextResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TextResponse& operator=(TextResponse&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const TextResponse& default_instance();
+
+  static inline const TextResponse* internal_default_instance() {
+    return reinterpret_cast<const TextResponse*>(
+               &_TextResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  friend void swap(TextResponse& a, TextResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TextResponse* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TextResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TextResponse* New() const final {
+    return CreateMaybeMessage<TextResponse>(nullptr);
+  }
+
+  TextResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TextResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const TextResponse& from);
+  void MergeFrom(const TextResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TextResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.TextResponse";
+  }
+  protected:
+  explicit TextResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_messages_2eproto);
+    return ::descriptor_table_messages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLoginFieldNumber = 1,
+    kTextFieldNumber = 3,
+    kRoomIdFieldNumber = 2,
+  };
+  // string login = 1;
+  void clear_login();
+  const std::string& login() const;
+  void set_login(const std::string& value);
+  void set_login(std::string&& value);
+  void set_login(const char* value);
+  void set_login(const char* value, size_t size);
+  std::string* mutable_login();
+  std::string* release_login();
+  void set_allocated_login(std::string* login);
+  private:
+  const std::string& _internal_login() const;
+  void _internal_set_login(const std::string& value);
+  std::string* _internal_mutable_login();
+  public:
+
+  // string text = 3;
+  void clear_text();
+  const std::string& text() const;
+  void set_text(const std::string& value);
+  void set_text(std::string&& value);
+  void set_text(const char* value);
+  void set_text(const char* value, size_t size);
+  std::string* mutable_text();
+  std::string* release_text();
+  void set_allocated_text(std::string* text);
+  private:
+  const std::string& _internal_text() const;
+  void _internal_set_text(const std::string& value);
+  std::string* _internal_mutable_text();
+  public:
+
+  // int32 room_id = 2;
+  void clear_room_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 room_id() const;
+  void set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_room_id() const;
+  void _internal_set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Serialize.TextResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr login_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr text_;
+  ::PROTOBUF_NAMESPACE_ID::int32 room_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_messages_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Response PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.Response) */ {
  public:
@@ -1485,6 +1859,7 @@ class Response PROTOBUF_FINAL :
     kInputResponse = 1,
     kRegResponse = 2,
     kJoinRoomResponse = 3,
+    kTextResponse = 4,
     MSG_NOT_SET = 0,
   };
 
@@ -1493,7 +1868,7 @@ class Response PROTOBUF_FINAL :
                &_Response_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    10;
 
   friend void swap(Response& a, Response& b) {
     a.Swap(&b);
@@ -1567,6 +1942,7 @@ class Response PROTOBUF_FINAL :
     kInputResponseFieldNumber = 1,
     kRegResponseFieldNumber = 2,
     kJoinRoomResponseFieldNumber = 3,
+    kTextResponseFieldNumber = 4,
   };
   // .Serialize.InputResponse input_response = 1;
   bool has_input_response() const;
@@ -1622,6 +1998,24 @@ class Response PROTOBUF_FINAL :
       ::Serialize::JoinRoomResponse* join_room_response);
   ::Serialize::JoinRoomResponse* unsafe_arena_release_join_room_response();
 
+  // .Serialize.TextResponse text_response = 4;
+  bool has_text_response() const;
+  private:
+  bool _internal_has_text_response() const;
+  public:
+  void clear_text_response();
+  const ::Serialize::TextResponse& text_response() const;
+  ::Serialize::TextResponse* release_text_response();
+  ::Serialize::TextResponse* mutable_text_response();
+  void set_allocated_text_response(::Serialize::TextResponse* text_response);
+  private:
+  const ::Serialize::TextResponse& _internal_text_response() const;
+  ::Serialize::TextResponse* _internal_mutable_text_response();
+  public:
+  void unsafe_arena_set_allocated_text_response(
+      ::Serialize::TextResponse* text_response);
+  ::Serialize::TextResponse* unsafe_arena_release_text_response();
+
   void clear_msg();
   MsgCase msg_case() const;
   // @@protoc_insertion_point(class_scope:Serialize.Response)
@@ -1630,6 +2024,7 @@ class Response PROTOBUF_FINAL :
   void set_has_input_response();
   void set_has_reg_response();
   void set_has_join_room_response();
+  void set_has_text_response();
 
   inline bool has_msg() const;
   inline void clear_has_msg();
@@ -1642,6 +2037,7 @@ class Response PROTOBUF_FINAL :
     ::Serialize::InputResponse* input_response_;
     ::Serialize::RegResponse* reg_response_;
     ::Serialize::JoinRoomResponse* join_room_response_;
+    ::Serialize::TextResponse* text_response_;
   } msg_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
@@ -1697,7 +2093,7 @@ class WrappedMessage PROTOBUF_FINAL :
                &_WrappedMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    11;
 
   friend void swap(WrappedMessage& a, WrappedMessage& b) {
     a.Swap(&b);
@@ -2204,6 +2600,154 @@ inline void JoinRoomRequest::set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
 
 // -------------------------------------------------------------------
 
+// TextRequest
+
+// string login = 1;
+inline void TextRequest::clear_login() {
+  login_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& TextRequest::login() const {
+  // @@protoc_insertion_point(field_get:Serialize.TextRequest.login)
+  return _internal_login();
+}
+inline void TextRequest::set_login(const std::string& value) {
+  _internal_set_login(value);
+  // @@protoc_insertion_point(field_set:Serialize.TextRequest.login)
+}
+inline std::string* TextRequest::mutable_login() {
+  // @@protoc_insertion_point(field_mutable:Serialize.TextRequest.login)
+  return _internal_mutable_login();
+}
+inline const std::string& TextRequest::_internal_login() const {
+  return login_.Get();
+}
+inline void TextRequest::_internal_set_login(const std::string& value) {
+  
+  login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void TextRequest::set_login(std::string&& value) {
+  
+  login_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:Serialize.TextRequest.login)
+}
+inline void TextRequest::set_login(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:Serialize.TextRequest.login)
+}
+inline void TextRequest::set_login(const char* value,
+    size_t size) {
+  
+  login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:Serialize.TextRequest.login)
+}
+inline std::string* TextRequest::_internal_mutable_login() {
+  
+  return login_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* TextRequest::release_login() {
+  // @@protoc_insertion_point(field_release:Serialize.TextRequest.login)
+  return login_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TextRequest::set_allocated_login(std::string* login) {
+  if (login != nullptr) {
+    
+  } else {
+    
+  }
+  login_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), login,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TextRequest.login)
+}
+
+// int32 room_id = 2;
+inline void TextRequest::clear_room_id() {
+  room_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 TextRequest::_internal_room_id() const {
+  return room_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 TextRequest::room_id() const {
+  // @@protoc_insertion_point(field_get:Serialize.TextRequest.room_id)
+  return _internal_room_id();
+}
+inline void TextRequest::_internal_set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  room_id_ = value;
+}
+inline void TextRequest::set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_room_id(value);
+  // @@protoc_insertion_point(field_set:Serialize.TextRequest.room_id)
+}
+
+// string text = 3;
+inline void TextRequest::clear_text() {
+  text_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& TextRequest::text() const {
+  // @@protoc_insertion_point(field_get:Serialize.TextRequest.text)
+  return _internal_text();
+}
+inline void TextRequest::set_text(const std::string& value) {
+  _internal_set_text(value);
+  // @@protoc_insertion_point(field_set:Serialize.TextRequest.text)
+}
+inline std::string* TextRequest::mutable_text() {
+  // @@protoc_insertion_point(field_mutable:Serialize.TextRequest.text)
+  return _internal_mutable_text();
+}
+inline const std::string& TextRequest::_internal_text() const {
+  return text_.Get();
+}
+inline void TextRequest::_internal_set_text(const std::string& value) {
+  
+  text_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void TextRequest::set_text(std::string&& value) {
+  
+  text_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:Serialize.TextRequest.text)
+}
+inline void TextRequest::set_text(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  text_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:Serialize.TextRequest.text)
+}
+inline void TextRequest::set_text(const char* value,
+    size_t size) {
+  
+  text_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:Serialize.TextRequest.text)
+}
+inline std::string* TextRequest::_internal_mutable_text() {
+  
+  return text_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* TextRequest::release_text() {
+  // @@protoc_insertion_point(field_release:Serialize.TextRequest.text)
+  return text_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TextRequest::set_allocated_text(std::string* text) {
+  if (text != nullptr) {
+    
+  } else {
+    
+  }
+  text_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), text,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TextRequest.text)
+}
+
+// -------------------------------------------------------------------
+
 // Request
 
 // .Serialize.RegRequest register_request = 1;
@@ -2423,6 +2967,79 @@ inline ::Serialize::JoinRoomRequest* Request::_internal_mutable_join_room_reques
 inline ::Serialize::JoinRoomRequest* Request::mutable_join_room_request() {
   // @@protoc_insertion_point(field_mutable:Serialize.Request.join_room_request)
   return _internal_mutable_join_room_request();
+}
+
+// .Serialize.TextRequest text_request = 4;
+inline bool Request::_internal_has_text_request() const {
+  return msg_case() == kTextRequest;
+}
+inline bool Request::has_text_request() const {
+  return _internal_has_text_request();
+}
+inline void Request::set_has_text_request() {
+  _oneof_case_[0] = kTextRequest;
+}
+inline void Request::clear_text_request() {
+  if (_internal_has_text_request()) {
+    if (GetArena() == nullptr) {
+      delete msg_.text_request_;
+    }
+    clear_has_msg();
+  }
+}
+inline ::Serialize::TextRequest* Request::release_text_request() {
+  // @@protoc_insertion_point(field_release:Serialize.Request.text_request)
+  if (_internal_has_text_request()) {
+    clear_has_msg();
+      ::Serialize::TextRequest* temp = msg_.text_request_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    msg_.text_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Serialize::TextRequest& Request::_internal_text_request() const {
+  return _internal_has_text_request()
+      ? *msg_.text_request_
+      : reinterpret_cast< ::Serialize::TextRequest&>(::Serialize::_TextRequest_default_instance_);
+}
+inline const ::Serialize::TextRequest& Request::text_request() const {
+  // @@protoc_insertion_point(field_get:Serialize.Request.text_request)
+  return _internal_text_request();
+}
+inline ::Serialize::TextRequest* Request::unsafe_arena_release_text_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.Request.text_request)
+  if (_internal_has_text_request()) {
+    clear_has_msg();
+    ::Serialize::TextRequest* temp = msg_.text_request_;
+    msg_.text_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Request::unsafe_arena_set_allocated_text_request(::Serialize::TextRequest* text_request) {
+  clear_msg();
+  if (text_request) {
+    set_has_text_request();
+    msg_.text_request_ = text_request;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.Request.text_request)
+}
+inline ::Serialize::TextRequest* Request::_internal_mutable_text_request() {
+  if (!_internal_has_text_request()) {
+    clear_msg();
+    set_has_text_request();
+    msg_.text_request_ = CreateMaybeMessage< ::Serialize::TextRequest >(GetArena());
+  }
+  return msg_.text_request_;
+}
+inline ::Serialize::TextRequest* Request::mutable_text_request() {
+  // @@protoc_insertion_point(field_mutable:Serialize.Request.text_request)
+  return _internal_mutable_text_request();
 }
 
 inline bool Request::has_msg() const {
@@ -2648,6 +3265,154 @@ inline void JoinRoomResponse::set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value) 
 
 // -------------------------------------------------------------------
 
+// TextResponse
+
+// string login = 1;
+inline void TextResponse::clear_login() {
+  login_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& TextResponse::login() const {
+  // @@protoc_insertion_point(field_get:Serialize.TextResponse.login)
+  return _internal_login();
+}
+inline void TextResponse::set_login(const std::string& value) {
+  _internal_set_login(value);
+  // @@protoc_insertion_point(field_set:Serialize.TextResponse.login)
+}
+inline std::string* TextResponse::mutable_login() {
+  // @@protoc_insertion_point(field_mutable:Serialize.TextResponse.login)
+  return _internal_mutable_login();
+}
+inline const std::string& TextResponse::_internal_login() const {
+  return login_.Get();
+}
+inline void TextResponse::_internal_set_login(const std::string& value) {
+  
+  login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void TextResponse::set_login(std::string&& value) {
+  
+  login_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:Serialize.TextResponse.login)
+}
+inline void TextResponse::set_login(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:Serialize.TextResponse.login)
+}
+inline void TextResponse::set_login(const char* value,
+    size_t size) {
+  
+  login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:Serialize.TextResponse.login)
+}
+inline std::string* TextResponse::_internal_mutable_login() {
+  
+  return login_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* TextResponse::release_login() {
+  // @@protoc_insertion_point(field_release:Serialize.TextResponse.login)
+  return login_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TextResponse::set_allocated_login(std::string* login) {
+  if (login != nullptr) {
+    
+  } else {
+    
+  }
+  login_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), login,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TextResponse.login)
+}
+
+// int32 room_id = 2;
+inline void TextResponse::clear_room_id() {
+  room_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 TextResponse::_internal_room_id() const {
+  return room_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 TextResponse::room_id() const {
+  // @@protoc_insertion_point(field_get:Serialize.TextResponse.room_id)
+  return _internal_room_id();
+}
+inline void TextResponse::_internal_set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  room_id_ = value;
+}
+inline void TextResponse::set_room_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_room_id(value);
+  // @@protoc_insertion_point(field_set:Serialize.TextResponse.room_id)
+}
+
+// string text = 3;
+inline void TextResponse::clear_text() {
+  text_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& TextResponse::text() const {
+  // @@protoc_insertion_point(field_get:Serialize.TextResponse.text)
+  return _internal_text();
+}
+inline void TextResponse::set_text(const std::string& value) {
+  _internal_set_text(value);
+  // @@protoc_insertion_point(field_set:Serialize.TextResponse.text)
+}
+inline std::string* TextResponse::mutable_text() {
+  // @@protoc_insertion_point(field_mutable:Serialize.TextResponse.text)
+  return _internal_mutable_text();
+}
+inline const std::string& TextResponse::_internal_text() const {
+  return text_.Get();
+}
+inline void TextResponse::_internal_set_text(const std::string& value) {
+  
+  text_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void TextResponse::set_text(std::string&& value) {
+  
+  text_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:Serialize.TextResponse.text)
+}
+inline void TextResponse::set_text(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  text_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:Serialize.TextResponse.text)
+}
+inline void TextResponse::set_text(const char* value,
+    size_t size) {
+  
+  text_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:Serialize.TextResponse.text)
+}
+inline std::string* TextResponse::_internal_mutable_text() {
+  
+  return text_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* TextResponse::release_text() {
+  // @@protoc_insertion_point(field_release:Serialize.TextResponse.text)
+  return text_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TextResponse::set_allocated_text(std::string* text) {
+  if (text != nullptr) {
+    
+  } else {
+    
+  }
+  text_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), text,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TextResponse.text)
+}
+
+// -------------------------------------------------------------------
+
 // Response
 
 // .Serialize.InputResponse input_response = 1;
@@ -2869,6 +3634,79 @@ inline ::Serialize::JoinRoomResponse* Response::mutable_join_room_response() {
   return _internal_mutable_join_room_response();
 }
 
+// .Serialize.TextResponse text_response = 4;
+inline bool Response::_internal_has_text_response() const {
+  return msg_case() == kTextResponse;
+}
+inline bool Response::has_text_response() const {
+  return _internal_has_text_response();
+}
+inline void Response::set_has_text_response() {
+  _oneof_case_[0] = kTextResponse;
+}
+inline void Response::clear_text_response() {
+  if (_internal_has_text_response()) {
+    if (GetArena() == nullptr) {
+      delete msg_.text_response_;
+    }
+    clear_has_msg();
+  }
+}
+inline ::Serialize::TextResponse* Response::release_text_response() {
+  // @@protoc_insertion_point(field_release:Serialize.Response.text_response)
+  if (_internal_has_text_response()) {
+    clear_has_msg();
+      ::Serialize::TextResponse* temp = msg_.text_response_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    msg_.text_response_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Serialize::TextResponse& Response::_internal_text_response() const {
+  return _internal_has_text_response()
+      ? *msg_.text_response_
+      : reinterpret_cast< ::Serialize::TextResponse&>(::Serialize::_TextResponse_default_instance_);
+}
+inline const ::Serialize::TextResponse& Response::text_response() const {
+  // @@protoc_insertion_point(field_get:Serialize.Response.text_response)
+  return _internal_text_response();
+}
+inline ::Serialize::TextResponse* Response::unsafe_arena_release_text_response() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.Response.text_response)
+  if (_internal_has_text_response()) {
+    clear_has_msg();
+    ::Serialize::TextResponse* temp = msg_.text_response_;
+    msg_.text_response_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Response::unsafe_arena_set_allocated_text_response(::Serialize::TextResponse* text_response) {
+  clear_msg();
+  if (text_response) {
+    set_has_text_response();
+    msg_.text_response_ = text_response;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.Response.text_response)
+}
+inline ::Serialize::TextResponse* Response::_internal_mutable_text_response() {
+  if (!_internal_has_text_response()) {
+    clear_msg();
+    set_has_text_response();
+    msg_.text_response_ = CreateMaybeMessage< ::Serialize::TextResponse >(GetArena());
+  }
+  return msg_.text_response_;
+}
+inline ::Serialize::TextResponse* Response::mutable_text_response() {
+  // @@protoc_insertion_point(field_mutable:Serialize.Response.text_response)
+  return _internal_mutable_text_response();
+}
+
 inline bool Response::has_msg() const {
   return msg_case() != MSG_NOT_SET;
 }
@@ -3040,6 +3878,10 @@ inline WrappedMessage::MsgCase WrappedMessage::msg_case() const {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

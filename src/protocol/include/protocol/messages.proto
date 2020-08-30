@@ -25,11 +25,18 @@ message JoinRoomRequest {
 	int32 room_id = 1;
 }
 
+message TextRequest {
+	string login = 1;
+	int32 room_id = 2;
+	string text = 3;
+}
+
 message Request {
 	oneof msg {
 		RegRequest register_request = 1;
 		InRequest input_request = 2;
 		JoinRoomRequest join_room_request = 3;
+		TextRequest text_request = 4;
 	}
 }
 
@@ -59,11 +66,18 @@ message JoinRoomResponse {
 	int32 room_id = 2;
 }
 
+message TextResponse {
+	string login = 1;
+	int32 room_id = 2;
+	string text = 3;
+}
+
 message Response {
 	oneof msg {
 		InputResponse input_response = 1;
 		RegResponse reg_response = 2;
 		JoinRoomResponse join_room_response = 3;
+		TextResponse text_response = 4;
 	}
 }
 

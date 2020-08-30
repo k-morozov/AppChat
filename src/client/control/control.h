@@ -89,7 +89,8 @@ public slots:
      * @param room_id sender's room
      */
     void get_text_from_gui(const std::string& login, const std::string& text, int room_id) {
-        client->write(std::make_shared<TextRequest>(login, room_id, text));
+        std::cout << "get_text_from_gui()" << std::endl;
+        client->send_msg_to_server(text, room_id);
     }
 
     /**
@@ -107,7 +108,7 @@ public slots:
      * @param new_room_id room where user is switching
      */
     void change_room(int new_room_id) {
-        client->write(std::make_shared<JoinRoomRequest>(new_room_id));
+        client->change_room(new_room_id);
     }
 
 private:
