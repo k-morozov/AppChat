@@ -30,17 +30,17 @@ public:
      *
      * @param db
      */
-    void join(subscriber_ptr subscriber, identifier_t room_id, database_ptr db);
+    bool join(subscriber_ptr, identifier_t, database_ptr db);
 
     /**
      * @brief Send message to specific room and specific user
      */
-    void send(text_response_ptr);
+    void send_to_channel(TextSendData data);
 
     /**
      * @brief Leave user from the room
      */
-    void leave(subscriber_ptr);
+    void leave(identifier_t client_id, identifier_t room_id);
 
 private:
     /**

@@ -75,18 +75,18 @@ Database::~Database() {
     db_ptr = NULL;
 }
 
-void Database::save_text_message(text_request_ptr message) {
-    const auto dt = message->get_datetime();
+void Database::save_text_msg(TextSendData msg) {
+//    Datetime dt(); // message->get_datetime();
     const std::string str_datetime = boost::str(boost::format("%1$d-%2$#02d-%3$#02d %4$#02s:%5$#02s:%6$#02s")
-      % (dt.year + 2000) % static_cast<unsigned int>(dt.month) % static_cast<unsigned int>(dt.day)
-      % static_cast<unsigned int>(dt.hours) % static_cast<unsigned int>(dt.minutes) % static_cast<unsigned int>(dt.seconds)
+      % (/*dt.year*/0 + 2000) % static_cast<unsigned int>(/*dt.month*/1) % static_cast<unsigned int>(/*dt.day*/1)
+      % static_cast<unsigned int>(9/*dt.hours*/) % static_cast<unsigned int>(15/*dt.minutes*/) % static_cast<unsigned int>(12/*dt.seconds*/)
     );
 
     const std::string insert_query = std::string("insert into history values('")
-                                      + std::string(message->get_login()) + std::string("', ")
-                                      + std::to_string(message->get_roomid()) + std::string(", strftime('%s','")
+                                      + std::string(msg.login) + std::string("', ")
+                                      + std::to_string(msg.room_id) + std::string(", strftime('%s','")
                                       + str_datetime + std::string("'), '")
-                                      + std::string(message->get_message()) + std::string("');");
+                                      + std::string(msg.text) + std::string("');");
     char* err_msg2 = nullptr;
     int rc = sqlite3_exec(db_ptr, insert_query.c_str(),
                          [](void*, int, char**, char**){ return 0;},
@@ -98,11 +98,10 @@ void Database::save_text_message(text_request_ptr message) {
         db_ptr = NULL;
         return;
     }
-
 }
 
-std::deque<text_response_ptr> Database::get_history(identifier_t roomid) {
-    std::deque<text_response_ptr> history_room;
+std::deque<TextSendData> Database::get_history(identifier_t roomid) {
+    std::deque<TextSendData> history_room;
     bool found = false;
     sqlite3_stmt* stmt;
 
@@ -126,9 +125,9 @@ std::deque<text_response_ptr> Database::get_history(identifier_t roomid) {
         std::string message = (const char *)sqlite3_column_blob(stmt, 3);
 
         BOOST_LOG_TRIVIAL(info) <<"Db: " << author << " " << room_id << " " << dt << " " << message;
-        text_response_ptr response = std::make_shared<TextResponse>(author, DateTime(boost::posix_time::time_from_string(dt)), message, room_id);
-
-        history_room.push_back(response);
+//        text_response_ptr response = std::make_shared<TextResponse>(author, DateTime(boost::posix_time::time_from_string(dt)), message, room_id);
+        // @todo return DateTime
+        history_room.push_back(TextSendData{room_id, author, message});
         found=true;
     }
     if(ret_code != SQLITE_DONE) {

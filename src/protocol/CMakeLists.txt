@@ -9,16 +9,8 @@ target_sources(${PROTOCOL_LIB_NAME}
 
     PRIVATE
         "include/protocol/command_table.h"
-        "include/protocol/datetime.h" datetime.cpp
-
-        "include/protocol/request/request.h"
-        "include/protocol/request/input_request.h" request/input_request.cpp
-        "include/protocol/request/transport_request.h" request/transport_request.cpp
-        "include/protocol/request/control_request.h"
-
-        "include/protocol/response/response.h"
-        "include/protocol/response/input_response.h" response/input_response.cpp
-        "include/protocol/response/transport_response.h"
+        "include/protocol/datetime.h" include/protocol/datetime.cpp
+        "include/protocol/msgfactory.h" include/protocol/msgfactory.cpp
 )
 
 # fixme: replace this with better statement
@@ -26,7 +18,7 @@ target_include_directories(${PROTOCOL_LIB_NAME}
     PUBLIC
         ./include
     PRIVATE
-        ./include/protocol
+        ./include/protocol/
 )
 
 set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
@@ -49,7 +41,7 @@ target_include_directories(${PROTOCOL_LIB_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
 
 install(TARGETS ${PROTOCOL_LIB_NAME} DESTINATION /usr/local/lib)
 
-add_library(messages_pb_lib STATIC include/protocol/messages.pb.cc)
+add_library(messages_pb_lib STATIC include/protocol/proto/messages.pb.cc)
 target_link_libraries(messages_pb_lib protobuf)
 set_target_properties(messages_pb_lib PROPERTIES
         CXX_STANDARD 17

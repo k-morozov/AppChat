@@ -5,25 +5,32 @@ ChannelsManager::ChannelsManager()
     BOOST_LOG_TRIVIAL(info) << "create ChannelsManager";
 }
 
-void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, database_ptr db) {
-    if (auto it=channels.find(room_id); it!=channels.end()) {
-        clients_in_room.emplace(new_sub->get_client_id(), room_id);
+bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, database_ptr db) {
+    bool flag = true;
+    BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
+    if (auto it=channels.find(new_room_id); it!=channels.end()) {
+        BOOST_LOG_TRIVIAL(info) << "channel found";
+        clients_in_room.emplace(new_sub->get_client_id(), new_room_id);
         it->second->join(new_sub);
     }
     else {
-        BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
-        auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id, db));
+        BOOST_LOG_TRIVIAL(info) << "channel not found";
+        auto [new_it, flag] = channels.emplace(new_room_id, std::make_shared<Channel>(new_room_id, db));
         
         if (!flag) {
             BOOST_LOG_TRIVIAL(error) << "Non create";
+            flag = false;
+            return flag;
         }
         // add check
         new_it->second->join(new_sub);
 
-        auto [it2, error] = clients_in_room.emplace(new_sub->get_client_id(), room_id);
+        auto [it2, error] = clients_in_room.emplace(new_sub->get_client_id(), new_room_id);
         if (!error) {
             BOOST_LOG_TRIVIAL(info) << "Non add subsciber client_id="<< it2->first
                                     << " in room_id=" << it2->second;
+            flag = false;
+            return flag;
         }
         else {
             BOOST_LOG_TRIVIAL(info) << "New subsciber client_id="<< it2->first
@@ -32,33 +39,42 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, databas
     }
 
     clientid_to_login.try_emplace(new_sub->get_client_id(), new_sub->get_login());
+    new_sub->set_channel(new_room_id);
+
+    return flag;
 }
 
-void ChannelsManager::send(text_response_ptr response) {
-    if (auto it=channels.find(response->get_roomid()); it!=channels.end()) {
-        it->second->notification(response);
+void ChannelsManager::send_to_channel(TextSendData data) {
+    BOOST_LOG_TRIVIAL(info) << "send to channel_id=" << data.room_id;
+    if (auto it=channels.find(data.room_id); it!=channels.end()) {
+        it->second->notification(std::move(data));
     }
     else {
-        BOOST_LOG_TRIVIAL(info) << "no room room_id=" << response->get_roomid();
+        BOOST_LOG_TRIVIAL(info) << "no found room_id=" << data.room_id;
     }
 }
 
-void ChannelsManager::leave(subscriber_ptr sub) {
-    auto it = clients_in_room.find(sub->get_client_id());
-    if (it==clients_in_room.end()) return;
-    auto room_id = it->second;
-    if (auto it=channels.find(room_id); it!=channels.end()) {
-        it->second->leave(sub);
-        clients_in_room.erase(sub->get_client_id());
-        clientid_to_login.erase(sub->get_client_id());
+void ChannelsManager::leave(identifier_t client_id, identifier_t room_id) {
+    BOOST_LOG_TRIVIAL(info) << "ChannelsManager::leave() client_id=" << client_id << ", from room=" << room_id;
 
-        BOOST_LOG_TRIVIAL(info) << "client_id=" << sub->get_client_id()
+    auto it_client = clients_in_room.find(client_id);
+    if (it_client == clients_in_room.end()) {
+        BOOST_LOG_TRIVIAL(info) << "not found client_id=" << client_id << ", in channels";
+        return;
+    }
+    if (auto it=channels.find(room_id); it!=channels.end()) {
+        it->second->leave(client_id);
+
+        clients_in_room.erase(it_client);
+        clientid_to_login.erase(client_id);
+
+        BOOST_LOG_TRIVIAL(info) << "client_id=" << client_id
                                 << " is leave from room_id=" << room_id;
     }
     else {
         BOOST_LOG_TRIVIAL(error) << "no room room_id=" << room_id;
     }
 
-    sub->set_busy(false);
+//    sub->set_busy(false);
 }
 

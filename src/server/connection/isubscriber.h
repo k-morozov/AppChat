@@ -20,12 +20,6 @@ public:
     virtual void start() = 0;
 
     /**
-     * @brief Send response message to the client
-     * @param response response needs to be sent
-     */
-    virtual void sendme(text_response_ptr response) = 0;
-
-    /**
      * @brief Get the client id object
      * @details Returns current client id
      * @return identifier_t 
@@ -38,6 +32,15 @@ public:
      * @return const std::string& 
      */
     virtual const std::string& get_login() const = 0;
+    virtual void set_channel(identifier_t new_id_room) = 0;
+    virtual void async_read_proto_msg(Serialize::Header) = 0;
+    virtual void do_read_pb_input_req(boost::system::error_code, std::size_t) = 0;
+    virtual void read_pb_reg_req(boost::system::error_code, std::size_t) = 0;
+    virtual void read_pb_join_room_req(boost::system::error_code, std::size_t) = 0;
+    virtual void read_pb_text_req(boost::system::error_code, std::size_t) = 0;
+    virtual void send_msg_to_client(const std::string&,const std::string&, int) = 0;
+//    virtual void add_msg_to_send(Protocol::work_buf_res_t&&) = 0;
+//    virtual void start_send_msgs() = 0;
 
     virtual bool is_busy() const noexcept = 0;
     virtual void set_busy(bool flag = true) noexcept = 0;

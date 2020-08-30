@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package Serialize;
+
+message Header {
+	sfixed32 version = 1;
+	sfixed32 command = 2;
+	sfixed32 length = 3;
+};
+
+// **************************************
+
+message RegRequest {
+	string login = 1;
+	string password = 2;
+};
+
+message InRequest {
+	string login = 1;
+	string password = 2;
+};
+
+message JoinRoomRequest {
+	int32 room_id = 1;
+}
+
+message TextRequest {
+	string login = 1;
+	int32 room_id = 2;
+	string text = 3;
+}
+
+message Request {
+	oneof msg {
+		RegRequest register_request = 1;
+		InRequest input_request = 2;
+		JoinRoomRequest join_room_request = 3;
+		TextRequest text_request = 4;
+	}
+}
+
+// *************************************
+
+enum STATUS {	
+	FAIL = 0;
+	OK = 1;
+}
+
+message InputResponse {
+	STATUS status = 1;
+	int32 msg_id = 2;
+	int32 client_id = 3;
+	int32 chat_id =4;
+}
+
+message RegResponse {
+	STATUS status = 1;
+	int32 msg_id = 2;
+	int32 client_id = 3;
+	int32 chat_id = 4;
+}
+
+message JoinRoomResponse {
+	STATUS status = 1;
+	int32 room_id = 2;
+}
+
+message TextResponse {
+	string login = 1;
+	int32 room_id = 2;
+	string text = 3;
+}
+
+message Response {
+	oneof msg {
+		InputResponse input_response = 1;
+		RegResponse reg_response = 2;
+		JoinRoomResponse join_room_response = 3;
+		TextResponse text_response = 4;
+	}
+}
+
+// *************************************
+message WrappedMessage {
+	oneof msg {
+		Request request = 1;
+		Response response = 2;
+	}
+}
