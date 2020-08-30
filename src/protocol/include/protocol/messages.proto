@@ -42,9 +42,17 @@ message InputResponse {
 	int32 chat_id =4;
 }
 
+message RegResponse {
+	STATUS status = 1;
+	int32 msg_id = 2;
+	int32 client_id = 3;
+	int32 chat_id = 4;
+}
+
 message Response {
 	oneof msg {
 		InputResponse input_response = 1;
+		RegResponse reg_response = 2;
 	}
 }
 

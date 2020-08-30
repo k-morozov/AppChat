@@ -17,8 +17,9 @@
 extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_InRequest_messages_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_InputResponse_messages_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_RegRequest_messages_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_RegResponse_messages_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Request_messages_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Response_messages_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_messages_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Response_messages_2eproto;
 namespace Serialize {
 class HeaderDefaultTypeInternal {
  public:
@@ -40,6 +41,10 @@ class InputResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<InputResponse> _instance;
 } _InputResponse_default_instance_;
+class RegResponseDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<RegResponse> _instance;
+} _RegResponse_default_instance_;
 class ResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Response> _instance;
@@ -101,6 +106,19 @@ static void InitDefaultsscc_info_RegRequest_messages_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_RegRequest_messages_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_RegRequest_messages_2eproto}, {}};
 
+static void InitDefaultsscc_info_RegResponse_messages_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::Serialize::_RegResponse_default_instance_;
+    new (ptr) ::Serialize::RegResponse();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_RegResponse_messages_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_RegResponse_messages_2eproto}, {}};
+
 static void InitDefaultsscc_info_Request_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -126,9 +144,10 @@ static void InitDefaultsscc_info_Response_messages_2eproto() {
   }
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Response_messages_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_Response_messages_2eproto}, {
-      &scc_info_InputResponse_messages_2eproto.base,}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Response_messages_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_Response_messages_2eproto}, {
+      &scc_info_InputResponse_messages_2eproto.base,
+      &scc_info_RegResponse_messages_2eproto.base,}};
 
 static void InitDefaultsscc_info_WrappedMessage_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -145,7 +164,7 @@ static void InitDefaultsscc_info_WrappedMessage_messages_2eproto() {
       &scc_info_Request_messages_2eproto.base,
       &scc_info_Response_messages_2eproto.base,}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_messages_2eproto[7];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_messages_2eproto[8];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_messages_2eproto[1];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_messages_2eproto = nullptr;
 
@@ -191,10 +210,20 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_messages_2eproto::offsets[] PR
   PROTOBUF_FIELD_OFFSET(::Serialize::InputResponse, client_id_),
   PROTOBUF_FIELD_OFFSET(::Serialize::InputResponse, chat_id_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Serialize::RegResponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::Serialize::RegResponse, status_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::RegResponse, msg_id_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::RegResponse, client_id_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::RegResponse, chat_id_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Serialize::Response, _internal_metadata_),
   ~0u,  // no _extensions_
   PROTOBUF_FIELD_OFFSET(::Serialize::Response, _oneof_case_[0]),
   ~0u,  // no _weak_field_map_
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::Serialize::Response, msg_),
   ~0u,  // no _has_bits_
@@ -212,8 +241,9 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 16, -1, sizeof(::Serialize::InRequest)},
   { 23, -1, sizeof(::Serialize::Request)},
   { 31, -1, sizeof(::Serialize::InputResponse)},
-  { 40, -1, sizeof(::Serialize::Response)},
-  { 47, -1, sizeof(::Serialize::WrappedMessage)},
+  { 40, -1, sizeof(::Serialize::RegResponse)},
+  { 49, -1, sizeof(::Serialize::Response)},
+  { 57, -1, sizeof(::Serialize::WrappedMessage)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -222,6 +252,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Serialize::_InRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Serialize::_Request_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Serialize::_InputResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Serialize::_RegResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Serialize::_Response_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Serialize::_WrappedMessage_default_instance_),
 };
@@ -237,30 +268,35 @@ const char descriptor_table_protodef_messages_2eproto[] PROTOBUF_SECTION_VARIABL
   "\024.Serialize.InRequestH\000B\005\n\003msg\"f\n\rInputR"
   "esponse\022!\n\006status\030\001 \001(\0162\021.Serialize.STAT"
   "US\022\016\n\006msg_id\030\002 \001(\005\022\021\n\tclient_id\030\003 \001(\005\022\017\n"
-  "\007chat_id\030\004 \001(\005\"E\n\010Response\0222\n\016input_resp"
-  "onse\030\001 \001(\0132\030.Serialize.InputResponseH\000B\005"
-  "\n\003msg\"g\n\016WrappedMessage\022%\n\007request\030\001 \001(\013"
-  "2\022.Serialize.RequestH\000\022\'\n\010response\030\002 \001(\013"
-  "2\023.Serialize.ResponseH\000B\005\n\003msg*\032\n\006STATUS"
-  "\022\010\n\004FAIL\020\000\022\006\n\002OK\020\001b\006proto3"
+  "\007chat_id\030\004 \001(\005\"d\n\013RegResponse\022!\n\006status\030"
+  "\001 \001(\0162\021.Serialize.STATUS\022\016\n\006msg_id\030\002 \001(\005"
+  "\022\021\n\tclient_id\030\003 \001(\005\022\017\n\007chat_id\030\004 \001(\005\"u\n\010"
+  "Response\0222\n\016input_response\030\001 \001(\0132\030.Seria"
+  "lize.InputResponseH\000\022.\n\014reg_response\030\002 \001"
+  "(\0132\026.Serialize.RegResponseH\000B\005\n\003msg\"g\n\016W"
+  "rappedMessage\022%\n\007request\030\001 \001(\0132\022.Seriali"
+  "ze.RequestH\000\022\'\n\010response\030\002 \001(\0132\023.Seriali"
+  "ze.ResponseH\000B\005\n\003msg*\032\n\006STATUS\022\010\n\004FAIL\020\000"
+  "\022\006\n\002OK\020\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_messages_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_messages_2eproto_sccs[7] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_messages_2eproto_sccs[8] = {
   &scc_info_Header_messages_2eproto.base,
   &scc_info_InRequest_messages_2eproto.base,
   &scc_info_InputResponse_messages_2eproto.base,
   &scc_info_RegRequest_messages_2eproto.base,
+  &scc_info_RegResponse_messages_2eproto.base,
   &scc_info_Request_messages_2eproto.base,
   &scc_info_Response_messages_2eproto.base,
   &scc_info_WrappedMessage_messages_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_messages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_messages_2eproto = {
-  false, false, descriptor_table_protodef_messages_2eproto, "messages.proto", 626,
-  &descriptor_table_messages_2eproto_once, descriptor_table_messages_2eproto_sccs, descriptor_table_messages_2eproto_deps, 7, 0,
+  false, false, descriptor_table_protodef_messages_2eproto, "messages.proto", 776,
+  &descriptor_table_messages_2eproto_once, descriptor_table_messages_2eproto_sccs, descriptor_table_messages_2eproto_deps, 8, 0,
   schemas, file_default_instances, TableStruct_messages_2eproto::offsets,
-  file_level_metadata_messages_2eproto, 7, file_level_enum_descriptors_messages_2eproto, file_level_service_descriptors_messages_2eproto,
+  file_level_metadata_messages_2eproto, 8, file_level_enum_descriptors_messages_2eproto, file_level_service_descriptors_messages_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -1639,14 +1675,295 @@ void InputResponse::InternalSwap(InputResponse* other) {
 
 // ===================================================================
 
+class RegResponse::_Internal {
+ public:
+};
+
+RegResponse::RegResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:Serialize.RegResponse)
+}
+RegResponse::RegResponse(const RegResponse& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&status_, &from.status_,
+    static_cast<size_t>(reinterpret_cast<char*>(&chat_id_) -
+    reinterpret_cast<char*>(&status_)) + sizeof(chat_id_));
+  // @@protoc_insertion_point(copy_constructor:Serialize.RegResponse)
+}
+
+void RegResponse::SharedCtor() {
+  ::memset(&status_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&chat_id_) -
+      reinterpret_cast<char*>(&status_)) + sizeof(chat_id_));
+}
+
+RegResponse::~RegResponse() {
+  // @@protoc_insertion_point(destructor:Serialize.RegResponse)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void RegResponse::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void RegResponse::ArenaDtor(void* object) {
+  RegResponse* _this = reinterpret_cast< RegResponse* >(object);
+  (void)_this;
+}
+void RegResponse::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void RegResponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const RegResponse& RegResponse::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_RegResponse_messages_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void RegResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:Serialize.RegResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&status_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&chat_id_) -
+      reinterpret_cast<char*>(&status_)) + sizeof(chat_id_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* RegResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // .Serialize.STATUS status = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_status(static_cast<::Serialize::STATUS>(val));
+        } else goto handle_unusual;
+        continue;
+      // int32 msg_id = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          msg_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 client_id = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          client_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 chat_id = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
+          chat_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* RegResponse::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Serialize.RegResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .Serialize.STATUS status = 1;
+  if (this->status() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_status(), target);
+  }
+
+  // int32 msg_id = 2;
+  if (this->msg_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_msg_id(), target);
+  }
+
+  // int32 client_id = 3;
+  if (this->client_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_client_id(), target);
+  }
+
+  // int32 chat_id = 4;
+  if (this->chat_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_chat_id(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Serialize.RegResponse)
+  return target;
+}
+
+size_t RegResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Serialize.RegResponse)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .Serialize.STATUS status = 1;
+  if (this->status() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_status());
+  }
+
+  // int32 msg_id = 2;
+  if (this->msg_id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_msg_id());
+  }
+
+  // int32 client_id = 3;
+  if (this->client_id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_client_id());
+  }
+
+  // int32 chat_id = 4;
+  if (this->chat_id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_chat_id());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void RegResponse::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:Serialize.RegResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  const RegResponse* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<RegResponse>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:Serialize.RegResponse)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:Serialize.RegResponse)
+    MergeFrom(*source);
+  }
+}
+
+void RegResponse::MergeFrom(const RegResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Serialize.RegResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.status() != 0) {
+    _internal_set_status(from._internal_status());
+  }
+  if (from.msg_id() != 0) {
+    _internal_set_msg_id(from._internal_msg_id());
+  }
+  if (from.client_id() != 0) {
+    _internal_set_client_id(from._internal_client_id());
+  }
+  if (from.chat_id() != 0) {
+    _internal_set_chat_id(from._internal_chat_id());
+  }
+}
+
+void RegResponse::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:Serialize.RegResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void RegResponse::CopyFrom(const RegResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Serialize.RegResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RegResponse::IsInitialized() const {
+  return true;
+}
+
+void RegResponse::InternalSwap(RegResponse* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(RegResponse, chat_id_)
+      + sizeof(RegResponse::chat_id_)
+      - PROTOBUF_FIELD_OFFSET(RegResponse, status_)>(
+          reinterpret_cast<char*>(&status_),
+          reinterpret_cast<char*>(&other->status_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata RegResponse::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
 class Response::_Internal {
  public:
   static const ::Serialize::InputResponse& input_response(const Response* msg);
+  static const ::Serialize::RegResponse& reg_response(const Response* msg);
 };
 
 const ::Serialize::InputResponse&
 Response::_Internal::input_response(const Response* msg) {
   return *msg->msg_.input_response_;
+}
+const ::Serialize::RegResponse&
+Response::_Internal::reg_response(const Response* msg) {
+  return *msg->msg_.reg_response_;
 }
 void Response::set_allocated_input_response(::Serialize::InputResponse* input_response) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
@@ -1663,6 +1980,21 @@ void Response::set_allocated_input_response(::Serialize::InputResponse* input_re
   }
   // @@protoc_insertion_point(field_set_allocated:Serialize.Response.input_response)
 }
+void Response::set_allocated_reg_response(::Serialize::RegResponse* reg_response) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  clear_msg();
+  if (reg_response) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(reg_response);
+    if (message_arena != submessage_arena) {
+      reg_response = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, reg_response, submessage_arena);
+    }
+    set_has_reg_response();
+    msg_.reg_response_ = reg_response;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Serialize.Response.reg_response)
+}
 Response::Response(::PROTOBUF_NAMESPACE_ID::Arena* arena)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
   SharedCtor();
@@ -1676,6 +2008,10 @@ Response::Response(const Response& from)
   switch (from.msg_case()) {
     case kInputResponse: {
       _internal_mutable_input_response()->::Serialize::InputResponse::MergeFrom(from._internal_input_response());
+      break;
+    }
+    case kRegResponse: {
+      _internal_mutable_reg_response()->::Serialize::RegResponse::MergeFrom(from._internal_reg_response());
       break;
     }
     case MSG_NOT_SET: {
@@ -1727,6 +2063,12 @@ void Response::clear_msg() {
       }
       break;
     }
+    case kRegResponse: {
+      if (GetArena() == nullptr) {
+        delete msg_.reg_response_;
+      }
+      break;
+    }
     case MSG_NOT_SET: {
       break;
     }
@@ -1757,6 +2099,13 @@ const char* Response::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::i
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           ptr = ctx->ParseMessage(_internal_mutable_input_response(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .Serialize.RegResponse reg_response = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_reg_response(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1796,6 +2145,14 @@ failure:
         1, _Internal::input_response(this), target, stream);
   }
 
+  // .Serialize.RegResponse reg_response = 2;
+  if (_internal_has_reg_response()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::reg_response(this), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1818,6 +2175,13 @@ size_t Response::ByteSizeLong() const {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *msg_.input_response_);
+      break;
+    }
+    // .Serialize.RegResponse reg_response = 2;
+    case kRegResponse: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *msg_.reg_response_);
       break;
     }
     case MSG_NOT_SET: {
@@ -1858,6 +2222,10 @@ void Response::MergeFrom(const Response& from) {
   switch (from.msg_case()) {
     case kInputResponse: {
       _internal_mutable_input_response()->::Serialize::InputResponse::MergeFrom(from._internal_input_response());
+      break;
+    }
+    case kRegResponse: {
+      _internal_mutable_reg_response()->::Serialize::RegResponse::MergeFrom(from._internal_reg_response());
       break;
     }
     case MSG_NOT_SET: {
@@ -2228,6 +2596,9 @@ template<> PROTOBUF_NOINLINE ::Serialize::Request* Arena::CreateMaybeMessage< ::
 }
 template<> PROTOBUF_NOINLINE ::Serialize::InputResponse* Arena::CreateMaybeMessage< ::Serialize::InputResponse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Serialize::InputResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Serialize::RegResponse* Arena::CreateMaybeMessage< ::Serialize::RegResponse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Serialize::RegResponse >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Serialize::Response* Arena::CreateMaybeMessage< ::Serialize::Response >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Serialize::Response >(arena);

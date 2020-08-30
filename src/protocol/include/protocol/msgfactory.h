@@ -7,11 +7,14 @@
 using ptr_input_request_t = std::unique_ptr<Serialize::InRequest>;
 using ptr_reg_request_t = std::unique_ptr<Serialize::RegRequest>;
 using ptr_proto_request_t = std::unique_ptr<Serialize::Request>;
-using ptr_header_t =std::unique_ptr<Serialize::Header>;
+using ptr_header_t = std::unique_ptr<Serialize::Header>;
+using ptr_proto_response_t = std::unique_ptr<Serialize::Response>;
 
 constexpr uint64_t BUF_REQ_LEN = sizeof(Serialize::Header) + sizeof(Serialize::Request);
+constexpr uint64_t BUF_RES_LEN = sizeof(Serialize::Header) + sizeof(Serialize::Response);
 
 using work_buf_req_t = std::unique_ptr<uint8_t[]>;
+using work_buf_res_t = std::unique_ptr<uint8_t[]>;
 
 class MsgFactory
 {
@@ -48,6 +51,48 @@ public:
         header->set_time(0);
 
         return header;
+    }
+
+    static ptr_proto_response_t create_input_response(int client_id) {
+        auto in_response = std::make_unique<Serialize::InputResponse>();
+        in_response->set_client_id(client_id);
+        in_response->set_msg_id(0);
+        in_response->set_chat_id(0);
+        if (client_id!=-1) {
+            in_response->set_status(Serialize::STATUS::OK);
+        }
+        else {
+            in_response->set_status(Serialize::STATUS::FAIL);
+        }
+        auto response = std::make_unique<Serialize::Response>();
+        response->set_allocated_input_response(in_response.release());
+
+        return response;
+    }
+
+    static ptr_proto_response_t create_reg_response(int client_id) {
+        auto reg_response = std::make_unique<Serialize::RegResponse>();
+        reg_response->set_client_id(client_id);
+        reg_response->set_msg_id(0);
+        reg_response->set_chat_id(0);
+        if (client_id!=-1) {
+            reg_response->set_status(Serialize::STATUS::OK);
+        }
+        else {
+            reg_response->set_status(Serialize::STATUS::FAIL);
+        }
+        auto response = std::make_unique<Serialize::Response>();
+        response->set_allocated_reg_response(reg_response.release());
+
+        return response;
+    }
+
+    static work_buf_res_t serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
+        work_buf_res_t __buffer = std::make_unique<uint8_t[]>(BUF_RES_LEN);
+        header_ptr->SerializeToArray(__buffer.get(), sizeof(Serialize::Header));
+        response_ptr->SerializeToArray(__buffer.get() + sizeof(Serialize::Header), header_ptr->length());
+
+        return __buffer;
     }
 };
 

@@ -83,7 +83,7 @@ void Client::send_login_request(work_buf_req_t&& __buffer) {
         boost::system::error_code error_code;
     //    bool flag_er_parse = false;
 
-        boost::asio::write(sock, boost::asio::buffer(__buffer.get(), sizeof(Serialize::Header) + sizeof(Serialize::Request)), error_code);
+        boost::asio::write(sock, boost::asio::buffer(__buffer.get(), BUF_REQ_LEN), error_code);
         if (error_code) {
             std::cout << "error send_login_request(header)" << std::endl;
             close_connection();
@@ -123,7 +123,7 @@ void Client::read_input_response() {
 
     std::vector<uint8_t> __buffer;
     __buffer.resize(sizeof(Serialize::Header));
-    boost::asio::read(sock, boost::asio::buffer(__buffer.data(), __buffer.size()), error_code);
+    boost::asio::read(sock, boost::asio::buffer(__buffer), error_code);
     if (error_code) {
         std::cout << "error when read response(input_res_ptr)" << std::endl;
         close_connection();
@@ -142,7 +142,7 @@ void Client::read_input_response() {
     {
         // @todo one memory allocation
         __buffer.resize(static_cast<std::size_t>(header_response.length()));
-        boost::asio::read(sock, boost::asio::buffer(__buffer.data(), __buffer.size()),
+        boost::asio::read(sock, boost::asio::buffer(__buffer),
                           error_code);
         if (error_code) {
             std::cout << "error when read response(data)" << std::endl;
@@ -158,9 +158,9 @@ void Client::read_input_response() {
         }
 
         if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)) {
-            if (response.input_response().status() == Serialize::STATUS::FAIL) {
+            if (response.reg_response().status() == Serialize::STATUS::FAIL) {
                 emit send_input_code(InputCode::BusyRegistr);
-                std::cout << "login is busy" << std::endl;
+                std::cout << "login is busy, id=" << response.reg_response().client_id() << std::endl;
                 close_connection();
                 return;
             } else {

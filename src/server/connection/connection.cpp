@@ -49,7 +49,7 @@ void Connection::sendme(text_response_ptr response) {
 void Connection::read_request_header() {
     __read_buffer.resize(sizeof(Serialize::Header));
 
-    boost::asio::async_read(socket, boost::asio::buffer(__read_buffer.data(), sizeof(Serialize::Header)),
+    boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
                             [this](boost::system::error_code error, std::size_t) {
         Serialize::Header new_header;
         new_header.ParseFromArray(__read_buffer.data(), sizeof(Serialize::Header));
@@ -228,20 +228,31 @@ void Connection::send_response_data() {
 }
 
 void Connection::read_proto_msg(Serialize::Header header) {
+    BOOST_LOG_TRIVIAL(info) << "read_proto_msg()";
     auto self(shared_from_this());
     __read_buffer.resize(header.length());
 
     switch (static_cast<TypeCommand>(header.command())) {
         case TypeCommand::AuthorisationRequest:
-            BOOST_LOG_TRIVIAL(info) << "read_proto_msg()";
-            boost::asio::async_read(socket, boost::asio::buffer(__read_buffer.data(), static_cast<int>(header.length())),
+            BOOST_LOG_TRIVIAL(info) << "read AuthorisationRequest";
+            boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
                                     std::bind(&Connection::read_pb_input_req,
                                               self,
                                               std::placeholders::_1,
                                               std::placeholders::_2)
                                     );
             break;
+        case TypeCommand::RegistrationRequest:
+            BOOST_LOG_TRIVIAL(info) << "read RegistrationRequest";
+            boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
+                                std::bind(&Connection::read_pb_reg_req,
+                                          self,
+                                          std::placeholders::_1,
+                                          std::placeholders::_2)
+                                );
+        break;
     default:
+        BOOST_LOG_TRIVIAL(error) << "read Unknown request";
         break;
     }
 }
@@ -254,38 +265,14 @@ void Connection::read_pb_input_req(boost::system::error_code error, std::size_t)
 
         login = new_request.input_request().login();
         password = new_request.input_request().password();
-        BOOST_LOG_TRIVIAL(info) << "read from request: login=" << login << ", pwd=" << password;
+        BOOST_LOG_TRIVIAL(info) << "read from input_request: login=" << login << ", pwd=" << password;
         client_id = db->check_client(login, password);
 
-        std::unique_ptr<Serialize::InputResponse> in_response = std::make_unique<Serialize::InputResponse>();
-        in_response->set_client_id(client_id);
-        in_response->set_msg_id(0);
-        in_response->set_chat_id(0);
-        if (client_id!=-1) {
-            db->add_logins(login, client_id, password);
-            in_response->set_status(Serialize::STATUS::OK);
-        }
-        else {
-            in_response->set_status(Serialize::STATUS::FAIL);
-        }
-
-        Serialize::Response response;
-        response.set_allocated_input_response(in_response.release());
-
-        Serialize::Header header;
-        const auto length = sizeof(Serialize::Response);
-        header.set_length(static_cast<google::protobuf::int32>(length));
-        header.set_version(1);
-        header.set_command(static_cast<google::protobuf::uint64>(TypeCommand::AutorisationResponse));
-        header.set_time(0);
-
-        std::vector<uint8_t> __buffer;
-        __buffer.resize(sizeof(Serialize::Header) + length);
-        header.SerializeToArray(__buffer.data(), sizeof(Serialize::Header));
-        response.SerializeToArray(__buffer.data() + sizeof(Serialize::Header), header.length());
-
-        BOOST_LOG_TRIVIAL(info) << "AutorisationResponse: " << ", logid=" << response.input_response().client_id();
-        boost::asio::write(socket, boost::asio::buffer(__buffer.data(), __buffer.size()));
+        auto buffer_serialize = MsgFactory::serialize_response(
+                    MsgFactory::create_header(TypeCommand::AutorisationResponse, sizeof(Serialize::Response)),
+                    MsgFactory::create_input_response(client_id)
+                    );
+        boost::asio::write(socket, boost::asio::buffer(buffer_serialize.get(), BUF_RES_LEN));
         if (client_id!=-1) {
             BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
             read_request_header();
@@ -297,5 +284,45 @@ void Connection::read_pb_input_req(boost::system::error_code error, std::size_t)
     }
     else {
         BOOST_LOG_TRIVIAL(error) << "error read_pb_input_req()";
+    }
+}
+
+void Connection::read_pb_reg_req(boost::system::error_code error, std::size_t) {
+    if (!error && db) {
+        BOOST_LOG_TRIVIAL(info) << "read_pb_reg_req()";
+        Serialize::Request new_request;
+        new_request.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
+        login = new_request.register_request().login();
+        password = new_request.register_request().password();
+
+        BOOST_LOG_TRIVIAL(info) << "read from reg_request: login=" << login << ", pwd=" << password;
+
+        client_id = db->get_loginid(login);
+        if (client_id == -1) {
+            client_id = generate_client_id();
+            db->add_logins(login, client_id, password);
+        }
+        else {
+            BOOST_LOG_TRIVIAL(warning) << "this client was add to db early";
+            client_id = -1;
+        }
+        auto buffer_serialize = MsgFactory::serialize_response(
+                    MsgFactory::create_header(TypeCommand::RegistrationResponse, sizeof(Serialize::Response)),
+                    MsgFactory::create_reg_response(client_id)
+                    );
+
+        boost::asio::write(socket, boost::asio::buffer(buffer_serialize.get(), BUF_RES_LEN));
+
+        if (client_id != -1) {
+            BOOST_LOG_TRIVIAL(info) << "Registration successfully completed";
+            read_request_header();
+        }
+        else {
+            BOOST_LOG_TRIVIAL(error) << "Registration failed";
+            free_connection();
+        }
+    } else {
+        BOOST_LOG_TRIVIAL(error) << "error read_request_body(registr)";
+        free_connection();
     }
 }

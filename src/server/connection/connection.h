@@ -9,8 +9,9 @@
 #include "protocol/protocol.h"
 #include "log/logger.h"
 
-#include "protocol/messages.pb.h"
+#include "protocol/msgfactory.h"
 #include <vector>
+
 /**
  * @brief Connection class
  * @details It serves connected tcp client
@@ -18,6 +19,7 @@
 class Connection : public ISubscriber, public std::enable_shared_from_this<Connection>
 {
 public:
+
     /**
      * @brief Construct a new Connection object
      * @param _socket Accepted client socket.
@@ -145,6 +147,7 @@ private:
 
     void read_proto_msg(Serialize::Header);
     void read_pb_input_req(boost::system::error_code error, std::size_t);
+    void read_pb_reg_req(boost::system::error_code error, std::size_t);
 };
 
 using connection_ptr = std::shared_ptr<Connection>;
