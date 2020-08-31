@@ -37,6 +37,10 @@ public:
      */
     void do_connect(work_buf_req_t&& __buffer);
 
+    void read_pb_header();
+
+    void read_pb_msg(Serialize::Header);
+
     void add_msg_to_send(work_buf_req_t &&);
 
     void start_send_msgs();
@@ -44,6 +48,9 @@ public:
     void change_room(int room_id);
 
     void send_msg_to_server(const std::string& text, int room_id);
+
+    void read_pb_text_res(Serialize::Header);
+
     //*****************************************************************************
 
     void write(const std::string& message);
@@ -64,7 +71,7 @@ private:
     boost::asio::ip::tcp::socket sock;
     std::mutex mtx_sock;
     const boost::asio::ip::tcp::resolver::results_type& eps;
-
+    std::vector<uint8_t> __read_buffer;
     std::deque<work_buf_req_t> msg_to_server;
 
     char login[Block::LoginName];
@@ -77,7 +84,7 @@ private:
 
     void send_login_request(work_buf_req_t && __buffer);
 
-    void read_response_header();
+
 
     /**
      * @brief Handle registartion response

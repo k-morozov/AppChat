@@ -34,12 +34,12 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, databas
     clientid_to_login.try_emplace(new_sub->get_client_id(), new_sub->get_login());
 }
 
-void ChannelsManager::send(text_response_ptr response) {
-    if (auto it=channels.find(response->get_roomid()); it!=channels.end()) {
-        it->second->notification(response);
+void ChannelsManager::send_to_channel(TextSendData data) {
+    if (auto it=channels.find(data.room_id); it!=channels.end()) {
+        it->second->notification(std::move(data));
     }
     else {
-        BOOST_LOG_TRIVIAL(info) << "no room room_id=" << response->get_roomid();
+        BOOST_LOG_TRIVIAL(info) << "no found room_id=" << data.room_id;
     }
 }
 

@@ -39,15 +39,15 @@ void Connection::free_connection() {
 }
 
 void Connection::sendme(text_response_ptr response) {
-    bool write_in_progress = !packets_to_client.empty();
-    packets_to_client.push_back(response);
-    if (!write_in_progress) {
-        send_response_header();
-    }
+//    bool write_in_progress = !msg_to_client.empty();
+//    msg_to_client.push_back(response);
+//    if (!write_in_progress) {
+//        send_response_header();
+//    }
 }
 
-void Connection::read_request_header() {
-    BOOST_LOG_TRIVIAL(info) << "read_request_header()";
+void Connection::read_pb_request_header() {
+    BOOST_LOG_TRIVIAL(info) << "read_pb_request_header()";
     __read_buffer.resize(sizeof(Serialize::Header));
 
     boost::asio::async_read(socket, boost::asio::buffer(__read_buffer),
@@ -58,7 +58,7 @@ void Connection::read_request_header() {
         if (!error) {
             read_proto_msg(new_header);
         } else {
-            BOOST_LOG_TRIVIAL(error) << "error read_request_header()";
+            BOOST_LOG_TRIVIAL(error) << "error read_pb_request_header()";
             free_connection();
         }
     });
@@ -78,58 +78,58 @@ void Connection::read_request_body(text_request_ptr) {
 }
 
 void Connection::read_request_body(join_room_request_ptr request) {
-    auto self(shared_from_this());
-    boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
-        [this, self, request](boost::system::error_code error, std::size_t) {
-            if (!error) {
-                ChannelsManager::Instance().leave(shared_from_this());
-                auto new_roomid = request->get_roomid();
-                BOOST_LOG_TRIVIAL(info) << "roomid=" << new_roomid;
-                ChannelsManager::Instance().join(self, new_roomid, db);
+//    auto self(shared_from_this());
+//    boost::asio::async_read(socket, boost::asio::buffer(request->get_data(), request->get_length_data()),
+//        [this, self, request](boost::system::error_code error, std::size_t) {
+//            if (!error) {
+//                ChannelsManager::Instance().leave(shared_from_this());
+//                auto new_roomid = request->get_roomid();
+//                BOOST_LOG_TRIVIAL(info) << "roomid=" << new_roomid;
+//                ChannelsManager::Instance().join(self, new_roomid, db);
 
-                read_request_header();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "error read_request_body()";
-                free_connection();
-            }
-    });
+//                read_pb_request_header();
+//            }
+//            else {
+//                BOOST_LOG_TRIVIAL(error) << "error read_request_body()";
+//                free_connection();
+//            }
+//    });
 
 }
 
 void Connection::send_response_header() {
-    auto self(shared_from_this());
-    boost::asio::async_write(socket,
-        boost::asio::buffer(packets_to_client.front()->get_header(),
-                            Block::Header),
-            [this, self](boost::system::error_code error, std::size_t) {
-                if (!error) {
-                    send_response_data();
-                } else {
-                    BOOST_LOG_TRIVIAL(error) << "error send_response_header()";
-                    free_connection();
-                }
-            }
-    );
+//    auto self(shared_from_this());
+//    boost::asio::async_write(socket,
+//        boost::asio::buffer(packets_to_client.front()->get_header(),
+//                            Block::Header),
+//            [this, self](boost::system::error_code error, std::size_t) {
+//                if (!error) {
+//                    send_response_data();
+//                } else {
+//                    BOOST_LOG_TRIVIAL(error) << "error send_response_header()";
+//                    free_connection();
+//                }
+//            }
+//    );
 }
 
 void Connection::send_response_data() {
-    auto self(shared_from_this());
-    boost::asio::async_write(socket,
-        boost::asio::buffer(packets_to_client.front()->get_data(),
-                            packets_to_client.front()->get_length_data()),
-            [this, self](boost::system::error_code error, std::size_t) {
-                if (!error) {
-                    packets_to_client.pop_front();
-                    if (!packets_to_client.empty()) {
-                        send_response_header();
-                    }
-                } else {
-                    BOOST_LOG_TRIVIAL(error) << "error send_response_data()";
-                    free_connection();
-                }
-            }
-    );
+//    auto self(shared_from_this());
+//    boost::asio::async_write(socket,
+//        boost::asio::buffer(packets_to_client.front()->get_data(),
+//                            packets_to_client.front()->get_length_data()),
+//            [this, self](boost::system::error_code error, std::size_t) {
+//                if (!error) {
+//                    packets_to_client.pop_front();
+//                    if (!packets_to_client.empty()) {
+//                        send_response_header();
+//                    }
+//                } else {
+//                    BOOST_LOG_TRIVIAL(error) << "error send_response_data()";
+//                    free_connection();
+//                }
+//            }
+//    );
 }
 
 void Connection::read_proto_msg(Serialize::Header header) {
@@ -198,7 +198,7 @@ void Connection::read_pb_input_req(boost::system::error_code error, std::size_t)
         boost::asio::write(socket, boost::asio::buffer(buffer_serialize.get(), BUF_RES_LEN));
         if (client_id!=-1) {
             BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
-            read_request_header();
+            read_pb_request_header();
         }
         else {
             BOOST_LOG_TRIVIAL(error) << "Authorization failed";
@@ -238,7 +238,7 @@ void Connection::read_pb_reg_req(boost::system::error_code error, std::size_t) {
 
         if (client_id != -1) {
             BOOST_LOG_TRIVIAL(info) << "Registration successfully completed";
-            read_request_header();
+            read_pb_request_header();
         }
         else {
             BOOST_LOG_TRIVIAL(error) << "Registration failed";
@@ -263,7 +263,7 @@ void Connection::read_pb_join_room_req(boost::system::error_code error, std::siz
         BOOST_LOG_TRIVIAL(info) << "new roomid=" << new_roomid;
         ChannelsManager::Instance().join(self, new_roomid, db);
 
-        read_request_header();
+        read_pb_request_header();
     }
     else {
         BOOST_LOG_TRIVIAL(error) << "error read_pb_join_room_req()";
@@ -287,11 +287,10 @@ void Connection::read_pb_text_req(boost::system::error_code error, std::size_t) 
 
         auto text_response = MsgFactory::create_text_response(login, roomid, text);
 
-//        start here
-//        ChannelsManager::Instance().send(response);
+        ChannelsManager::Instance().send_to_channel(TextSendData{roomid, login, text});
 //        db->save_text_message(request);
 
-        read_request_header();
+        read_pb_request_header();
     }
     else {
         BOOST_LOG_TRIVIAL(error) << "error read_pb_text_req()";
@@ -299,3 +298,35 @@ void Connection::read_pb_text_req(boost::system::error_code error, std::size_t) 
     }
 }
 
+void Connection::send_msg_to_client(const std::string& login,const std::string& text, int room_id) {
+    auto response_ptr = MsgFactory::create_text_response(login, room_id, text);
+    auto header_ptr = MsgFactory::create_header(TypeCommand::EchoRequest, sizeof(Serialize::Request));
+    auto response_to_send = MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+
+    add_msg_to_send(std::move(response_to_send));
+}
+
+void  Connection::add_msg_to_send(work_buf_res_t&& response_ptr) {
+    bool process_write = !msg_to_client.empty();
+    msg_to_client.push_back(std::move(response_ptr));
+
+    if (!process_write) {
+        start_send_msgs();
+    }
+}
+
+void Connection::start_send_msgs() {
+    boost::asio::async_write(socket, boost::asio::buffer(msg_to_client.front().get(), BUF_RES_LEN),
+        [this](boost::system::error_code ec, std::size_t) {
+        if (!ec) {
+            msg_to_client.pop_front();
+            if (!msg_to_client.empty()) {
+                start_send_msgs();
+            }
+        }
+        else {
+            BOOST_LOG_TRIVIAL(error) << "error start_send_msgs()";
+            free_connection();
+        }
+    });
+}

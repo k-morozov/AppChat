@@ -17,26 +17,6 @@ void Client::close_connection() {
     mtx_sock.unlock();
 }
 
-//void Client::write(const std::string& message) {
-//    text_request_ptr text_request = std::make_shared<TextRequest>(login, room_id, message);
-
-//    bool process_write = !packets_to_server.empty();
-//    packets_to_server.push_back(text_request);
-
-//    if (!process_write) {
-//        send_request_header();
-//    }
-//}
-
-//void Client::write(text_request_ptr request) {
-//    bool process_write = !packets_to_server.empty();
-//    packets_to_server.push_back(request);
-
-//    if (!process_write) {
-//        send_request_header();
-//    }
-//}
-
 void Client::do_connect(work_buf_req_t&&  __buffer) {
     std::cout << "start do_connect()" << std::endl;
     boost::asio::async_connect(sock, eps,
@@ -135,7 +115,7 @@ void Client::read_input_response() {
 
         std::cout << "Success send_join_room_request()" << std::endl;
         if (!error_code) {
-            read_response_header();
+            read_pb_header();
         }
     }
     else {
@@ -144,49 +124,46 @@ void Client::read_input_response() {
     }
 }
 
-void Client::read_response_header() {
-    response_ptr packet = std::make_shared<Response>();
-    boost::asio::async_read(sock, boost::asio::buffer(packet->get_header(), Block::Header),
-        [this, packet](boost::system::error_code ec, std::size_t) {
-            if (!ec) {
-                switch (packet->get_type_data()) {
-                    case TypeCommand::EchoRequest:
-                        std::cout << "EchoRequest: " << std::endl;
-                    break;
-                    case TypeCommand::EchoResponse:
-                        read_response_data(std::make_shared<TextResponse>(packet));
-                        break;
+void Client::read_pb_header() {
+    std::cout << "read_pb_header()" << std::endl;
+//    std::vector<uint8_t> __read_buffer;
+    __read_buffer.resize(sizeof(Serialize::Header));
 
-                    default:
-                        std::cout << "Unknown command " << packet->get_protocol_version() << std::endl;
-                        break;
-                }
-            }
-            else {
-                std::cout << "Error read_response_header()" << std::endl;
-                close_connection();
-            }
+    boost::asio::async_read(sock, boost::asio::buffer(__read_buffer),
+                            [this](boost::system::error_code error, std::size_t) {
+        Serialize::Header new_header;
+        new_header.ParseFromArray(__read_buffer.data(), sizeof(Serialize::Header));
+        if (!error) {
+            read_pb_msg(new_header);
+        } else {
+            std::cout << "error read_pb_request_header()" << std::endl;
+            close_connection();
+        }
     });
+
 }
 
-void Client::read_response_data(text_response_ptr packet) {
-    std::cout << get_command_str(packet->get_type_data()) << ": ";
+void Client::read_pb_msg(Serialize::Header new_header) {
+    switch (static_cast<TypeCommand>(new_header.command())) {
+        case TypeCommand::EchoRequest:
+            std::cout << "EchoRequest: " << std::endl;
+        break;
+        case TypeCommand::EchoResponse:
+            std::cout << "EchoResponse: " << std::endl;
+            read_pb_text_res(new_header);
+            break;
 
-    boost::asio::async_read(sock, boost::asio::buffer(packet->get_data(), packet->get_length_data()),
-        [this, packet](boost::system::error_code error, std::size_t) {
-            if (!error) {
-                auto local_time = DateTime::from_universal_to_local(packet->get_datetime());
+        default:
+            std::cout << "Unknown command " << new_header.command() << std::endl;
+            break;
+    }
 
-                std::cout << packet->get_login() << ": " << packet->get_message() << std::endl;
-                send_text(packet->get_login(), packet->get_message(), local_time);
+    read_pb_header();
 
-                read_response_header();
-            }
-            else {
-                std::cout << "Error read_response_data(text)" << std::endl;
-                close_connection();
-            }
-    });
+}
+
+void Client::read_response_data(text_response_ptr) {
+
 }
 
 void Client::add_msg_to_send(work_buf_req_t&& request_ptr) {
@@ -222,10 +199,32 @@ void Client::change_room(int new_room_id) {
     add_msg_to_send(std::move(request_to_send));
 }
 
-void Client::send_msg_to_server(const std::string& text, int room_id) {
-    auto request_ptr = MsgFactory::create_text_request(login, room_id, text);
+void Client::send_msg_to_server(const std::string& text, int _room_id) {
+    auto request_ptr = MsgFactory::create_text_request(login, _room_id, text);
     auto header_ptr = MsgFactory::create_header(TypeCommand::EchoRequest, sizeof(Serialize::Request));
     auto request_to_send = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
 
     add_msg_to_send(std::move(request_to_send));
+}
+
+void Client::read_pb_text_res(Serialize::Header new_header) {
+    std::cout << "read_pb_text_res()" << std::endl;
+    std::vector<uint8_t> __read_buffer(new_header.length());
+
+    boost::asio::async_read(sock, boost::asio::buffer(__read_buffer),
+        [this, __read_buffer](boost::system::error_code ec, std::size_t) {
+            if (!ec) {
+                Serialize::Response new_response;
+                new_response.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
+
+                std::cout << ">>>" << new_response.text_response().login()
+                          << ": " << new_response.text_response().text() << std::endl;
+
+//                read_pb_header();
+            }
+            else {
+                std::cout << "Error read_pb_text_res()" << std::endl;
+                close_connection();
+            }
+    });
 }

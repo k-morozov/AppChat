@@ -46,7 +46,7 @@ public:
      */
     virtual void start() override {
         BOOST_LOG_TRIVIAL(info) << "Connection start read_request_header().";
-        read_request_header();
+        read_pb_request_header();
    }
 
     /**
@@ -79,12 +79,15 @@ public:
     ~Connection() {
          free_connection();
     }
+
+    void add_msg_to_send(work_buf_res_t&&) override;
 private:
 
     boost::asio::ip::tcp::socket socket;
     std::mutex mtx_sock;
     std::deque<response_ptr> packets_to_client;
 
+    std::deque<work_buf_req_t> msg_to_client;
     std::vector<uint8_t> __read_buffer;
 
     identifier_t client_id;
@@ -100,7 +103,7 @@ private:
      * @details It parses requests headers and
      * calls parsing methods for request body when it is neccessary.
      */
-    void read_request_header();
+    void read_pb_request_header();
 
     /**
      * @brief Handle registration request.
@@ -145,11 +148,13 @@ private:
         return ++id;
     }
 
-    void read_proto_msg(Serialize::Header);
-    void read_pb_input_req(boost::system::error_code, std::size_t);
-    void read_pb_reg_req(boost::system::error_code, std::size_t);
-    void read_pb_join_room_req(boost::system::error_code, std::size_t);
-    void read_pb_text_req(boost::system::error_code, std::size_t);
+    void read_proto_msg(Serialize::Header) override;
+    void read_pb_input_req(boost::system::error_code, std::size_t) override;
+    void read_pb_reg_req(boost::system::error_code, std::size_t) override;
+    void read_pb_join_room_req(boost::system::error_code, std::size_t) override;
+    void read_pb_text_req(boost::system::error_code, std::size_t) override;
+    void send_msg_to_client(const std::string&,const std::string&, int) override;
+    void start_send_msgs() override;
 };
 
 using connection_ptr = std::shared_ptr<Connection>;

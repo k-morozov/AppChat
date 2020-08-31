@@ -7,6 +7,13 @@
 #include "connection/isubscriber.h"
 #include "protocol/protocol.h"
 
+
+struct TextSendData {
+    int room_id;
+    std::string login;
+    std::string text;
+};
+
 /**
  * @brief Room interface
  * 
@@ -33,7 +40,7 @@ public:
      * @brief Notify all room's subscribers about new message
      * @param subscriber
      */
-    virtual void notification(text_response_ptr subscriber) = 0;
+    virtual void notification(TextSendData data) = 0;
     
     /**
      * @brief Get the room id object
