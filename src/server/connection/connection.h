@@ -46,7 +46,7 @@ public:
      */
     virtual void start() override {
         BOOST_LOG_TRIVIAL(info) << "Connection start read_request_header().";
-        read_pb_request_header();
+        async_read_pb_header();
    }
 
     /**
@@ -88,9 +88,12 @@ private:
     std::deque<response_ptr> packets_to_client;
 
     std::deque<work_buf_req_t> msg_to_client;
-    std::vector<uint8_t> __read_buffer;
+    std::deque<std::vector<uint8_t>> bin_buf_to_client;
+
+
 
     identifier_t client_id;
+    identifier_t room_id = -1;
     std::string login;
     std::string password;
 
@@ -103,58 +106,27 @@ private:
      * @details It parses requests headers and
      * calls parsing methods for request body when it is neccessary.
      */
-    void read_pb_request_header();
+    void async_read_pb_header();
+    void do_read_pb_header(boost::system::error_code, std::size_t);
+    std::array<uint8_t, SIZE_HEADER> buffer_header;
+    std::vector<uint8_t> buffer_msg;
 
-    /**
-     * @brief Handle registration request.
-     */
-    void read_request_body(registr_request_ptr);
-
-    /**
-     * @brief Handle author request.
-     */
-    [[deprecated]]
-    void read_request_body(autor_request_ptr);
-
-    /**
-     * @brief Handle incoming message request.
-     */
-    void read_request_body(text_request_ptr);
-
-    /**
-     * @brief Handle room joining request.
-     */
-    void read_request_body(join_room_request_ptr);
-
-    /**
-     * @brief Entry point for sending response.
-     * @details It sends response headers and
-     * if successeed call sending response data.
-     */
-    void send_response_header();
-
-    /**
-     * @brief Send response data.
-     */
-    void send_response_data();
-
-    /**
-     * @brief Client id generator.
-     * @details It is quite simple and return incremented integer value every time.
-     * @return identifier_t 
-     */
     identifier_t generate_client_id() {
         static identifier_t id = 0;
         return ++id;
     }
 
-    void read_proto_msg(Serialize::Header) override;
-    void read_pb_input_req(boost::system::error_code, std::size_t) override;
+    void async_read_proto_msg(Serialize::Header) override;
+    void do_read_pb_input_req(boost::system::error_code, std::size_t) override;
+    void do_write_input_req(boost::system::error_code, std::size_t);
+
     void read_pb_reg_req(boost::system::error_code, std::size_t) override;
     void read_pb_join_room_req(boost::system::error_code, std::size_t) override;
     void read_pb_text_req(boost::system::error_code, std::size_t) override;
     void send_msg_to_client(const std::string&,const std::string&, int) override;
     void start_send_msgs() override;
+    void add_bin_buf_to_send(std::vector<uint8_t>&&);
+    void start_send_bin_buffers();
 };
 
 using connection_ptr = std::shared_ptr<Connection>;

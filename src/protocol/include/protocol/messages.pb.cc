@@ -252,7 +252,6 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_messages_2eproto::offsets[] PR
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Serialize::Header, version_),
   PROTOBUF_FIELD_OFFSET(::Serialize::Header, command_),
-  PROTOBUF_FIELD_OFFSET(::Serialize::Header, time_),
   PROTOBUF_FIELD_OFFSET(::Serialize::Header, length_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Serialize::RegRequest, _internal_metadata_),
@@ -346,17 +345,17 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_messages_2eproto::offsets[] PR
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::Serialize::Header)},
-  { 9, -1, sizeof(::Serialize::RegRequest)},
-  { 16, -1, sizeof(::Serialize::InRequest)},
-  { 23, -1, sizeof(::Serialize::JoinRoomRequest)},
-  { 29, -1, sizeof(::Serialize::TextRequest)},
-  { 37, -1, sizeof(::Serialize::Request)},
-  { 47, -1, sizeof(::Serialize::InputResponse)},
-  { 56, -1, sizeof(::Serialize::RegResponse)},
-  { 65, -1, sizeof(::Serialize::JoinRoomResponse)},
-  { 72, -1, sizeof(::Serialize::TextResponse)},
-  { 80, -1, sizeof(::Serialize::Response)},
-  { 90, -1, sizeof(::Serialize::WrappedMessage)},
+  { 8, -1, sizeof(::Serialize::RegRequest)},
+  { 15, -1, sizeof(::Serialize::InRequest)},
+  { 22, -1, sizeof(::Serialize::JoinRoomRequest)},
+  { 28, -1, sizeof(::Serialize::TextRequest)},
+  { 36, -1, sizeof(::Serialize::Request)},
+  { 46, -1, sizeof(::Serialize::InputResponse)},
+  { 55, -1, sizeof(::Serialize::RegResponse)},
+  { 64, -1, sizeof(::Serialize::JoinRoomResponse)},
+  { 71, -1, sizeof(::Serialize::TextResponse)},
+  { 79, -1, sizeof(::Serialize::Response)},
+  { 89, -1, sizeof(::Serialize::WrappedMessage)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -375,37 +374,37 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_messages_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\016messages.proto\022\tSerialize\"H\n\006Header\022\017\n"
-  "\007version\030\001 \001(\005\022\017\n\007command\030\002 \001(\005\022\014\n\004time\030"
-  "\003 \001(\005\022\016\n\006length\030\004 \001(\005\"-\n\nRegRequest\022\r\n\005l"
-  "ogin\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\",\n\tInReques"
-  "t\022\r\n\005login\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"\"\n\017Jo"
-  "inRoomRequest\022\017\n\007room_id\030\001 \001(\005\";\n\013TextRe"
-  "quest\022\r\n\005login\030\001 \001(\t\022\017\n\007room_id\030\002 \001(\005\022\014\n"
-  "\004text\030\003 \001(\t\"\333\001\n\007Request\0221\n\020register_requ"
-  "est\030\001 \001(\0132\025.Serialize.RegRequestH\000\022-\n\rin"
-  "put_request\030\002 \001(\0132\024.Serialize.InRequestH"
-  "\000\0227\n\021join_room_request\030\003 \001(\0132\032.Serialize"
-  ".JoinRoomRequestH\000\022.\n\014text_request\030\004 \001(\013"
-  "2\026.Serialize.TextRequestH\000B\005\n\003msg\"f\n\rInp"
-  "utResponse\022!\n\006status\030\001 \001(\0162\021.Serialize.S"
-  "TATUS\022\016\n\006msg_id\030\002 \001(\005\022\021\n\tclient_id\030\003 \001(\005"
-  "\022\017\n\007chat_id\030\004 \001(\005\"d\n\013RegResponse\022!\n\006stat"
-  "us\030\001 \001(\0162\021.Serialize.STATUS\022\016\n\006msg_id\030\002 "
-  "\001(\005\022\021\n\tclient_id\030\003 \001(\005\022\017\n\007chat_id\030\004 \001(\005\""
-  "F\n\020JoinRoomResponse\022!\n\006status\030\001 \001(\0162\021.Se"
-  "rialize.STATUS\022\017\n\007room_id\030\002 \001(\005\"<\n\014TextR"
-  "esponse\022\r\n\005login\030\001 \001(\t\022\017\n\007room_id\030\002 \001(\005\022"
-  "\014\n\004text\030\003 \001(\t\"\342\001\n\010Response\0222\n\016input_resp"
-  "onse\030\001 \001(\0132\030.Serialize.InputResponseH\000\022."
-  "\n\014reg_response\030\002 \001(\0132\026.Serialize.RegResp"
-  "onseH\000\0229\n\022join_room_response\030\003 \001(\0132\033.Ser"
-  "ialize.JoinRoomResponseH\000\0220\n\rtext_respon"
-  "se\030\004 \001(\0132\027.Serialize.TextResponseH\000B\005\n\003m"
-  "sg\"g\n\016WrappedMessage\022%\n\007request\030\001 \001(\0132\022."
-  "Serialize.RequestH\000\022\'\n\010response\030\002 \001(\0132\023."
-  "Serialize.ResponseH\000B\005\n\003msg*\032\n\006STATUS\022\010\n"
-  "\004FAIL\020\000\022\006\n\002OK\020\001b\006proto3"
+  "\n\016messages.proto\022\tSerialize\":\n\006Header\022\017\n"
+  "\007version\030\001 \001(\017\022\017\n\007command\030\002 \001(\017\022\016\n\006lengt"
+  "h\030\003 \001(\017\"-\n\nRegRequest\022\r\n\005login\030\001 \001(\t\022\020\n\010"
+  "password\030\002 \001(\t\",\n\tInRequest\022\r\n\005login\030\001 \001"
+  "(\t\022\020\n\010password\030\002 \001(\t\"\"\n\017JoinRoomRequest\022"
+  "\017\n\007room_id\030\001 \001(\005\";\n\013TextRequest\022\r\n\005login"
+  "\030\001 \001(\t\022\017\n\007room_id\030\002 \001(\005\022\014\n\004text\030\003 \001(\t\"\333\001"
+  "\n\007Request\0221\n\020register_request\030\001 \001(\0132\025.Se"
+  "rialize.RegRequestH\000\022-\n\rinput_request\030\002 "
+  "\001(\0132\024.Serialize.InRequestH\000\0227\n\021join_room"
+  "_request\030\003 \001(\0132\032.Serialize.JoinRoomReque"
+  "stH\000\022.\n\014text_request\030\004 \001(\0132\026.Serialize.T"
+  "extRequestH\000B\005\n\003msg\"f\n\rInputResponse\022!\n\006"
+  "status\030\001 \001(\0162\021.Serialize.STATUS\022\016\n\006msg_i"
+  "d\030\002 \001(\005\022\021\n\tclient_id\030\003 \001(\005\022\017\n\007chat_id\030\004 "
+  "\001(\005\"d\n\013RegResponse\022!\n\006status\030\001 \001(\0162\021.Ser"
+  "ialize.STATUS\022\016\n\006msg_id\030\002 \001(\005\022\021\n\tclient_"
+  "id\030\003 \001(\005\022\017\n\007chat_id\030\004 \001(\005\"F\n\020JoinRoomRes"
+  "ponse\022!\n\006status\030\001 \001(\0162\021.Serialize.STATUS"
+  "\022\017\n\007room_id\030\002 \001(\005\"<\n\014TextResponse\022\r\n\005log"
+  "in\030\001 \001(\t\022\017\n\007room_id\030\002 \001(\005\022\014\n\004text\030\003 \001(\t\""
+  "\342\001\n\010Response\0222\n\016input_response\030\001 \001(\0132\030.S"
+  "erialize.InputResponseH\000\022.\n\014reg_response"
+  "\030\002 \001(\0132\026.Serialize.RegResponseH\000\0229\n\022join"
+  "_room_response\030\003 \001(\0132\033.Serialize.JoinRoo"
+  "mResponseH\000\0220\n\rtext_response\030\004 \001(\0132\027.Ser"
+  "ialize.TextResponseH\000B\005\n\003msg\"g\n\016WrappedM"
+  "essage\022%\n\007request\030\001 \001(\0132\022.Serialize.Requ"
+  "estH\000\022\'\n\010response\030\002 \001(\0132\023.Serialize.Resp"
+  "onseH\000B\005\n\003msg*\032\n\006STATUS\022\010\n\004FAIL\020\000\022\006\n\002OK\020"
+  "\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_messages_2eproto_deps[1] = {
 };
@@ -425,7 +424,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_mes
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_messages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_messages_2eproto = {
-  false, false, descriptor_table_protodef_messages_2eproto, "messages.proto", 1223,
+  false, false, descriptor_table_protodef_messages_2eproto, "messages.proto", 1209,
   &descriptor_table_messages_2eproto_once, descriptor_table_messages_2eproto_sccs, descriptor_table_messages_2eproto_deps, 12, 0,
   schemas, file_default_instances, TableStruct_messages_2eproto::offsets,
   file_level_metadata_messages_2eproto, 12, file_level_enum_descriptors_messages_2eproto, file_level_service_descriptors_messages_2eproto,
@@ -521,32 +520,25 @@ const char* Header::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::int
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // int32 version = 1;
+      // sfixed32 version = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 13)) {
+          version_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<::PROTOBUF_NAMESPACE_ID::int32>(ptr);
+          ptr += sizeof(::PROTOBUF_NAMESPACE_ID::int32);
         } else goto handle_unusual;
         continue;
-      // int32 command = 2;
+      // sfixed32 command = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
-          command_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 21)) {
+          command_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<::PROTOBUF_NAMESPACE_ID::int32>(ptr);
+          ptr += sizeof(::PROTOBUF_NAMESPACE_ID::int32);
         } else goto handle_unusual;
         continue;
-      // int32 time = 3;
+      // sfixed32 length = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
-          time_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // int32 length = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
-          length_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 29)) {
+          length_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<::PROTOBUF_NAMESPACE_ID::int32>(ptr);
+          ptr += sizeof(::PROTOBUF_NAMESPACE_ID::int32);
         } else goto handle_unusual;
         continue;
       default: {
@@ -577,28 +569,22 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 version = 1;
+  // sfixed32 version = 1;
   if (this->version() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_version(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteSFixed32ToArray(1, this->_internal_version(), target);
   }
 
-  // int32 command = 2;
+  // sfixed32 command = 2;
   if (this->command() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_command(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteSFixed32ToArray(2, this->_internal_command(), target);
   }
 
-  // int32 time = 3;
-  if (this->time() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_time(), target);
-  }
-
-  // int32 length = 4;
+  // sfixed32 length = 3;
   if (this->length() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_length(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteSFixed32ToArray(3, this->_internal_length(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -617,32 +603,19 @@ size_t Header::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 version = 1;
+  // sfixed32 version = 1;
   if (this->version() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_version());
+    total_size += 1 + 4;
   }
 
-  // int32 command = 2;
+  // sfixed32 command = 2;
   if (this->command() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_command());
+    total_size += 1 + 4;
   }
 
-  // int32 time = 3;
-  if (this->time() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_time());
-  }
-
-  // int32 length = 4;
+  // sfixed32 length = 3;
   if (this->length() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_length());
+    total_size += 1 + 4;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -681,9 +654,6 @@ void Header::MergeFrom(const Header& from) {
   }
   if (from.command() != 0) {
     _internal_set_command(from._internal_command());
-  }
-  if (from.time() != 0) {
-    _internal_set_time(from._internal_time());
   }
   if (from.length() != 0) {
     _internal_set_length(from._internal_length());

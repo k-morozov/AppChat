@@ -112,7 +112,7 @@ public slots:
     }
 
 private:
-    std::unique_ptr<Client> client;
+    std::shared_ptr<Client> client;
     MainWindow w;
 
     std::vector<uint8_t> __buffer;

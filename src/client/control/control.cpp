@@ -36,14 +36,12 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
         ptr_request = MsgFactory::create_input_request(login, password);
     }
 
-    auto ptr_header = MsgFactory::create_header(command, sizeof(Serialize::Request));
-    work_buf_req_t unique_buffer = std::make_unique<uint8_t[]>(BUF_REQ_LEN);
+    auto ptr_header = MsgFactory::create_header(command, ptr_request->ByteSizeLong());
+    auto bin_buffer = MsgFactory::serialize_request(std::move(ptr_header), std::move(ptr_request));
 
-    ptr_header->SerializeToArray(unique_buffer.get(), sizeof(Serialize::Header));
-    ptr_request->SerializeToArray(unique_buffer.get()+sizeof(Serialize::Header), ptr_header->length());
-
-    client = std::make_unique<Client>(io_service, endpoints);
-    client->do_connect(std::move(unique_buffer));
+    client = std::make_shared<Client>(io_service, endpoints);
+    client->do_connect(std::move(bin_buffer));
+    client->set_login(login);
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
     QObject::connect(client.get(), SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));

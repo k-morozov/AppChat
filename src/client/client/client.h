@@ -35,13 +35,14 @@ public:
     /**
      * @brief Start connection to the server
      */
-    void do_connect(work_buf_req_t&& __buffer);
+    void do_connect(std::vector<uint8_t>&& __buffer);
 
-    void read_pb_header();
+    void async_read_pb_header();
+    void do_read_pb_header(boost::system::error_code error, std::size_t nbytes);
 
-    void read_pb_msg(Serialize::Header);
+    void async_read_pb_msg(Serialize::Header);
 
-    void add_msg_to_send(work_buf_req_t &&);
+    void add_msg_to_send(std::vector<uint8_t> &&);
 
     void start_send_msgs();
 
@@ -51,13 +52,16 @@ public:
 
     void read_pb_text_res(Serialize::Header);
 
+    void set_login(const std::string& new_login) {
+        login = new_login;
+    }
     //*****************************************************************************
 
     void write(const std::string& message);
 
     void set_login_id(identifier_t id)   { client_id = id;}
 
-    const char* get_login() const { return login; }
+//    const char* get_login() const { return login; }
 
     void close_connection();
 
@@ -71,20 +75,23 @@ private:
     boost::asio::ip::tcp::socket sock;
     std::mutex mtx_sock;
     const boost::asio::ip::tcp::resolver::results_type& eps;
-    std::vector<uint8_t> __read_buffer;
-    std::deque<work_buf_req_t> msg_to_server;
 
-    char login[Block::LoginName];
+    std::vector<uint8_t> __read_buffer;
+    std::array<uint8_t, SIZE_HEADER> bin_buffer;
+    std::deque<std::vector<uint8_t>> msg_to_server;
+
+//    char login[Block::LoginName];
+    std::string login;
     char password[Block::Password];
     identifier_t client_id;
     identifier_t room_id = 0;
 
 private:
-    void read_input_response();
+    void read_input_response(Serialize::Header);
+    void do_read_input_response(boost::system::error_code, std::size_t);
+    void do_read_echo_response(boost::system::error_code, std::size_t);
 
-    void send_login_request(work_buf_req_t && __buffer);
-
-
+    void send_login_request(std::vector<uint8_t> && __buffer);
 
     /**
      * @brief Handle registartion response

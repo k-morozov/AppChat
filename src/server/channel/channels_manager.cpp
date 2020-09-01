@@ -6,12 +6,14 @@ ChannelsManager::ChannelsManager()
 }
 
 void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, database_ptr db) {
+    BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
     if (auto it=channels.find(room_id); it!=channels.end()) {
+        BOOST_LOG_TRIVIAL(info) << "channel found";
         clients_in_room.emplace(new_sub->get_client_id(), room_id);
         it->second->join(new_sub);
     }
     else {
-        BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
+        BOOST_LOG_TRIVIAL(info) << "channel not found";
         auto [new_it, flag] = channels.emplace(room_id, std::make_shared<Channel>(room_id, db));
         
         if (!flag) {
@@ -35,6 +37,7 @@ void ChannelsManager::join(subscriber_ptr new_sub, identifier_t room_id, databas
 }
 
 void ChannelsManager::send_to_channel(TextSendData data) {
+    BOOST_LOG_TRIVIAL(info) << "send to channel_id=" << data.room_id;
     if (auto it=channels.find(data.room_id); it!=channels.end()) {
         it->second->notification(std::move(data));
     }
@@ -44,8 +47,12 @@ void ChannelsManager::send_to_channel(TextSendData data) {
 }
 
 void ChannelsManager::leave(subscriber_ptr sub) {
+    BOOST_LOG_TRIVIAL(info) << "ChannelsManager::leave()";
     auto it = clients_in_room.find(sub->get_client_id());
-    if (it==clients_in_room.end()) return;
+    if (it==clients_in_room.end()) {
+        BOOST_LOG_TRIVIAL(info) << "not found client_id=" << sub->get_client_id() << ", in channels";
+        return;
+    }
     auto room_id = it->second;
     if (auto it=channels.find(room_id); it!=channels.end()) {
         it->second->leave(sub);

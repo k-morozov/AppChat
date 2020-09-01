@@ -250,10 +250,9 @@ class Header PROTOBUF_FINAL :
   enum : int {
     kVersionFieldNumber = 1,
     kCommandFieldNumber = 2,
-    kTimeFieldNumber = 3,
-    kLengthFieldNumber = 4,
+    kLengthFieldNumber = 3,
   };
-  // int32 version = 1;
+  // sfixed32 version = 1;
   void clear_version();
   ::PROTOBUF_NAMESPACE_ID::int32 version() const;
   void set_version(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -262,7 +261,7 @@ class Header PROTOBUF_FINAL :
   void _internal_set_version(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 command = 2;
+  // sfixed32 command = 2;
   void clear_command();
   ::PROTOBUF_NAMESPACE_ID::int32 command() const;
   void set_command(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -271,16 +270,7 @@ class Header PROTOBUF_FINAL :
   void _internal_set_command(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 time = 3;
-  void clear_time();
-  ::PROTOBUF_NAMESPACE_ID::int32 time() const;
-  void set_time(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_time() const;
-  void _internal_set_time(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // int32 length = 4;
+  // sfixed32 length = 3;
   void clear_length();
   ::PROTOBUF_NAMESPACE_ID::int32 length() const;
   void set_length(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -298,7 +288,6 @@ class Header PROTOBUF_FINAL :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::int32 version_;
   ::PROTOBUF_NAMESPACE_ID::int32 command_;
-  ::PROTOBUF_NAMESPACE_ID::int32 time_;
   ::PROTOBUF_NAMESPACE_ID::int32 length_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_messages_2eproto;
@@ -2238,7 +2227,7 @@ class WrappedMessage PROTOBUF_FINAL :
 #endif  // __GNUC__
 // Header
 
-// int32 version = 1;
+// sfixed32 version = 1;
 inline void Header::clear_version() {
   version_ = 0;
 }
@@ -2258,7 +2247,7 @@ inline void Header::set_version(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Serialize.Header.version)
 }
 
-// int32 command = 2;
+// sfixed32 command = 2;
 inline void Header::clear_command() {
   command_ = 0;
 }
@@ -2278,27 +2267,7 @@ inline void Header::set_command(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Serialize.Header.command)
 }
 
-// int32 time = 3;
-inline void Header::clear_time() {
-  time_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 Header::_internal_time() const {
-  return time_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 Header::time() const {
-  // @@protoc_insertion_point(field_get:Serialize.Header.time)
-  return _internal_time();
-}
-inline void Header::_internal_set_time(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  time_ = value;
-}
-inline void Header::set_time(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_time(value);
-  // @@protoc_insertion_point(field_set:Serialize.Header.time)
-}
-
-// int32 length = 4;
+// sfixed32 length = 3;
 inline void Header::clear_length() {
   length_ = 0;
 }

@@ -16,6 +16,8 @@ constexpr uint64_t BUF_RES_LEN = sizeof(Serialize::Header) + sizeof(Serialize::R
 using work_buf_req_t = std::unique_ptr<uint8_t[]>;
 using work_buf_res_t = std::unique_ptr<uint8_t[]>;
 
+constexpr std::size_t SIZE_HEADER = 3*(sizeof(int32_t)+1);
+
 class MsgFactory
 {
 public:
@@ -66,11 +68,11 @@ public:
 
     static ptr_header_t create_header(TypeCommand command, int32_t length) {
         auto header = std::make_unique<Serialize::Header>();
-        header->set_length(static_cast<google::protobuf::int32>(length));
+        header->set_length(length);
 
         header->set_version(1);
-        header->set_command(static_cast<google::protobuf::uint64>(command));
-        header->set_time(0);
+        header->set_command(static_cast<google::protobuf::int32>(command));
+//        header->set_time(0);
 
         return header;
     }
@@ -121,23 +123,50 @@ public:
         return response;
     }
 
-    static work_buf_res_t serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
-        work_buf_res_t __buffer = std::make_unique<uint8_t[]>(BUF_RES_LEN);
-        header_ptr->SerializeToArray(__buffer.get(), sizeof(Serialize::Header));
-        response_ptr->SerializeToArray(__buffer.get() + sizeof(Serialize::Header), header_ptr->length());
+    static std::vector<uint8_t> serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
+        std::vector<uint8_t> bin_buffer(SIZE_HEADER + response_ptr->ByteSizeLong());
+//        header_ptr->set_length(request_ptr->ByteSizeLong());
+        header_ptr->SerializeToArray(bin_buffer.data(), SIZE_HEADER);
+        response_ptr->SerializeToArray(bin_buffer.data() + SIZE_HEADER, response_ptr->ByteSizeLong());
 
-        return __buffer;
+        return bin_buffer;
     }
 
-    static work_buf_res_t serialize_request(ptr_header_t&& header_ptr, ptr_proto_request_t&& request_ptr) {
-        work_buf_req_t __buffer = std::make_unique<uint8_t[]>(BUF_REQ_LEN);
-        header_ptr->SerializeToArray(__buffer.get(), sizeof(Serialize::Header));
-        request_ptr->SerializeToArray(__buffer.get() + sizeof(Serialize::Header), header_ptr->length());
+    static std::vector<uint8_t> serialize_request(ptr_header_t&& header_ptr, ptr_proto_request_t&& request_ptr) {
+        std::vector<uint8_t> bin_buffer(SIZE_HEADER + request_ptr->ByteSizeLong());
+//        header_ptr->set_length(request_ptr->ByteSizeLong());
+        header_ptr->SerializeToArray(bin_buffer.data(), SIZE_HEADER);
+        request_ptr->SerializeToArray(bin_buffer.data() + SIZE_HEADER, request_ptr->ByteSizeLong());
 
-        return __buffer;
+        return bin_buffer;
     }
 
 
 };
 
+inline std::ostream& operator<<(std::ostream& stream, const Serialize::Header msg) {
+    stream << "header size: "   << msg.ByteSizeLong() << " bytes" << std::endl;
+    stream << "version:"        << msg.version() << std::endl;
+    stream << "command:"        << msg.command() << std::endl;
+//    stream << "time:"           << msg.time() << std::endl;
+    stream << "length:"         << msg.length() << std::endl;
+
+    return stream;
+}
+
+inline std::ostream& operator<<(std::ostream& stream, const Serialize::InRequest msg) {
+    stream << "read InputRequest: " << msg.ByteSizeLong() << " bytes" << std::endl;
+    stream << "login:"              << msg.login() << std::endl;
+    stream << "password:"           << msg.password() << std::endl;
+
+    return stream;
+}
+
+inline std::ostream& operator<<(std::ostream& stream, const Serialize::Request msg) {
+    if (msg.has_input_request()) {
+        stream << msg;
+    }
+
+    return stream;
+}
 #endif // MSGFACTORY_H

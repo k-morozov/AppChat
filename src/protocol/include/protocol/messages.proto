@@ -3,10 +3,9 @@ syntax = "proto3";
 package Serialize;
 
 message Header {
-	int32 version = 1;
-	int32 command = 2;
-	int32 time = 3;
-	int32 length = 4;
+	sfixed32 version = 1;
+	sfixed32 command = 2;
+	sfixed32 length = 3;
 };
 
 // **************************************
