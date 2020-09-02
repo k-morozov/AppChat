@@ -35,7 +35,7 @@ public:
      * @param subscriber sbscriber who is leaving this room
      */
     virtual void leave(subscriber_ptr subscriber) = 0;
-
+    virtual void leave(identifier_t client_id) = 0;
     /**
      * @brief Notify all room's subscribers about new message
      * @param subscriber

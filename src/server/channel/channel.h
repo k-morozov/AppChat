@@ -49,7 +49,7 @@ public:
      * @param subscriber sbscriber who is leaving this channel
      */
     virtual void leave(subscriber_ptr subscriber) override;
-    
+    void leave(identifier_t client_id) override ;
     /**
      * @brief Notify all channel subscribers about new message
      * @param response 

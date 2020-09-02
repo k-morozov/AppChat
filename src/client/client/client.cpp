@@ -46,75 +46,75 @@ void Client::send_login_request(std::vector<uint8_t>&& __buffer) {
             }
     });
 }
-
+[[deprecated]]
 void Client::read_input_response(Serialize::Header header_response) {
-    std::cout << "called read_input_response()" << std::endl;
-    boost::system::error_code error_code;
-    bool flag_er_parse = false;
+//    std::cout << "called read_input_response()" << std::endl;
+//    boost::system::error_code error_code;
+//    bool flag_er_parse = false;
 
-    if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)
-        || header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::AutorisationResponse))
-    {
-        std::vector<uint8_t> bin_buffer(header_response.length());
-        auto nbytes = boost::asio::read(sock, boost::asio::buffer(bin_buffer),
-                          error_code);
-        if (error_code) {
-            std::cout << "error when read response(data)" << std::endl;
-            close_connection();
-            return ;
-        }
-        std::cout << "read responser=" << nbytes << " bytes" << std::endl;
+//    if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)
+//        || header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::AutorisationResponse))
+//    {
+//        std::vector<uint8_t> bin_buffer(header_response.length());
+//        auto nbytes = boost::asio::read(sock, boost::asio::buffer(bin_buffer),
+//                          error_code);
+//        if (error_code) {
+//            std::cout << "error when read response(data)" << std::endl;
+//            close_connection();
+//            return ;
+//        }
+//        std::cout << "read responser=" << nbytes << " bytes" << std::endl;
 
-        Serialize::Response response;
-        flag_er_parse = response.ParseFromArray(bin_buffer.data(), static_cast<int>(bin_buffer.size()));
-        if (flag_er_parse) {
-            std::cout << "parse response: OK" << std::endl;
-        } else {
-            std::cout << "parse response: FAIL" << std::endl;
-            close_connection();
-            return ;
-        }
+//        Serialize::Response response;
+//        flag_er_parse = response.ParseFromArray(bin_buffer.data(), static_cast<int>(bin_buffer.size()));
+//        if (flag_er_parse) {
+//            std::cout << "parse response: OK" << std::endl;
+//        } else {
+//            std::cout << "parse response: FAIL" << std::endl;
+//            close_connection();
+//            return ;
+//        }
 
-        if (response.has_input_response()) {
-            std::cout << "response include input_response" << std::endl;
-            if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)) {
-                if (response.reg_response().status() == Serialize::STATUS::FAIL) {
-                    emit send_input_code(InputCode::BusyRegistr);
-                    std::cout << "login is busy, id=" << response.reg_response().client_id() << std::endl;
-                    close_connection();
-                    return;
-                } else {
-                    emit send_input_code(InputCode::RegistrOK);
-                }
-            }
-            else {
-                if (response.input_response().status() == Serialize::STATUS::FAIL) {
-                    emit send_input_code(InputCode::IncorrectAutor);
-                    std::cout << "Not found login/password" << std::endl;
-                    close_connection();
-                    return;
-                }
-                else {
-                    std::cout << "Autorisation response: OK" << std::endl;
-                    emit send_input_code(InputCode::AutorOK);
-                }
-            }
+//        if (response.has_input_response()) {
+//            std::cout << "response include input_response" << std::endl;
+//            if (header_response.command()==static_cast<::google::protobuf::int32>(TypeCommand::RegistrationResponse)) {
+//                if (response.reg_response().status() == Serialize::STATUS::FAIL) {
+//                    emit send_input_code(InputCode::BusyRegistr);
+//                    std::cout << "login is busy, id=" << response.reg_response().client_id() << std::endl;
+//                    close_connection();
+//                    return;
+//                } else {
+//                    emit send_input_code(InputCode::RegistrOK);
+//                }
+//            }
+//            else {
+//                if (response.input_response().status() == Serialize::STATUS::FAIL) {
+//                    emit send_input_code(InputCode::IncorrectAutor);
+//                    std::cout << "Not found login/password" << std::endl;
+//                    close_connection();
+//                    return;
+//                }
+//                else {
+//                    std::cout << "Autorisation response: OK" << std::endl;
+//                    emit send_input_code(InputCode::AutorOK);
+//                }
+//            }
 
-            set_login_id(response.input_response().client_id());
-            change_room(room_id);
+//            set_login_id(response.input_response().client_id());
+//            change_room(room_id);
 
-            std::cout << "Success send_join_room_request()" << std::endl;
+//            std::cout << "Success send_join_room_request()" << std::endl;
 
-            async_read_pb_header();
-        } else {
-            std::cout << "response not include input_response" << std::endl;
-        }
+//            async_read_pb_header();
+//        } else {
+//            std::cout << "response not include input_response" << std::endl;
+//        }
 
-    }
-    else {
-        std::cout << "No innput response from server" << std::endl;
-        close_connection();
-    }
+//    }
+//    else {
+//        std::cout << "No innput response from server" << std::endl;
+//        close_connection();
+//    }
 }
 
 void Client::async_read_pb_header() {
@@ -170,9 +170,17 @@ void Client::async_read_pb_msg(Serialize::Header new_header) {
                                                 shared_from_this(),
                                                 std::placeholders::_1,
                                                 std::placeholders::_2));
-//            read_pb_text_res(new_header);
-            break;
+        break;
+        case TypeCommand::JoinRoomResponse:
+            std::cout << "JoinRoomResponse: " << std::endl;
+            __read_buffer.resize(new_header.length());
+            boost::asio::async_read(sock, boost::asio::buffer(__read_buffer),
+                                      std::bind(&Client::do_read_join_room_response,
+                                                shared_from_this(),
+                                                std::placeholders::_1,
+                                                std::placeholders::_2));
 
+        break;
         default:
             std::cout << "Unknown command " << new_header.command() << std::endl;
             break;
@@ -222,6 +230,42 @@ void Client::do_read_input_response(boost::system::error_code error, std::size_t
     }
 }
 
+void Client::do_read_join_room_response(boost::system::error_code error, std::size_t nbytes) {
+    if (!error) {
+        std::cout << "read responser=" << nbytes << " bytes" << std::endl;
+
+        Serialize::Response response;
+        bool flag_parse = response.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
+        if (flag_parse) {
+            std::cout << "parse response: OK" << std::endl;
+        } else {
+            std::cout << "parse response: FAIL" << std::endl;
+            close_connection();
+            return ;
+        }
+
+        if (response.has_join_room_response()) {
+            std::cout << "response include join_room" << std::endl;
+            if (response.join_room_response().status() == Serialize::STATUS::OK) {
+                std::cout << "Response join_room: OK" << std::endl;
+                room_id = response.join_room_response().room_id();
+            } else {
+                std::cout << "Response join_room: FAIL" << std::endl;
+                close_connection();
+                return;
+            }
+            async_read_pb_header();
+        } else {
+            std::cout << "response not include join_room" << std::endl;
+        }
+    }
+    else {
+        std::cout << "error when read response(data)" << std::endl;
+        close_connection();
+        return ;
+    }
+}
+
 void Client::do_read_echo_response(boost::system::error_code error, std::size_t nbytes) {
     if (!error) {
         Serialize::Response new_response;
@@ -242,6 +286,9 @@ void Client::do_read_echo_response(boost::system::error_code error, std::size_t 
         close_connection();
     }
 }
+
+
+
 void Client::read_response_data(text_response_ptr) {
 
 }
@@ -272,6 +319,7 @@ void Client::start_send_msgs() {
 }
 
 void Client::change_room(int new_room_id) {
+    std::cout << "called change_room: " << new_room_id << std::endl;
     auto request_ptr = MsgFactory::join_room_request(new_room_id);
     auto header_ptr = MsgFactory::create_header(TypeCommand::JoinRoomRequest, request_ptr->ByteSizeLong());
     auto bin_buffer = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
@@ -280,9 +328,9 @@ void Client::change_room(int new_room_id) {
 }
 
 void Client::send_msg_to_server(const std::string& text, int _room_id) {
-    std::cout << "send_msg_to_server(): login=" << login << std::endl;
+    std::cout << "send_msg_to_server(): login=" << login << ", text=" << text << std::endl;
     auto request_ptr = MsgFactory::create_text_request(login, _room_id, text);
-    auto header_ptr = MsgFactory::create_header(TypeCommand::EchoRequest, sizeof(Serialize::Request));
+    auto header_ptr = MsgFactory::create_header(TypeCommand::EchoRequest, request_ptr->ByteSizeLong());
     auto bin_buffer = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
 
     add_msg_to_send(std::move(bin_buffer));

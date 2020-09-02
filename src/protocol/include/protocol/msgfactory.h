@@ -123,6 +123,22 @@ public:
         return response;
     }
 
+    static ptr_proto_response_t create_join_room_response(int new_room_id, bool flag) {
+        auto jr_response = std::make_unique<Serialize::JoinRoomResponse>();
+        jr_response->set_room_id(new_room_id);
+        if (flag) {
+            jr_response->set_status(Serialize::STATUS::OK);
+        }
+        else {
+            jr_response->set_status(Serialize::STATUS::FAIL);
+        }
+
+        auto response = std::make_unique<Serialize::Response>();
+        response->set_allocated_join_room_response(jr_response.release());
+
+        return response;
+    }
+
     static std::vector<uint8_t> serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
         std::vector<uint8_t> bin_buffer(SIZE_HEADER + response_ptr->ByteSizeLong());
 //        header_ptr->set_length(request_ptr->ByteSizeLong());

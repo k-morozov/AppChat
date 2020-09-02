@@ -70,7 +70,7 @@ public:
      * @return const std::string& 
      */
     virtual const std::string& get_login() const override { return login; }
-
+    virtual void set_channel(identifier_t new_id_room) override { room_id = new_id_room; }
     virtual bool is_busy() const noexcept override { return busy; }
     virtual void set_busy(bool flag = true) noexcept override { busy = flag; }
 
@@ -93,7 +93,7 @@ private:
 
 
     identifier_t client_id;
-    identifier_t room_id = -1;
+    identifier_t room_id = 0;
     std::string login;
     std::string password;
 

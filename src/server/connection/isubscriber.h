@@ -39,7 +39,7 @@ public:
      * @return const std::string& 
      */
     virtual const std::string& get_login() const = 0;
-
+    virtual void set_channel(identifier_t new_id_room) = 0;
     virtual void async_read_proto_msg(Serialize::Header) = 0;
     virtual void do_read_pb_input_req(boost::system::error_code, std::size_t) = 0;
     virtual void read_pb_reg_req(boost::system::error_code, std::size_t) = 0;

@@ -30,7 +30,7 @@ public:
      *
      * @param db
      */
-    void join(subscriber_ptr, identifier_t, database_ptr db);
+    bool join(subscriber_ptr, identifier_t, database_ptr db);
 
     /**
      * @brief Send message to specific room and specific user
@@ -40,7 +40,7 @@ public:
     /**
      * @brief Leave user from the room
      */
-    void leave(subscriber_ptr);
+    void leave(identifier_t client_id, identifier_t room_id);
 
 private:
     /**

@@ -89,6 +89,7 @@ private:
 private:
     void read_input_response(Serialize::Header);
     void do_read_input_response(boost::system::error_code, std::size_t);
+    void do_read_join_room_response(boost::system::error_code, std::size_t);
     void do_read_echo_response(boost::system::error_code, std::size_t);
 
     void send_login_request(std::vector<uint8_t> && __buffer);
