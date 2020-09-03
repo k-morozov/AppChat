@@ -33,7 +33,7 @@ public:
 
     static ptr_proto_request_t create_text_request(const std::string& login, int room_id, const std::string& text);
 
-    static ptr_header_t create_header(TypeCommand command, int32_t length);
+    static ptr_header_t create_header(TypeCommand command, std::size_t length);
 
     static ptr_proto_response_t create_input_response(int client_id);
 

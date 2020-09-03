@@ -6,7 +6,7 @@ ChannelsManager::ChannelsManager()
 }
 
 bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, database_ptr db) {
-    bool flag = true;
+    bool flag_result = true;
     BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
     if (auto it=channels.find(new_room_id); it!=channels.end()) {
         BOOST_LOG_TRIVIAL(info) << "channel found";
@@ -19,8 +19,8 @@ bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, dat
         
         if (!flag) {
             BOOST_LOG_TRIVIAL(error) << "Non create";
-            flag = false;
-            return flag;
+            flag_result = false;
+            return flag_result;
         }
         // add check
         new_it->second->join(new_sub);
@@ -29,8 +29,8 @@ bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, dat
         if (!error) {
             BOOST_LOG_TRIVIAL(info) << "Non add subsciber client_id="<< it2->first
                                     << " in room_id=" << it2->second;
-            flag = false;
-            return flag;
+            flag_result = false;
+            return flag_result;
         }
         else {
             BOOST_LOG_TRIVIAL(info) << "New subsciber client_id="<< it2->first
@@ -41,7 +41,7 @@ bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, dat
     clientid_to_login.try_emplace(new_sub->get_client_id(), new_sub->get_login());
     new_sub->set_channel(new_room_id);
 
-    return flag;
+    return flag_result;
 }
 
 void ChannelsManager::send_to_channel(TextSendData data) {
