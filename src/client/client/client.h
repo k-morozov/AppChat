@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <deque>
+#include <queue>
 #include <mutex>
 #include <memory>
 #include <boost/asio.hpp>
@@ -36,31 +36,17 @@ public:
      */
     void do_connect(std::vector<uint8_t>&& __buffer);
 
-    void async_read_pb_header();
-    void do_read_pb_header(boost::system::error_code error, std::size_t nbytes);
-
-    void async_read_pb_msg(Serialize::Header);
-
-    void add_msg_to_send(std::vector<uint8_t> &&);
-
-    void start_send_msgs();
-
     void change_room(int room_id);
 
     void send_msg_to_server(const std::string& text, int room_id);
 
-    void read_pb_text_res(Serialize::Header);
+
 
     void set_login(const std::string& new_login) {
         login = new_login;
     }
-    //*****************************************************************************
-
-    void write(const std::string& message);
 
     void set_login_id(identifier_t id)   { client_id = id;}
-
-//    const char* get_login() const { return login; }
 
     void close_connection();
 
@@ -77,34 +63,28 @@ private:
 
     std::vector<uint8_t> __read_buffer;
     std::array<uint8_t, Protocol::SIZE_HEADER> bin_buffer;
-    std::deque<std::vector<uint8_t>> msg_to_server;
+    std::queue<std::vector<uint8_t>> msg_to_server;
 
-//    char login[Block::LoginName];
     std::string login;
     char password[Block::Password];
     identifier_t client_id;
     identifier_t room_id = 0;
 
 private:
-    void read_input_response(Serialize::Header);
+
+    void async_read_pb_header();
+    void async_read_pb_msg(Serialize::Header);
+
+    void do_read_pb_header(boost::system::error_code error, std::size_t nbytes);
     void do_read_input_response(boost::system::error_code, std::size_t);
+    void do_read_reg_response(boost::system::error_code, std::size_t);
     void do_read_join_room_response(boost::system::error_code, std::size_t);
     void do_read_echo_response(boost::system::error_code, std::size_t);
 
     void send_login_request(std::vector<uint8_t> && __buffer);
 
-    /**
-     * @brief Entry point to actually send request
-     */
-    void send_request_header();
-
-    /**
-     * @brief Send request data to server
-     * @note Do not call it manually,
-     * it must be called from the @link Client::send_request_header "send_reqest_header".
-     */
-    void send_request_data();
-
+    void add_msg_to_send(std::vector<uint8_t> &&);
+    void start_send_msgs();
 
 signals:
     /**

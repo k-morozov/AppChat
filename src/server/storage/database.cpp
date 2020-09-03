@@ -83,10 +83,10 @@ void Database::save_text_msg(TextSendData msg) {
     );
 
     const std::string insert_query = std::string("insert into history values('")
-                                      + std::string(msg.login) + std::string("', ")
+                                      + msg.login + std::string("', ")
                                       + std::to_string(msg.room_id) + std::string(", strftime('%s','")
                                       + str_datetime + std::string("'), '")
-                                      + std::string(msg.text) + std::string("');");
+                                      + msg.text + std::string("');");
     char* err_msg2 = nullptr;
     int rc = sqlite3_exec(db_ptr, insert_query.c_str(),
                          [](void*, int, char**, char**){ return 0;},
@@ -119,10 +119,14 @@ std::deque<TextSendData> Database::get_history(identifier_t roomid) {
 
     int ret_code = 0;
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
-        std::string author = (const char *)sqlite3_column_blob(stmt, 0);
+//        std::string author = (const char *)sqlite3_column_blob(stmt, 0);
+        std::string author = reinterpret_cast<const char *>(sqlite3_column_blob(stmt, 0));
+
         int room_id = sqlite3_column_int(stmt, 1);
-        std::string dt = (const char *)sqlite3_column_blob(stmt, 2);
-        std::string message = (const char *)sqlite3_column_blob(stmt, 3);
+//        std::string dt = (const char *)sqlite3_column_blob(stmt, 2);
+//        std::string message = (const char *)sqlite3_column_blob(stmt, 3);
+        std::string dt = reinterpret_cast<const char *>(sqlite3_column_blob(stmt, 2));
+        std::string message = reinterpret_cast<const char *>(sqlite3_column_blob(stmt, 3));
 
         BOOST_LOG_TRIVIAL(info) <<"Db: " << author << " " << room_id << " " << dt << " " << message;
 //        text_response_ptr response = std::make_shared<TextResponse>(author, DateTime(boost::posix_time::time_from_string(dt)), message, room_id);
@@ -173,8 +177,8 @@ identifier_t Database::get_loginid(std::string login) const {
 
     int ret_code = 0;
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
-        BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
-                                 << (const char *)sqlite3_column_blob(stmt, 2);
+//        BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
+//                                 << (const char *)sqlite3_column_blob(stmt, 2);
         result = sqlite3_column_int(stmt, 1);
         found = true;
     }
@@ -205,9 +209,9 @@ identifier_t Database::check_client(std::string login, std::string password) con
     int ret_code = 0;
 
     while((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
-        BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
-                                 << (const char *)sqlite3_column_blob(stmt, 2);
-        if ( password == (const char*)sqlite3_column_blob(stmt, 2)) {
+//        BOOST_LOG_TRIVIAL(info) << (const char *)sqlite3_column_blob(stmt, 0) << " " << sqlite3_column_int(stmt, 1) << " "
+//                                 << (const char *)sqlite3_column_blob(stmt, 2);
+        if ( password == reinterpret_cast<const char*>(sqlite3_column_blob(stmt, 2))) {
             result = sqlite3_column_int(stmt, 1);
         }
         found = true;

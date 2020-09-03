@@ -2,14 +2,14 @@
 #define CONNECTION_H
 
 #include <memory>
-#include <deque>
+#include <queue>
 #include <mutex>
+#include <vector>
+#include <cassert>
+
 #include "connection/isubscriber.h"
 #include "channel/channels_manager.h"
 #include "log/logger.h"
-
-#include <vector>
-#include <cassert>
 
 /**
  * @brief Connection class
@@ -28,7 +28,6 @@ public:
         socket(std::move(_socket)),
         db(_db),
         busy(true)
-
     {
         BOOST_LOG_TRIVIAL(info) << "new connection from " << socket.remote_endpoint().address().to_string()
                                 << ":" << socket.remote_endpoint().port();
@@ -77,8 +76,10 @@ private:
     boost::asio::ip::tcp::socket socket;
     std::mutex mtx_sock;
 
-    std::deque<Protocol::work_buf_req_t> msg_to_client;
-    std::deque<std::vector<uint8_t>> bin_buf_to_client;
+    std::array<uint8_t, Protocol::SIZE_HEADER> buffer_header;
+    std::vector<uint8_t> buffer_msg;
+
+    std::queue<std::vector<uint8_t>> send_msgs_queue;
 
     identifier_t client_id;
     identifier_t room_id = 0;
@@ -89,32 +90,23 @@ private:
     std::atomic<bool> busy;
 
 private:
-    /**
-     * @brief Parse headers of request.
-     * @details It parses requests headers and
-     * calls parsing methods for request body when it is neccessary.
-     */
-    void async_read_pb_header();
-    void do_read_pb_header(boost::system::error_code, std::size_t);
-
-    std::array<uint8_t, Protocol::SIZE_HEADER> buffer_header;
-    std::vector<uint8_t> buffer_msg;
-
     identifier_t generate_client_id() {
         static identifier_t id = 0;
         return ++id;
     }
 
+    void async_read_pb_header() override;
     void async_read_proto_msg(Serialize::Header) override;
-    void do_read_pb_input_req(boost::system::error_code, std::size_t) override;
-    void do_write_input_req(boost::system::error_code, std::size_t);
 
-    void read_pb_reg_req(boost::system::error_code, std::size_t) override;
-    void read_pb_join_room_req(boost::system::error_code, std::size_t) override;
-    void read_pb_text_req(boost::system::error_code, std::size_t) override;
+    void do_read_pb_header(boost::system::error_code, std::size_t) override;
+    void do_read_pb_input_req(boost::system::error_code, std::size_t) override;
+    void do_read_pb_reg_req(boost::system::error_code, std::size_t) override;
+    void do_read_pb_join_room_req(boost::system::error_code, std::size_t) override;
+    void do_read_pb_text_req(boost::system::error_code, std::size_t) override;
+
     void send_msg_to_client(const std::string&,const std::string&, int) override;
-    void add_bin_buf_to_send(std::vector<uint8_t>&&);
-    void start_send_bin_buffers();
+    void add_msg_send_queue(std::vector<uint8_t>&&) override;
+    void sending_msgs_to_client() override;
 };
 
 using connection_ptr = std::shared_ptr<Connection>;

@@ -51,7 +51,7 @@ namespace Protocol {
         return request;
     }
 
-    ptr_header_t MsgFactory::create_header(TypeCommand command, int32_t length) {
+    ptr_header_t MsgFactory::create_header(TypeCommand command, std::size_t length) {
         auto header = std::make_unique<Serialize::Header>();
         header->set_length(length);
 
@@ -126,18 +126,18 @@ namespace Protocol {
 
     std::vector<uint8_t> MsgFactory::serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
         std::vector<uint8_t> bin_buffer(SIZE_HEADER + response_ptr->ByteSizeLong());
-//        header_ptr->set_length(request_ptr->ByteSizeLong());
+        header_ptr->set_length(response_ptr->ByteSizeLong());
         header_ptr->SerializeToArray(bin_buffer.data(), SIZE_HEADER);
-        response_ptr->SerializeToArray(bin_buffer.data() + SIZE_HEADER, response_ptr->ByteSizeLong());
+        response_ptr->SerializeToArray(bin_buffer.data() + SIZE_HEADER, static_cast<int>(response_ptr->ByteSizeLong()));
 
         return bin_buffer;
     }
 
     std::vector<uint8_t> MsgFactory::serialize_request(ptr_header_t&& header_ptr, ptr_proto_request_t&& request_ptr) {
         std::vector<uint8_t> bin_buffer(SIZE_HEADER + request_ptr->ByteSizeLong());
-//        header_ptr->set_length(request_ptr->ByteSizeLong());
+        header_ptr->set_length(request_ptr->ByteSizeLong());
         header_ptr->SerializeToArray(bin_buffer.data(), SIZE_HEADER);
-        request_ptr->SerializeToArray(bin_buffer.data() + SIZE_HEADER, request_ptr->ByteSizeLong());
+        request_ptr->SerializeToArray(bin_buffer.data() + SIZE_HEADER, static_cast<int>(request_ptr->ByteSizeLong()));
 
         return bin_buffer;
     }
