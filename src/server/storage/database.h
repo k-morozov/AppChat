@@ -14,8 +14,12 @@ public:
     Database();
     ~Database();
 
+    [[deprecated]]
     void save_text_message(text_request_ptr message);
-    std::deque<text_response_ptr> get_history(identifier_t roomid);
+
+    void save_text_msg(TextSendData);
+
+    std::deque<TextSendData> get_history(identifier_t roomid);
 
     void add_logins(std::string login, identifier_t logi_id, std::string password);
 

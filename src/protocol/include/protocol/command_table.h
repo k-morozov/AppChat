@@ -63,6 +63,12 @@ inline const std::string& get_command_str(TypeCommand command) {
     return type_command_str.at(TypeCommand::Unknown);
 }
 
+struct TextSendData {
+    int room_id;
+    std::string login;
+    std::string text;
+};
+
 enum class InputCode : int {
     RegistrOK = 1,
     AutorOK,

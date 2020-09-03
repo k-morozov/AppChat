@@ -270,8 +270,10 @@ void Connection::read_pb_text_req(boost::system::error_code error, std::size_t) 
 
         BOOST_LOG_TRIVIAL(info) << "login=" << login_sender << ", roomid=" << roomid << ", text=" << text;
 
-        ChannelsManager::Instance().send_to_channel(TextSendData{roomid, login_sender, text});
-//        db->save_text_message(request);
+        TextSendData msg{roomid, login_sender, text};
+
+        ChannelsManager::Instance().send_to_channel(msg);
+        db->save_text_msg(msg);
 
         async_read_pb_header();
     }

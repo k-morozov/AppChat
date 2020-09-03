@@ -7,13 +7,6 @@
 #include "connection/isubscriber.h"
 #include "protocol/protocol.h"
 
-
-struct TextSendData {
-    int room_id;
-    std::string login;
-    std::string text;
-};
-
 /**
  * @brief Room interface
  * 
