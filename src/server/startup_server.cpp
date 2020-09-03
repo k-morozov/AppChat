@@ -13,7 +13,7 @@ namespace {
      * @param port
      * @return results for starts server
      */
-    bool set_parametrs(int argc, char** argv, int32_t& port) {
+    bool set_parametrs(int argc, char** argv,  unsigned short& port) {
         namespace po = boost::program_options;
         try {
             po::options_description desc("Allowed options");
@@ -56,7 +56,7 @@ namespace {
 
 int main(int argc, char** argv) {
     init_logger();
-    int32_t port = SERVER_DEFAULT_PORT;
+    unsigned short port = SERVER_DEFAULT_PORT;
 
     if (set_parametrs(argc, argv, port)) {
         BOOST_LOG_TRIVIAL(info) << "starting server v.0.7";

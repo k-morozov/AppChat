@@ -30,7 +30,7 @@ void Connection::free_connection() {
     }
     mtx_sock.unlock();
 
-    packets_to_client.clear();
+//    packets_to_client.clear();
     client_id = -1;
     login.clear();
     password.clear();
@@ -38,9 +38,6 @@ void Connection::free_connection() {
     room_id = 0;
 
     BOOST_LOG_TRIVIAL(warning) << "User exit. Leave from channels. Close socket. Connection saved. ";
-}
-
-void Connection::sendme(text_response_ptr) {
 }
 
 void Connection::async_read_pb_header() {
@@ -55,19 +52,19 @@ void Connection::async_read_pb_header() {
 
 void Connection::do_read_pb_header(boost::system::error_code error, std::size_t nbytes) {
     if (!error) {
-        BOOST_LOG_TRIVIAL(info) << "read header, size=" << nbytes << " bytes";
-        // cassert
+         assert(nbytes==Protocol::SIZE_HEADER);
+
         Serialize::Header new_header;
-        bool flag = new_header.ParseFromArray(buffer_header.data(), SIZE_HEADER);
+        bool flag = new_header.ParseFromArray(buffer_header.data(), Protocol::SIZE_HEADER);
         if (flag) {
-            BOOST_LOG_TRIVIAL(info) << "parse Header: OK";
             async_read_proto_msg(new_header);
         } else {
             BOOST_LOG_TRIVIAL(error) << "parse Header: FAIL";
-            free_connection();
+            async_read_pb_header();
         }
     } else {
         BOOST_LOG_TRIVIAL(error) << "error read in async_read_pb_header()";
+//        async_read_pb_header();
         free_connection();
     }
 }
@@ -128,7 +125,7 @@ void Connection::do_read_pb_input_req(boost::system::error_code error, std::size
             BOOST_LOG_TRIVIAL(info) << "parse input_request: OK" ;
         } else {
             BOOST_LOG_TRIVIAL(error) << "parse input_request: FAIL" ;
-            std::cout << new_request << std::endl;
+//            std::cout << new_request << std::endl;
         }
         if (new_request.has_input_request()) {
             BOOST_LOG_TRIVIAL(info) << "request include input_request" ;
@@ -140,9 +137,9 @@ void Connection::do_read_pb_input_req(boost::system::error_code error, std::size
 
             BOOST_LOG_TRIVIAL(info) << "read input_request: login=" << login << ", pwd=" << password << ", client_id=" << client_id;
 
-            auto response_ptr = MsgFactory::create_input_response(client_id);
-            auto header_ptr = MsgFactory::create_header(TypeCommand::AutorisationResponse, response_ptr->ByteSizeLong());
-            auto buffer_serialize = MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+            auto response_ptr = Protocol::MsgFactory::create_input_response(client_id);
+            auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::AutorisationResponse, response_ptr->ByteSizeLong());
+            auto buffer_serialize = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
             add_bin_buf_to_send(std::move(buffer_serialize));
 
             BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
@@ -195,9 +192,9 @@ void Connection::read_pb_reg_req(boost::system::error_code error, std::size_t) {
             BOOST_LOG_TRIVIAL(warning) << "this client was add to db early";
             client_id = -1;
         }
-        auto buffer_serialize = MsgFactory::serialize_response(
-                    MsgFactory::create_header(TypeCommand::RegistrationResponse, sizeof(Serialize::Response)),
-                    MsgFactory::create_reg_response(client_id)
+        auto buffer_serialize = Protocol::MsgFactory::serialize_response(
+                    Protocol::MsgFactory::create_header(TypeCommand::RegistrationResponse, sizeof(Serialize::Response)),
+                    Protocol::MsgFactory::create_reg_response(client_id)
                     );
 
         boost::asio::write(socket, boost::asio::buffer(buffer_serialize));
@@ -237,9 +234,9 @@ void Connection::read_pb_join_room_req(boost::system::error_code error, std::siz
             ChannelsManager::Instance().leave(client_id, room_id);
             flag = ChannelsManager::Instance().join(self, new_roomid, db);
 
-            auto response_ptr = MsgFactory::create_join_room_response(room_id, flag);
-            auto header_ptr = MsgFactory::create_header(TypeCommand::JoinRoomResponse, response_ptr->ByteSizeLong());
-            auto buffer_serialize = MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+            auto response_ptr = Protocol::MsgFactory::create_join_room_response(room_id, flag);
+            auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::JoinRoomResponse, response_ptr->ByteSizeLong());
+            auto buffer_serialize = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
             add_bin_buf_to_send(std::move(buffer_serialize));
 
             BOOST_LOG_TRIVIAL(info) << "send join_room_response";
@@ -285,22 +282,13 @@ void Connection::read_pb_text_req(boost::system::error_code error, std::size_t) 
 
 void Connection::send_msg_to_client(const std::string& login,const std::string& text, int room_id) {
     BOOST_LOG_TRIVIAL(info) << "send_msg_to_client";
-    auto response_ptr = MsgFactory::create_text_response(login, room_id, text);
+    auto response_ptr = Protocol::MsgFactory::create_text_response(login, room_id, text);
     BOOST_LOG_TRIVIAL(info) << "login=" << response_ptr->text_response().login() << ", text=" << response_ptr->text_response().text();
 
-    auto header_ptr = MsgFactory::create_header(TypeCommand::EchoResponse, response_ptr->ByteSizeLong());
-    auto response_to_send = MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+    auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::EchoResponse, response_ptr->ByteSizeLong());
+    auto response_to_send = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
 
     add_bin_buf_to_send(std::move(response_to_send));
-}
-
-void  Connection::add_msg_to_send(work_buf_res_t&& response_ptr) {
-    bool process_write = !msg_to_client.empty();
-    msg_to_client.push_back(std::move(response_ptr));
-
-    if (!process_write) {
-        start_send_msgs();
-    }
 }
 
 void  Connection::add_bin_buf_to_send(std::vector<uint8_t>&& bin_buffer) {
@@ -330,19 +318,19 @@ void Connection::start_send_bin_buffers() {
     });
 }
 
-void Connection::start_send_msgs() {
-    boost::asio::async_write(socket, boost::asio::buffer(msg_to_client.front().get(), BUF_RES_LEN),
-        [this](boost::system::error_code ec, std::size_t nbytes) {
-        if (!ec) {
+//void Connection::start_send_msgs() {
+//    boost::asio::async_write(socket, boost::asio::buffer(msg_to_client.front().get(), Protocol::BUF_RES_LEN),
+//        [this](boost::system::error_code ec, std::size_t nbytes) {
+//        if (!ec) {
 //            std::cout << "write " << nbytes << "bytes" << std::endl;
-            msg_to_client.pop_front();
-            if (!msg_to_client.empty()) {
-                start_send_msgs();
-            }
-        }
-        else {
-            BOOST_LOG_TRIVIAL(error) << "error start_send_msgs()";
-            free_connection();
-        }
-    });
-}
+//            msg_to_client.pop_front();
+//            if (!msg_to_client.empty()) {
+//                start_send_msgs();
+//            }
+//        }
+//        else {
+//            BOOST_LOG_TRIVIAL(error) << "error start_send_msgs()";
+//            free_connection();
+//        }
+//    });
+//}

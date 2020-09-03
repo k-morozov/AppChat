@@ -75,12 +75,6 @@ Database::~Database() {
     db_ptr = NULL;
 }
 
-[[deprecated]]
-void Database::save_text_message(text_request_ptr message) {
-
-
-}
-
 void Database::save_text_msg(TextSendData msg) {
 //    Datetime dt(); // message->get_datetime();
     const std::string str_datetime = boost::str(boost::format("%1$d-%2$#02d-%3$#02d %4$#02s:%5$#02s:%6$#02s")

@@ -19,7 +19,7 @@ public:
      * @param port - number port
      * @param _db - database ptr
      */
-    Server(int32_t port, database_ptr _db):
+    Server(unsigned short port, database_ptr _db):
         endpoint(boost::asio::ip::tcp::v4(), port),
         acceptor(io_service, endpoint),
         db(_db),

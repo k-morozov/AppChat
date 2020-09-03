@@ -119,7 +119,7 @@ void Client::read_input_response(Serialize::Header header_response) {
 
 void Client::async_read_pb_header() {
     std::cout << "called async_read_pb_header()" << std::endl;
-    boost::asio::async_read(sock, boost::asio::buffer(bin_buffer.data(), SIZE_HEADER),
+    boost::asio::async_read(sock, boost::asio::buffer(bin_buffer.data(), Protocol::SIZE_HEADER),
                             std::bind(&Client::do_read_pb_header,
                                       shared_from_this(),
                                       std::placeholders::_1,
@@ -132,7 +132,7 @@ void Client::do_read_pb_header(boost::system::error_code error, std::size_t nbyt
         std::cout << "new header read: " << nbytes << " bytes" << std::endl;
 
         Serialize::Header new_header;
-        bool flag = new_header.ParseFromArray(bin_buffer.data(), SIZE_HEADER);
+        bool flag = new_header.ParseFromArray(bin_buffer.data(), Protocol::SIZE_HEADER);
         if (flag) {
             std::cout << "parse header: OK" << std::endl;
         } else {
@@ -288,11 +288,6 @@ void Client::do_read_echo_response(boost::system::error_code error, std::size_t 
 }
 
 
-
-void Client::read_response_data(text_response_ptr) {
-
-}
-
 void Client::add_msg_to_send(std::vector<uint8_t>&& request_ptr) {
     bool process_write = !msg_to_server.empty();
     msg_to_server.push_back(std::move(request_ptr));
@@ -320,18 +315,18 @@ void Client::start_send_msgs() {
 
 void Client::change_room(int new_room_id) {
     std::cout << "called change_room: " << new_room_id << std::endl;
-    auto request_ptr = MsgFactory::join_room_request(new_room_id);
-    auto header_ptr = MsgFactory::create_header(TypeCommand::JoinRoomRequest, request_ptr->ByteSizeLong());
-    auto bin_buffer = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
+    auto request_ptr = Protocol::MsgFactory::join_room_request(new_room_id);
+    auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::JoinRoomRequest, request_ptr->ByteSizeLong());
+    auto bin_buffer = Protocol::MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
 
     add_msg_to_send(std::move(bin_buffer));
 }
 
 void Client::send_msg_to_server(const std::string& text, int _room_id) {
     std::cout << "send_msg_to_server(): login=" << login << ", text=" << text << std::endl;
-    auto request_ptr = MsgFactory::create_text_request(login, _room_id, text);
-    auto header_ptr = MsgFactory::create_header(TypeCommand::EchoRequest, request_ptr->ByteSizeLong());
-    auto bin_buffer = MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
+    auto request_ptr = Protocol::MsgFactory::create_text_request(login, _room_id, text);
+    auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::EchoRequest, request_ptr->ByteSizeLong());
+    auto bin_buffer = Protocol::MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
 
     add_msg_to_send(std::move(bin_buffer));
 }

@@ -28,16 +28,16 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
     boost::asio::ip::tcp::resolver resolver(io_service);
     auto endpoints = resolver.resolve(ip, std::to_string(port));
 
-    ptr_proto_request_t ptr_request;
+    Protocol::ptr_proto_request_t ptr_request;
     if (command == TypeCommand::RegistrationRequest) {
-        ptr_request = MsgFactory::create_reg_request(login, password);
+        ptr_request = Protocol::MsgFactory::create_reg_request(login, password);
     }
     else if (command == TypeCommand::AuthorisationRequest) {
-        ptr_request = MsgFactory::create_input_request(login, password);
+        ptr_request = Protocol::MsgFactory::create_input_request(login, password);
     }
 
-    auto ptr_header = MsgFactory::create_header(command, ptr_request->ByteSizeLong());
-    auto bin_buffer = MsgFactory::serialize_request(std::move(ptr_header), std::move(ptr_request));
+    auto ptr_header = Protocol::MsgFactory::create_header(command, ptr_request->ByteSizeLong());
+    auto bin_buffer = Protocol::MsgFactory::serialize_request(std::move(ptr_header), std::move(ptr_request));
 
     client = std::make_shared<Client>(io_service, endpoints);
     client->do_connect(std::move(bin_buffer));

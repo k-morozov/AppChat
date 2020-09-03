@@ -11,6 +11,7 @@
 
 #include "protocol/msgfactory.h"
 #include <vector>
+#include <cassert>
 
 /**
  * @brief Connection class
@@ -50,12 +51,6 @@ public:
    }
 
     /**
-     * @brief Send response message to the client
-     * @param response response needs to be sent
-     */
-    virtual void sendme(text_response_ptr response) override;
-
-    /**
      * @brief Get the client id object
      * @details Returns current client id
      * @return identifier_t 
@@ -80,17 +75,13 @@ public:
          free_connection();
     }
 
-    void add_msg_to_send(work_buf_res_t&&) override;
 private:
-
     boost::asio::ip::tcp::socket socket;
     std::mutex mtx_sock;
-    std::deque<response_ptr> packets_to_client;
+//    std::deque<response_ptr> packets_to_client;
 
-    std::deque<work_buf_req_t> msg_to_client;
+    std::deque<Protocol::work_buf_req_t> msg_to_client;
     std::deque<std::vector<uint8_t>> bin_buf_to_client;
-
-
 
     identifier_t client_id;
     identifier_t room_id = 0;
@@ -108,7 +99,8 @@ private:
      */
     void async_read_pb_header();
     void do_read_pb_header(boost::system::error_code, std::size_t);
-    std::array<uint8_t, SIZE_HEADER> buffer_header;
+
+    std::array<uint8_t, Protocol::SIZE_HEADER> buffer_header;
     std::vector<uint8_t> buffer_msg;
 
     identifier_t generate_client_id() {
@@ -124,7 +116,7 @@ private:
     void read_pb_join_room_req(boost::system::error_code, std::size_t) override;
     void read_pb_text_req(boost::system::error_code, std::size_t) override;
     void send_msg_to_client(const std::string&,const std::string&, int) override;
-    void start_send_msgs() override;
+//    void start_send_msgs() override;
     void add_bin_buf_to_send(std::vector<uint8_t>&&);
     void start_send_bin_buffers();
 };

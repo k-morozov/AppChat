@@ -11,14 +11,14 @@ target_sources(${PROTOCOL_LIB_NAME}
         "include/protocol/command_table.h"
         "include/protocol/datetime.h" datetime.cpp
 
-        "include/protocol/request/request.h"
-        "include/protocol/request/input_request.h" request/input_request.cpp
-        "include/protocol/request/transport_request.h" request/transport_request.cpp
-        "include/protocol/request/control_request.h"
+#        "include/protocol/request/request.h"
+#        "include/protocol/request/input_request.h" request/input_request.cpp
+#        "include/protocol/request/transport_request.h" request/transport_request.cpp
+#        "include/protocol/request/control_request.h"
 
-        "include/protocol/response/response.h"
-        "include/protocol/response/input_response.h" response/input_response.cpp
-        "include/protocol/response/transport_response.h"
+#        "include/protocol/response/response.h"
+#        "include/protocol/response/input_response.h" response/input_response.cpp
+#        "include/protocol/response/transport_response.h"
         "include/protocol/msgfactory.h" include/protocol/msgfactory.cpp
 )
 

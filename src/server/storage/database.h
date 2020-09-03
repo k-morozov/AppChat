@@ -12,10 +12,8 @@ class Database
 {
 public:
     Database();
-    ~Database();
 
-    [[deprecated]]
-    void save_text_message(text_request_ptr message);
+    ~Database();
 
     void save_text_msg(TextSendData);
 

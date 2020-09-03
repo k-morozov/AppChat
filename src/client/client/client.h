@@ -5,6 +5,7 @@
 #include <string>
 #include <deque>
 #include <mutex>
+#include <memory>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
 #include <QWidget>
@@ -77,7 +78,7 @@ private:
     const boost::asio::ip::tcp::resolver::results_type& eps;
 
     std::vector<uint8_t> __read_buffer;
-    std::array<uint8_t, SIZE_HEADER> bin_buffer;
+    std::array<uint8_t, Protocol::SIZE_HEADER> bin_buffer;
     std::deque<std::vector<uint8_t>> msg_to_server;
 
 //    char login[Block::LoginName];
@@ -93,23 +94,6 @@ private:
     void do_read_echo_response(boost::system::error_code, std::size_t);
 
     void send_login_request(std::vector<uint8_t> && __buffer);
-
-    /**
-     * @brief Handle registartion response
-     */
-    void read_response_data(registr_response_ptr);
-
-    /**
-     * @brief Handle authorization response
-     * TODO: fix typo autor -> authorization
-     */
-    void read_response_data(autor_response_ptr);
-
-    /**
-     * @brief Handle text message response
-     * 
-     */
-    void read_response_data(text_response_ptr);
 
     /**
      * @brief Entry point to actually send request
