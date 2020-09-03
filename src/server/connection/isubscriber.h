@@ -6,7 +6,6 @@
 #include <string>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
-#include "protocol/msgfactory.h"
 
 /**
  * @brief Channel Subscriber Interface 

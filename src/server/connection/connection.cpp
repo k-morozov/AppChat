@@ -318,19 +318,3 @@ void Connection::start_send_bin_buffers() {
     });
 }
 
-//void Connection::start_send_msgs() {
-//    boost::asio::async_write(socket, boost::asio::buffer(msg_to_client.front().get(), Protocol::BUF_RES_LEN),
-//        [this](boost::system::error_code ec, std::size_t nbytes) {
-//        if (!ec) {
-//            std::cout << "write " << nbytes << "bytes" << std::endl;
-//            msg_to_client.pop_front();
-//            if (!msg_to_client.empty()) {
-//                start_send_msgs();
-//            }
-//        }
-//        else {
-//            BOOST_LOG_TRIVIAL(error) << "error start_send_msgs()";
-//            free_connection();
-//        }
-//    });
-//}

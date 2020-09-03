@@ -10,8 +10,6 @@
 #include "protocol/protocol.h"
 #include <QWidget>
 
-#include "protocol/msgfactory.h"
-
 /**
  * @brief Client class
  * 

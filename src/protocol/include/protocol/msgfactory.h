@@ -2,7 +2,7 @@
 #define MSGFACTORY_H
 
 #include "command_table.h"
-#include "protocol/messages.pb.h"
+#include "proto/messages.pb.h"
 
 namespace Protocol {
 

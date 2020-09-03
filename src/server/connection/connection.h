@@ -6,10 +6,8 @@
 #include <mutex>
 #include "connection/isubscriber.h"
 #include "channel/channels_manager.h"
-#include "protocol/protocol.h"
 #include "log/logger.h"
 
-#include "protocol/msgfactory.h"
 #include <vector>
 #include <cassert>
 
@@ -78,7 +76,6 @@ public:
 private:
     boost::asio::ip::tcp::socket socket;
     std::mutex mtx_sock;
-//    std::deque<response_ptr> packets_to_client;
 
     std::deque<Protocol::work_buf_req_t> msg_to_client;
     std::deque<std::vector<uint8_t>> bin_buf_to_client;
@@ -116,7 +113,6 @@ private:
     void read_pb_join_room_req(boost::system::error_code, std::size_t) override;
     void read_pb_text_req(boost::system::error_code, std::size_t) override;
     void send_msg_to_client(const std::string&,const std::string&, int) override;
-//    void start_send_msgs() override;
     void add_bin_buf_to_send(std::vector<uint8_t>&&);
     void start_send_bin_buffers();
 };
