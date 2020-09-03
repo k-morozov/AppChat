@@ -10,7 +10,4 @@
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/utility/setup/console.hpp>
 
-//#include <boost/log/core/core.hpp>
-//#include <boost/log/trivial.hpp>
-
 void init_logger();

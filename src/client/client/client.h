@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <string>
-#include <deque>
+#include <queue>
 #include <mutex>
+#include <memory>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
 #include <QWidget>
@@ -14,7 +15,7 @@
  * 
  * @details Implement communication with server
  */
-class Client: public QObject {
+class Client: public QObject, public std::enable_shared_from_this<Client> {
    Q_OBJECT
 
 public:
@@ -24,50 +25,31 @@ public:
      * @param eps 
      * @param request initial request the server
      */
-    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& eps,
-           input_request_ptr request)
-        : io_service(io), sock(io), eps(eps)
+    Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& _eps)
+        : io_service(io), sock(io), eps(_eps)
     {
-        std::cout << "ctor client" << std::endl;
-        do_connect(eps, request);
+        std::cout << "create client" << std::endl;
     }
 
     /**
-     * @brief Send text message
-     * @param message 
+     * @brief Start connection to the server
      */
-    void write(const std::string& message);
+    void do_connect(std::vector<uint8_t>&& __buffer);
 
-    /**
-     * @brief Send text request
-     */
-    void write(text_request_ptr);
+    void change_room(int room_id);
 
-    /**
-     * @brief Send join room request
-     */
-    void write(join_room_request_ptr);
+    void send_msg_to_server(const std::string& text, int room_id);
 
-    /**
-     * @brief Setter for client_id
-     * @param id 
-     */
+
+
+    void set_login(const std::string& new_login) {
+        login = new_login;
+    }
+
     void set_login_id(identifier_t id)   { client_id = id;}
 
-    /**
-     * @brief Login getter
-     * @return const char* 
-     */
-    const char* get_login() const { return login; }
-
-    /**
-     * @brief Finish the communication with server
-     */
     void close_connection();
 
-    /**
-     * @brief destructor
-     */
     ~Client() {
         std::cout << "Destr client" << std::endl;
         close_connection();
@@ -79,66 +61,30 @@ private:
     std::mutex mtx_sock;
     const boost::asio::ip::tcp::resolver::results_type& eps;
 
-    std::deque<packet_ptr> packets_to_server;
+    std::vector<uint8_t> __read_buffer;
+    std::array<uint8_t, Protocol::SIZE_HEADER> bin_buffer;
+    std::queue<std::vector<uint8_t>> msg_to_server;
 
-    char login[Block::LoginName];
+    std::string login;
     char password[Block::Password];
     identifier_t client_id;
     identifier_t room_id = 0;
 
 private:
-    /**
-     * @brief Log in scenario implementation
-     * @return input_request_ptr 
-     */
-    [[deprecated]]
-    input_request_ptr logon();
 
-    /**
-     * @brief Start connection to the server
-     */
-    void do_connect(const boost::asio::ip::tcp::resolver::results_type&, input_request_ptr);
+    void async_read_pb_header();
+    void async_read_pb_msg(Serialize::Header);
 
-    /**
-     * @brief Log in on the server
-     * @param request
-     */
-    void send_login_request(input_request_ptr request);
+    void do_read_pb_header(boost::system::error_code error, std::size_t nbytes);
+    void do_read_input_response(boost::system::error_code, std::size_t);
+    void do_read_reg_response(boost::system::error_code, std::size_t);
+    void do_read_join_room_response(boost::system::error_code, std::size_t);
+    void do_read_echo_response(boost::system::error_code, std::size_t);
 
-    /**
-     * @brief Entry point for handling server response
-     */
-    void read_response_header();
+    void send_login_request(std::vector<uint8_t> && __buffer);
 
-    /**
-     * @brief Handle registartion response
-     */
-    void read_response_data(registr_response_ptr);
-
-    /**
-     * @brief Handle authorization response
-     * TODO: fix typo autor -> authorization
-     */
-    void read_response_data(autor_response_ptr);
-
-    /**
-     * @brief Handle text message response
-     * 
-     */
-    void read_response_data(text_response_ptr);
-
-    /**
-     * @brief Entry point to actually send request
-     */
-    void send_request_header();
-
-    /**
-     * @brief Send request data to server
-     * @note Do not call it manually,
-     * it must be called from the @link Client::send_request_header "send_reqest_header".
-     */
-    void send_request_data();
-
+    void add_msg_to_send(std::vector<uint8_t> &&);
+    void start_send_msgs();
 
 signals:
     /**

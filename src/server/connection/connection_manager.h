@@ -10,7 +10,7 @@
 class ConnectionManager
 {
 public:
-    ConnectionManager(database_ptr db): db(db) {
+    ConnectionManager(database_ptr n_db): db(n_db) {
         BOOST_LOG_TRIVIAL(info) << "create ConnectionManager";
     }
     ConnectionManager(const ConnectionManager&) = delete;

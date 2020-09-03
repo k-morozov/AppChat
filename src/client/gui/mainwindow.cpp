@@ -78,6 +78,7 @@ void MainWindow::on_push_change_room_id_clicked()
 {
     auto new_roomid = ui->room_id->text();
     if (new_roomid.isEmpty()) return;
+    // @todo change logic: room change after ack from join_room_response()
     roomid = new_roomid;
     ui->text_output->clear();
     emit send_change_room(roomid.toInt());

@@ -48,6 +48,7 @@ matrix:
         - eval "${MATRIX_EVAL}"
       before_script:
         - sudo python3 ./scripts/install_env.py
+        - sudo apt-get install libprotobuf-dev protobuf-compiler
       cache:
         directories:
           - boost_1_73_0/
