@@ -121,7 +121,6 @@ void Connection::do_read_pb_input_req(boost::system::error_code error, std::size
             BOOST_LOG_TRIVIAL(info) << "parse input_request: OK" ;
         } else {
             BOOST_LOG_TRIVIAL(error) << "parse input_request: FAIL" ;
-//            std::cout << new_request << std::endl;
         }
         if (new_request.has_input_request()) {
             BOOST_LOG_TRIVIAL(info) << "request include input_request" ;
@@ -133,12 +132,13 @@ void Connection::do_read_pb_input_req(boost::system::error_code error, std::size
 
             BOOST_LOG_TRIVIAL(info) << "read input_request: login=" << login << ", pwd=" << password << ", client_id=" << client_id;
 
+            // @todo create response -> thread_pool
             auto response_ptr = Protocol::MsgFactory::create_input_response(client_id);
             auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::AutorisationResponse, response_ptr->ByteSizeLong());
             auto buffer_serialize = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
             add_msg_send_queue(std::move(buffer_serialize));
 
-            BOOST_LOG_TRIVIAL(info) << "Authorization successfully completed";
+            BOOST_LOG_TRIVIAL(info) << "Authorization: " << (client_id!=-1 ? "OK" : "FAIL");
             async_read_pb_header();
         }
         else {
@@ -268,10 +268,12 @@ void Connection::send_msg_to_client(const std::string& a_login,const std::string
 void  Connection::add_msg_send_queue(std::vector<uint8_t>&& bin_buffer) {
     bool process_write = !send_msgs_queue.empty();
     send_msgs_queue.push(std::move(bin_buffer));
-
     if (!process_write) {
         sending_msgs_to_client();
     }
+//    boost::asio::post(*thread_pool, [this, bin_buffer]() {
+//        boost::asio::write(socket, boost::asio::buffer(bin_buffer));
+//    });
 }
 
 void Connection::sending_msgs_to_client() {

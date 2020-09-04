@@ -2,7 +2,7 @@
 #define MSGFACTORY_H
 
 #include "command_table.h"
-#include "proto/messages.pb.h"
+#include "proto/build/messages.pb.h"
 
 namespace Protocol {
 
@@ -12,13 +12,7 @@ using ptr_proto_request_t = std::unique_ptr<Serialize::Request>;
 using ptr_header_t = std::unique_ptr<Serialize::Header>;
 using ptr_proto_response_t = std::unique_ptr<Serialize::Response>;
 
-constexpr uint64_t BUF_REQ_LEN = sizeof(Serialize::Header) + sizeof(Serialize::Request);
-constexpr uint64_t BUF_RES_LEN = sizeof(Serialize::Header) + sizeof(Serialize::Response);
-
-using work_buf_req_t = std::unique_ptr<uint8_t[]>;
-using work_buf_res_t = std::unique_ptr<uint8_t[]>;
-
-constexpr std::size_t SIZE_HEADER = 3*(sizeof(int32_t)+1);
+constexpr std::size_t SIZE_HEADER = 2*(sizeof(uint32_t)+1) + (sizeof(uint64_t)+1);
 
 class MsgFactory
 {

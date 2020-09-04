@@ -7,6 +7,7 @@
 #include <vector>
 #include <cassert>
 
+#include <boost/asio/thread_pool.hpp>
 #include "connection/isubscriber.h"
 #include "channel/channels_manager.h"
 #include "log/logger.h"
@@ -24,7 +25,8 @@ public:
      * @param _socket Accepted client socket.
      * @param _db
      */
-    explicit Connection(boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
+    explicit Connection(std::shared_ptr<boost::asio::thread_pool> a_thread_pool, boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
+        thread_pool(a_thread_pool),
         socket(std::move(_socket)),
         db(_db),
         busy(true)
@@ -73,6 +75,7 @@ public:
     }
 
 private:
+    std::shared_ptr<boost::asio::thread_pool> thread_pool;
     boost::asio::ip::tcp::socket socket;
     std::mutex mtx_sock;
 

@@ -14,7 +14,7 @@ connection_ptr ConnectionManager::get_connection(boost::asio::ip::tcp::socket&& 
         return (*it);
     }
     else {
-        auto block = std::make_shared<Connection>(std::move(_socket), db);
+        auto block = std::make_shared<Connection>(thread_pool, std::move(_socket), db);
         pool_connections.push_back(block);
 
         BOOST_LOG_TRIVIAL(info) << "create new connection, current size pool = " << pool_connections.size();

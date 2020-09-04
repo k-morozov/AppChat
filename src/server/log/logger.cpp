@@ -21,7 +21,8 @@ void init_logger() {
 //        (
 //            boost::log::trivial::severity >= boost::log::trivial::info
 //        );
-    logging::add_console_log(std::cout, boost::log::keywords::format = "[%TimeStamp%]- <%Severity%>: %Message%");
+//    "%Y-%m-%d %H:%M:%S"
+    logging::add_console_log(std::cout, boost::log::keywords::format = "[%TimeStamp%][%ThreadID%]<%Severity%>: %Message%");
 
     logging::core::get()->set_filter
     (

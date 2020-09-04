@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package Serialize;
+
+message RegRequest {
+	string login = 1;
+	string password = 2;
+};
+
+message InRequest {
+	string login = 1;
+	string password = 2;
+};
+
+message JoinRoomRequest {
+	int32 room_id = 1;
+}
+
+message TextRequest {
+	string login = 1;
+	int32 room_id = 2;
+	string text = 3;
+}
+
+message Request {
+	oneof msg {
+		RegRequest register_request = 1;
+		InRequest input_request = 2;
+		JoinRoomRequest join_room_request = 3;
+		TextRequest text_request = 4;
+	}
+}
