@@ -57,6 +57,7 @@ void Connection::do_read_pb_header(boost::system::error_code error, std::size_t 
         Serialize::Header new_header;
         bool flag = new_header.ParseFromArray(buffer_header.data(), Protocol::SIZE_HEADER);
         if (flag) {
+            // @todo ba::post(pool, parse_msg)
             async_read_proto_msg(new_header);
         } else {
             BOOST_LOG_TRIVIAL(error) << "parse Header: FAIL";
@@ -64,7 +65,6 @@ void Connection::do_read_pb_header(boost::system::error_code error, std::size_t 
         }
     } else {
         BOOST_LOG_TRIVIAL(error) << "error read in async_read_pb_header()";
-//        async_read_pb_header();
         free_connection();
     }
 }
@@ -110,6 +110,8 @@ void Connection::async_read_proto_msg(Serialize::Header header) {
         BOOST_LOG_TRIVIAL(error) << "read Unknown request";
         break;
     }
+
+    // @todo if ba::post(pool) -> read_header???
 }
 
 void Connection::do_read_pb_input_req(boost::system::error_code error, std::size_t) {
@@ -136,6 +138,8 @@ void Connection::do_read_pb_input_req(boost::system::error_code error, std::size
             auto response_ptr = Protocol::MsgFactory::create_input_response(client_id);
             auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::AutorisationResponse, response_ptr->ByteSizeLong());
             auto buffer_serialize = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+
+            // @todo ba::post(pool) -> write
             add_msg_send_queue(std::move(buffer_serialize));
 
             BOOST_LOG_TRIVIAL(info) << "Authorization: " << (client_id!=-1 ? "OK" : "FAIL");
@@ -174,6 +178,8 @@ void Connection::do_read_pb_reg_req(boost::system::error_code error, std::size_t
         auto response_ptr = Protocol::MsgFactory::create_reg_response(client_id);
         auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::RegistrationResponse, response_ptr->ByteSizeLong());
         auto buffer_serialize = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+
+        // @todo ba::post(pool) -> write
         add_msg_send_queue(std::move(buffer_serialize));
 
         if (client_id != -1) {
@@ -214,6 +220,8 @@ void Connection::do_read_pb_join_room_req(boost::system::error_code error, std::
             auto response_ptr = Protocol::MsgFactory::create_join_room_response(room_id, flag);
             auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::JoinRoomResponse, response_ptr->ByteSizeLong());
             auto buffer_serialize = Protocol::MsgFactory::serialize_response(std::move(header_ptr), std::move(response_ptr));
+
+            // @todo ba::post(pool) -> write
             add_msg_send_queue(std::move(buffer_serialize));
 
             BOOST_LOG_TRIVIAL(info) << "send join_room_response";
@@ -246,6 +254,7 @@ void Connection::do_read_pb_text_req(boost::system::error_code error, std::size_
 
         TextSendData msg{roomid, login_sender, text};
 
+        // @todo ba::post(pool), bd into ChannelsManager
         ChannelsManager::Instance().send_to_channel(msg);
         db->save_text_msg(msg);
 
