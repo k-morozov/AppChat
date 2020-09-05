@@ -24,7 +24,7 @@ public:
         endpoint(boost::asio::ip::tcp::v4(), port),
         acceptor(io_service, endpoint),
         // @todo thread_pool
-        thread_pool(std::make_shared<boost::asio::thread_pool>(1)),
+        thread_pool(std::make_shared<boost::asio::thread_pool>(4)),
         db(_db),
         connect_manager(thread_pool, db)
     {

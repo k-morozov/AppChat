@@ -99,9 +99,21 @@ private:
     }
 
     void async_read_pb_header() override;
-    void async_read_proto_msg(Serialize::Header) override;
+    void async_read_pb_msg(Serialize::Header) override;
 
-    void do_read_pb_header(boost::system::error_code, std::size_t) override;
+    // methods multi-treads
+    void process_msg(Serialize::Header);
+    void do_autorisation(Serialize::Request);
+    void do_registration(Serialize::Request);
+    void do_join_room(Serialize::Request);
+    void do_text_msg(Serialize::Request);
+
+    void send_auto_response(identifier_t);
+    void send_reg_response(identifier_t);
+    void send_join_room_response(identifier_t, bool);
+
+    // methods one tread
+    void do_parse_pb_header(boost::system::error_code, std::size_t) override;
     void do_read_pb_input_req(boost::system::error_code, std::size_t) override;
     void do_read_pb_reg_req(boost::system::error_code, std::size_t) override;
     void do_read_pb_join_room_req(boost::system::error_code, std::size_t) override;

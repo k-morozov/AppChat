@@ -35,9 +35,9 @@ public:
     virtual void set_channel(identifier_t new_id_room) = 0;
 
     virtual void async_read_pb_header() = 0;
-    virtual void async_read_proto_msg(Serialize::Header) = 0;
+    virtual void async_read_pb_msg(Serialize::Header) = 0;
 
-    virtual void do_read_pb_header(boost::system::error_code, std::size_t) = 0;
+    virtual void do_parse_pb_header(boost::system::error_code, std::size_t) = 0;
     virtual void do_read_pb_input_req(boost::system::error_code, std::size_t) = 0;
     virtual void do_read_pb_reg_req(boost::system::error_code, std::size_t) = 0;
     virtual void do_read_pb_join_room_req(boost::system::error_code, std::size_t) = 0;
