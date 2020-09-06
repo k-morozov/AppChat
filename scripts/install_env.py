@@ -19,21 +19,21 @@ class BoostInstaller:
 
 class LinuxBoostInstaller(BoostInstaller):
   def install(self, path):
-    commands = {
+    commands = [
       "cd " + path,
       "sudo ./bootstrap.sh --prefix=/usr/local",
       "sudo ./b2 {} install".format(self.b2_options)
-    }
+    ]
 
     os.system(" && ".join(commands))
 
 class Win32BoostInstaller(BoostInstaller):
   def install(self, path):
-    commands = {
+    commands = [
       "cd " + path,
       "bootstrap.bat gcc",
       "b2.exe toolset=gcc {} install".format(self.b2_options)
-    }
+    ]
 
     os.system(" && ".join(commands))
 
@@ -72,7 +72,7 @@ print("Finish")
 
 ##############################################################################
 #                            PROTOBUF INSTALL                                #
-##############################################################################a
+##############################################################################
 
 class ProtobufInfo:
   def __init__(self, version):
@@ -88,24 +88,24 @@ class ProtobufInfo:
 
 class LinuxProtobufInstaller:
   def install(self, protobuf_info):
-    commands = {
+    commands = [
       "mkdir protobuf-build",
       "cd protobuf-build",
       "sudo cmake ../{}/cmake".format(protobuf_info.get_dirname()),
       "sudo make && sudo make check && sudo make install",
       "sudo ldconfig"
-    }
+    ]
 
     os.system(" && ".join(commands))
 
 class Win32ProtobufInstaller:
   def install(self, protobuf_info):
-    commands = {
+    commands = [
       "mkdir protobuf-build",
       "cd protobuf-build",
       "cmake.exe ..\\{}\\cmake -G \"MinGW Makefiles\"".format(protobuf_info.get_dirname()),
       "mingw32-make.exe && mingw32-make.exe check && mingw32-make.exe install"
-    }
+    ]
 
     os.system(" && ".join(commands))
 
