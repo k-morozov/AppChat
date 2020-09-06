@@ -57,6 +57,7 @@ void Connection::do_parse_pb_header(boost::system::error_code error, std::size_t
         if (flag) {
             buffer_msg.resize(new_header.length());
             boost::asio::async_read(socket, boost::asio::buffer(buffer_msg.data(), new_header.length()),
+                                    // @todo op lambda, post here?
                                     [this, new_header](boost::system::error_code, std::size_t) {
                                         process_msg(new_header);
                                     });
@@ -70,6 +71,7 @@ void Connection::do_parse_pb_header(boost::system::error_code error, std::size_t
     }
 }
 
+// ************************************* replace Backend ? ******************************************************************
 void Connection::process_msg(Serialize::Header header) {
     Serialize::Request new_request;
     bool parse = new_request.ParseFromArray(buffer_msg.data(), static_cast<int>(buffer_msg.size()));
