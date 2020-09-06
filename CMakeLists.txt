@@ -56,7 +56,7 @@ endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/client)
 
 # build tests
-#add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
 
 if (NOT WIN32)
     set(CPACK_GENERATOR DEB)
