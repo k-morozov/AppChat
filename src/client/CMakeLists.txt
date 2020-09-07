@@ -22,11 +22,17 @@ set(CLIENT_SOURCES
     ${Control_dir}/control.cpp
 )
 
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package (Threads)
 
 add_executable(${CLIENT_NAME}  ${CLIENT_SOURCES})
+
+#add_library(messages_pb_lib STATIC messages.pb.cc)
+#target_link_libraries(messages_pb_lib protobuf)
+#set_target_properties(messages_pb_lib PROPERTIES
+#        CXX_STANDARD 17
+#        CXX_STANDARD_REQUIRED ON
+#)
 
 find_package(Boost COMPONENTS system date_time REQUIRED)
 
@@ -49,6 +55,7 @@ target_link_libraries (${CLIENT_NAME}
     protocol_lib
     project_warnings
     project_sanitizers
+    messages_pb_lib
 )
 
 if (WIN32)
@@ -66,3 +73,6 @@ endif()
 if (NOT WIN32)
     install(TARGETS ${CLIENT_NAME} RUNTIME DESTINATION bin)
 endif()
+
+
+

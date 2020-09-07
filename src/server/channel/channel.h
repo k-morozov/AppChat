@@ -30,6 +30,7 @@ public:
         if (db == nullptr) {
             BOOST_LOG_TRIVIAL(info) << "Failed to load history. Database pointer is nullptr.";
         } else {
+            // @todo add check history
             history_room = db->get_history(channel_id);
             BOOST_LOG_TRIVIAL(info) << "Create channel_id=" << channel_id;
         }
@@ -48,12 +49,12 @@ public:
      * @param subscriber sbscriber who is leaving this channel
      */
     virtual void leave(subscriber_ptr subscriber) override;
-    
+    void leave(identifier_t client_id) override ;
     /**
      * @brief Notify all channel subscribers about new message
      * @param response 
      */
-    virtual void notification(text_response_ptr response) override;
+    virtual void notification(TextSendData data) override;
 
 
     /**
@@ -75,8 +76,9 @@ private:
 
     const identifier_t channel_id;
 
-    std::deque<text_response_ptr> history_room;
+    std::deque<TextSendData> history_room;
 };
 
 using channel_ptr = std::shared_ptr<Channel>;
+
 #endif // CHANNEL_H

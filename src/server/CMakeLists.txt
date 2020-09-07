@@ -76,6 +76,7 @@ target_link_libraries (${SERVER_NAME}
     pthread
     project_warnings
     project_sanitizers
+    messages_pb_lib
 )
 
 if (NOT WIN32)

@@ -23,18 +23,25 @@ Control::Control(int argc, char** argv) {
 }
 
 void Control::connect_to_server(const std::string& login, const std::string& password, TypeCommand command) {
-    std::cout << "open connect_to_server" << std::endl;
+    std::cout << "connect_to_server()" << std::endl;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::resolver resolver(io_service);
     auto endpoints = resolver.resolve(ip, std::to_string(port));
 
-    input_request_ptr request;
-    if (command==TypeCommand::RegistrationRequest) {
-        request = std::make_shared<RegistrationRequest>(login, password);
-    } else {
-        request = std::make_shared<AutorisationRequest>(login, password);
+    Protocol::ptr_proto_request_t ptr_request;
+    if (command == TypeCommand::RegistrationRequest) {
+        ptr_request = Protocol::MsgFactory::create_reg_request(login, password);
     }
-    client = std::make_unique<Client>(io_service, endpoints, request);
+    else if (command == TypeCommand::AuthorisationRequest) {
+        ptr_request = Protocol::MsgFactory::create_input_request(login, password);
+    }
+
+    auto ptr_header = Protocol::MsgFactory::create_header(command, ptr_request->ByteSizeLong());
+    auto bin_buffer = Protocol::MsgFactory::serialize_request(std::move(ptr_header), std::move(ptr_request));
+
+    client = std::make_shared<Client>(io_service, endpoints);
+    client->do_connect(std::move(bin_buffer));
+    client->set_login(login);
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
     QObject::connect(client.get(), SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));
