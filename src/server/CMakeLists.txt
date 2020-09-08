@@ -35,6 +35,10 @@ find_library(SQLITE3_LIBRARY NAMES sqlite3)
 set(STORAGE_SRC
      ${DIR_STORAGE}/database.h
      ${DIR_STORAGE}/database.cpp
+     #${DIR_STORAGE}/database_.h
+     #${DIR_STORAGE}/database_.cpp
+     ${DIR_STORAGE}/sqlitedatabase.h
+     ${DIR_STORAGE}/sqlitedatabase.cpp
 )
 
 set(SERVER_SOURCES
