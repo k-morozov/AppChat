@@ -10,7 +10,7 @@
 class ConnectionManager
 {
 public:
-    ConnectionManager(std::shared_ptr<boost::asio::thread_pool> a_thread_pool, database_ptr n_db):
+    ConnectionManager(std::shared_ptr<boost::asio::thread_pool> a_thread_pool, Storage::database_ptr n_db):
         thread_pool(a_thread_pool),
         db(n_db)
     {
@@ -37,7 +37,7 @@ public:
 private:
     std::shared_ptr<boost::asio::thread_pool> thread_pool;
     std::vector<connection_ptr> pool_connections;
-    database_ptr db;
+    Storage::database_ptr db;
 
     /**
      * @brief print all connections

@@ -25,7 +25,7 @@ public:
      * @param _socket Accepted client socket.
      * @param _db
      */
-    explicit Connection(std::shared_ptr<boost::asio::thread_pool> a_thread_pool, boost::asio::ip::tcp::socket&& _socket, database_ptr _db):
+    explicit Connection(std::shared_ptr<boost::asio::thread_pool> a_thread_pool, boost::asio::ip::tcp::socket&& _socket, Storage::database_ptr _db):
         thread_pool(a_thread_pool),
         socket(std::move(_socket)),
         db(_db),
@@ -89,7 +89,7 @@ private:
     std::string login;
     std::string password;
 
-    database_ptr db;
+    Storage::database_ptr db;
     std::atomic<bool> busy;
 
 private:

@@ -219,7 +219,7 @@ void Connection::do_text_msg(Serialize::Request new_request) {
 
         // @todo ba::post(pool), bd into ChannelsManager
         ChannelsManager::Instance().send_to_channel(msg);
-        db->save_text_msg(msg);
+        db->save_text_message(msg);
     } else {
         BOOST_LOG_TRIVIAL(error) << "request without text_request";
     }
@@ -470,7 +470,7 @@ void Connection::do_read_pb_text_req(boost::system::error_code error, std::size_
 
         // @todo ba::post(pool), bd into ChannelsManager
         ChannelsManager::Instance().send_to_channel(msg);
-        db->save_text_msg(msg);
+        db->save_text_message(msg);
 
         async_read_pb_header();
     }

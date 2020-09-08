@@ -5,7 +5,7 @@
 #include <mutex>
 #include <deque>
 #include "iroom.h"
-#include "storage/database.h"
+#include "storage/sqlitedatabase.h"
 #include "log/logger.h"
 
 /**
@@ -25,7 +25,7 @@ public:
      *
      * @param db
      */
-    Channel(identifier_t room, database_ptr db) : channel_id(room)
+    Channel(identifier_t room, Storage::database_ptr db) : channel_id(room)
     {
         if (db == nullptr) {
             BOOST_LOG_TRIVIAL(info) << "Failed to load history. Database pointer is nullptr.";
