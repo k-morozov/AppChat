@@ -11,15 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     ui->password->setEchoMode(QLineEdit::Password);
-    ui->text_input->setReadOnly(true);
-    ui->text_output->setReadOnly(true);
-    ui->text_input->hide();
-    ui->text_output->hide();
-    ui->room_id->hide();
-    ui->room_id->setReadOnly(true);
-    ui->label_channel_id->hide();
-    ui->push_send->hide();
-    ui->push_change_room_id->hide();
 }
 
 MainWindow::~MainWindow()
@@ -37,32 +28,6 @@ void MainWindow::on_push_autorisation_clicked()
     ui->password->clear();
 }
 
-void MainWindow::on_push_send_clicked()
-{
-    using namespace boost::posix_time;
-
-    auto message = ui->text_input->text();
-    send_text_data(logon.toStdString(), message.toStdString(), roomid.toUInt());
-
-    ui->text_input->clear();
-    ui->text_output->setTextColor(QColor(50,205,50));
-    ui->text_output->append("[" + QString::fromUtf8(to_simple_string(second_clock::local_time().time_of_day()).c_str()) + "] " + logon + ": " + message);
-    ui->text_output->setTextColor(QColor(0,0,0));
-}
-
-
-void MainWindow::print_text(const std::string& from, const std::string& text, DateTime dt) {
-    std::string s("[" + dt.to_simple_time() + "] " + from + ": " + text);
-    QString message(s.data());
-    if (from=="server") {
-        ui->text_output->setTextColor(QColor(255,0,0));
-        ui->text_output->append(message);
-        ui->text_output->setTextColor(QColor(0,0,0));
-    }
-    else {
-        ui->text_output->append(message);
-    }
-}
 
 void MainWindow::on_push_registration_clicked()
 {
@@ -74,40 +39,6 @@ void MainWindow::on_push_registration_clicked()
     ui->password->clear();
 }
 
-void MainWindow::on_push_change_room_id_clicked()
-{
-    auto new_roomid = ui->room_id->text();
-    if (new_roomid.isEmpty()) return;
-    // @todo change logic: room change after ack from join_room_response()
-    roomid = new_roomid;
-    ui->text_output->clear();
-    emit send_change_room(roomid.toInt());
-}
-
-void MainWindow::good_input() {
-    ui->text_input->show();
-    ui->text_output->show();
-    ui->room_id->show();
-    ui->label_channel_id->show();
-    ui->push_send->show();
-    ui->push_change_room_id->show();
-    ui->room_id->setReadOnly(false);
-
-    ui->logon->setReadOnly(true);
-    ui->password->setReadOnly(true);
-//    ui->room_id->setReadOnly(true);
-    ui->label_login->setHidden(true);
-    ui->label_password->setHidden(true);
-
-    ui->logon->setHidden(true);
-    ui->password->setHidden(true);
-//    ui->room_id->setHidden(true);
-
-    ui->push_autorisation->setHidden(true);
-    ui->push_registration->setHidden(true);
-
-    ui->text_input->setReadOnly(false);
-}
 
 void MainWindow::handler_input_code(InputCode code) {
     ui->logon->clear();
@@ -116,7 +47,6 @@ void MainWindow::handler_input_code(InputCode code) {
     switch (code) {
         case InputCode::RegistrOK:
             QMessageBox::information(this, "registration", "You successfully registered.");
-            good_input();
         break;
 
         case InputCode::BusyRegistr:
@@ -124,7 +54,6 @@ void MainWindow::handler_input_code(InputCode code) {
         break;
 
         case InputCode::AutorOK:
-            good_input();
         break;
 
         case InputCode::IncorrectAutor:

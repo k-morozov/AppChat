@@ -38,6 +38,8 @@ else ()
     endif()
 endif()
 
+include_directories(${Protobuf_INCLUDE_DIRS})
+
 include(${CMAKE_SOURCE_DIR}/cmake/ProjectWarnings.cmake)
 add_library(project_warnings INTERFACE)
 enable_warnings(project_warnings)
@@ -49,14 +51,14 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/protocol)
 
 # Build appchat-server
 if (NOT WIN32)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
+#    add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
 endif()
 
 # Build appchat-client
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/client)
 
 # build tests
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
 
 if (NOT WIN32)
     set(CPACK_GENERATOR DEB)

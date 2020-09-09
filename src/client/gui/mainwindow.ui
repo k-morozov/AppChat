@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>259</width>
-    <height>539</height>
+    <width>249</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,104 +17,58 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>11</y>
-      <width>227</width>
-      <height>481</height>
+      <x>30</x>
+      <y>80</y>
+      <width>191</width>
+      <height>51</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <layout class="QGridLayout" name="gridLayout">
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="password"/>
-             </item>
-             <item row="1" column="0" alignment="Qt::AlignHCenter">
-              <widget class="QLabel" name="label_password">
-               <property name="text">
-                <string>password</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" alignment="Qt::AlignHCenter">
-              <widget class="QLabel" name="label_login">
-               <property name="text">
-                <string>login</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="logon"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QPushButton" name="push_autorisation">
-               <property name="text">
-                <string>autorisation</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="push_registration">
-               <property name="text">
-                <string>registration</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_channel_id">
-             <property name="text">
-              <string>channel ID</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="room_id"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="push_change_room_id">
-             <property name="text">
-              <string>go</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QTextEdit" name="text_output"/>
-       </item>
-      </layout>
+      <widget class="QPushButton" name="push_autorisation">
+       <property name="text">
+        <string>autorisation</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="text_input"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="push_send">
-         <property name="text">
-          <string>send</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QPushButton" name="push_registration">
+       <property name="text">
+        <string>registration</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>231</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_password">
+       <property name="text">
+        <string>password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" alignment="Qt::AlignHCenter">
+      <widget class="QLabel" name="label_login">
+       <property name="text">
+        <string>login</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="password"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="logon"/>
      </item>
     </layout>
    </widget>
@@ -124,10 +78,16 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>259</width>
+     <width>249</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuHello">
+    <property name="title">
+     <string>Hello</string>
+    </property>
+   </widget>
+   <addaction name="menuHello"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
@@ -135,11 +95,6 @@
   <tabstop>logon</tabstop>
   <tabstop>password</tabstop>
   <tabstop>push_autorisation</tabstop>
-  <tabstop>push_change_room_id</tabstop>
-  <tabstop>text_output</tabstop>
-  <tabstop>text_input</tabstop>
-  <tabstop>push_send</tabstop>
-  <tabstop>room_id</tabstop>
   <tabstop>push_registration</tabstop>
  </tabstops>
  <resources/>

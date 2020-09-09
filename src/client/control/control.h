@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "client/client.h"
 #include "gui/mainwindow.h"
+#include "gui/chatwindow.h"
 
 #include "protocol/msgfactory.h"
 
@@ -46,6 +47,8 @@ signals:
      * @param dt date and time of sending the text
      */
     void send_text_to_gui(const std::string& login, const std::string& text, DateTime dt);
+
+    void send_input_code(InputCode);
 
 public slots:
     /**
@@ -111,9 +114,26 @@ public slots:
         client->change_room(new_room_id);
     }
 
+    /**
+     * @brief change_window
+     * @todo IWindow - classes
+     */
+    void change_window(InputCode a_code) {
+        QObject::connect(this, SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));
+        if (a_code == InputCode::BusyRegistr || a_code == InputCode::IncorrectAutor) {
+            emit send_input_code(a_code);
+        }
+        else {
+            w.hide();
+            chat_window.show();
+        }
+    }
+
+
 private:
     std::shared_ptr<Client> client;
     MainWindow w;
+    ChatWindow chat_window;
 
     std::vector<uint8_t> __buffer;
 

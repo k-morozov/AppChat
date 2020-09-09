@@ -4,3 +4,4 @@ docs/*
 CMakeLists.txt.user
 .cmake/
 AppChat.code-workspace
+/build

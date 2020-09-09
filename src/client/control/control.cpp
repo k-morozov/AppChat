@@ -10,6 +10,7 @@ Control::Control(int argc, char** argv) {
     }
 
     w.show();
+
     qRegisterMetaType<std::string>("std::string");
     qRegisterMetaType<QTextCursor>("QTextCursor");
     qRegisterMetaType<InputCode>("InputCode");
@@ -17,9 +18,9 @@ Control::Control(int argc, char** argv) {
 
     QObject::connect(&w, &MainWindow::send_autorisation_info, this, &Control::autorisation);
     QObject::connect(&w, &MainWindow::send_registration_info, this, &Control::registration);
-    QObject::connect(&w, &MainWindow::send_change_room, this, &Control::change_room);
-    QObject::connect(this, &Control::send_text_to_gui, &w, &MainWindow::print_text);
-    QObject::connect(&w, &MainWindow::send_text_data, this, &Control::get_text_from_gui);
+    QObject::connect(&chat_window, &ChatWindow::send_change_room, this, &Control::change_room);
+    QObject::connect(this, &Control::send_text_to_gui, &chat_window, &ChatWindow::print_text);
+    QObject::connect(&chat_window, &ChatWindow::send_text_data, this, &Control::get_text_from_gui);
 }
 
 void Control::connect_to_server(const std::string& login, const std::string& password, TypeCommand command) {
@@ -44,7 +45,7 @@ void Control::connect_to_server(const std::string& login, const std::string& pas
     client->set_login(login);
 
     QObject::connect(client.get(), &Client::send_text, this, &Control::text_from_client);
-    QObject::connect(client.get(), SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));
+    QObject::connect(client.get(), SIGNAL(send_input_code(InputCode)), this, SLOT(change_window(InputCode)));
 
     std::thread th([&io_service]() {
         io_service.run();

@@ -17,7 +17,10 @@ set(CLIENT_SOURCES
     ${Client_dir}/client.cpp
     ${GUI_dir}/mainwindow.h
     ${GUI_dir}/mainwindow.cpp
+    ${GUI_dir}/chatwindow.cpp
+    ${GUI_dir}/chatwindow.h
     ${GUI_dir}/mainwindow.ui
+    ${GUI_dir}/chatwindow.ui
     ${Control_dir}/control.h
     ${Control_dir}/control.cpp
 )

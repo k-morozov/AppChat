@@ -59,32 +59,6 @@ signals:
      */
     void send_registration_info(const std::string& login, const std::string& password);
 
-    /**
-     * @brief Notify user is sending message
-     * 
-     * @param login user's login
-     * @param text message's content
-     * @param room_id room where user is subscriber
-     */
-    void send_text_data(const std::string& login, const std::string& text, int room_id);
-
-    /**
-     * @brief Change the room
-     * 
-     * @param new_room_id id of the room user wants to join
-     */
-    void send_change_room(int new_room_id);
-
-public slots:
-    /**
-     * @brief show incoming message
-     * 
-     * @param login sender's login
-     * @param message message's content
-     * @param dt date and time of sending the text
-     */
-    void print_text(const std::string& login, const std::string& message, DateTime dt);
-
 private slots:
     /**
      * @brief Handle user pressed "Authorize"
@@ -95,22 +69,6 @@ private slots:
      * @brief Handle user pressed "Register"
      */
     void on_push_registration_clicked();
-
-    /**
-     * @brief Handle user pressed "Clicked"
-     */
-    void on_push_send_clicked();
-    
-    /**
-     * @brief Handle user clicked change room
-     */
-    void on_push_change_room_id_clicked();
-
-
-    /**
-     * @brief Handle correct input
-     */
-    void good_input();
     
     /**
      * @brief Handle received input
