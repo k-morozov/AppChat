@@ -6,6 +6,7 @@ build_pb_msgs() {
 	cd ../src/protocol/include/protocol/proto/
 	rm -r build/
 	mkdir build/
+	ls
 	protoc -I . --cpp_out ./build/ request.proto response.proto messages.proto	
 }
 
