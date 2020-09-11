@@ -49,7 +49,7 @@ matrix:
       before_script:
         - sudo python3 ./scripts/install_env.py
         - sudo apt-get install libprotobuf-dev protobuf-compiler
-        - protoc -I ./src/protocol/include/protocol/proto/ --cpp_out ./src/protocol/include/protocol/proto/build/  ./src/protocol/include/protocol/proto/request.proto ./src/protocol/include/protocol/proto/response.proto ./src/protocol/include/protocol/proto/messages.proto
+        - sudo ./scripts/build_pb.sh
       cache:
         directories:
           - boost_1_73_0/

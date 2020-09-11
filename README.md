@@ -25,6 +25,7 @@ Deb package installs the server and the client. For client need Qt5 so lib.
 * gcc 7.2+
 * boost 1.73
 * Qt5
+* protobuf 3
 * in progress
 
 -----------
@@ -45,3 +46,4 @@ Deb package installs the server and the client. For client need Qt5 so lib.
 
 * [Morozov Konstantin](https://github.com/k-morozov)
 * [Tuminskiy Mikhail](https://github.com/tuminskiy)
+* [Alexey Minimulin](https://github.com/asminimulin)
