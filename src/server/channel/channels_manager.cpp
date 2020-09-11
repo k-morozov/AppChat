@@ -5,7 +5,7 @@ ChannelsManager::ChannelsManager()
     BOOST_LOG_TRIVIAL(info) << "create ChannelsManager";
 }
 
-bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, database_ptr db) {
+bool ChannelsManager::join(subscriber_ptr new_sub, identifier_t new_room_id, Storage::database_ptr db) {
     bool flag_result = true;
     BOOST_LOG_TRIVIAL(info) << "ChannelsManager::join";
     if (auto it=channels.find(new_room_id); it!=channels.end()) {

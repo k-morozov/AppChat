@@ -20,7 +20,7 @@ public:
      * @param port - number port
      * @param _db - database ptr
      */
-    Server(unsigned short port, database_ptr _db):
+    Server(unsigned short port, Storage::database_ptr _db):
         endpoint(boost::asio::ip::tcp::v4(), port),
         acceptor(io_service, endpoint),
         // @todo thread_pool
@@ -50,7 +50,7 @@ private:
     boost::asio::ip::tcp::acceptor acceptor;
     std::shared_ptr<boost::asio::thread_pool> thread_pool;
 
-    database_ptr db;
+    Storage::database_ptr db;
     ConnectionManager connect_manager;
 
     /**

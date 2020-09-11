@@ -1,38 +1,43 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#pragma once
 
-#include <protocol/protocol.h>
 #include <deque>
-#include <sqlite3.h>
-#include "log/logger.h"
 #include <memory>
-#include <boost/filesystem.hpp>
+
+#include "databaseconfiguration.h"
+#include "protocol/protocol.h"
+
+namespace Storage
+{
 
 class Database
 {
 public:
-    Database();
+  Database(DatabaseConfiguration dbConfig);
+  virtual ~Database();
 
-    ~Database();
+  virtual bool open() = 0;
+  virtual void close() = 0;
 
-    void save_text_msg(TextSendData);
+  bool is_open();
 
-    std::deque<TextSendData> get_history(identifier_t roomid);
+  virtual bool create_table_history() = 0;
+  virtual bool create_table_logins() = 0;
 
-    void add_logins(std::string login, identifier_t logi_id, std::string password);
+  virtual bool save_text_message(TextSendData message) = 0;
+  
+  virtual std::deque<TextSendData> get_history(identifier_t roomid) const = 0;
 
-    identifier_t get_loginid(std::string login) const;
+  virtual bool add_logins(std::string login, identifier_t logi_id, std::string password) = 0;
 
-    identifier_t check_client(std::string login, std::string password) const;
+  virtual identifier_t get_loginid(std::string login) const = 0;
 
-private:
-    std::string db_name;
-    sqlite3* db_ptr = NULL;
-    static std::string create_table_history;
-    static std::string create_table_logins;
+  virtual identifier_t check_client(std::string login, std::string password) const = 0;
 
+protected:
+  DatabaseConfiguration dbConfig_;
+  bool is_open_;
 };
 
 using database_ptr = std::shared_ptr<Database>;
 
-#endif // DATABASE_H
+} //namespace Storage

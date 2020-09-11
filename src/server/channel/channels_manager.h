@@ -30,7 +30,7 @@ public:
      *
      * @param db
      */
-    bool join(subscriber_ptr, identifier_t, database_ptr db);
+    bool join(subscriber_ptr, identifier_t, Storage::database_ptr db);
 
     /**
      * @brief Send message to specific room and specific user

@@ -61,8 +61,21 @@ int main(int argc, char** argv) {
     if (set_parametrs(argc, argv, port)) {
         BOOST_LOG_TRIVIAL(info) << "starting server v.0.8";
         try {
-            database_ptr db_sqlite = std::make_shared<Database>();
-            std::unique_ptr<Server> server = std::make_unique<Server>(port, db_sqlite);
+            Storage::DatabaseConfiguration db_config;
+            db_config.FolderPath = std::string{std::getenv("HOME")} + "/AppChat/";
+            db_config.ConnectionString = "file://" + db_config.FolderPath + "history.db";
+
+            Storage::database_ptr db = std::make_shared<Storage::SqliteDatabase>(db_config);
+            
+            if (!db->open()) {
+              BOOST_LOG_TRIVIAL(error) << "failed open database";
+              return 0;
+            }
+
+            db->create_table_history();
+            db->create_table_logins();
+
+            std::unique_ptr<Server> server = std::make_unique<Server>(port, db);
             server->run();
         } catch (const std::exception & ex) {
             BOOST_LOG_TRIVIAL(fatal) << "Exception " << ex.what();
