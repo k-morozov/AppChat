@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     unsigned short port = SERVER_DEFAULT_PORT;
 
     if (set_parametrs(argc, argv, port)) {
-        BOOST_LOG_TRIVIAL(info) << "starting server v.0.7";
+        BOOST_LOG_TRIVIAL(info) << "starting server v.0.8";
         try {
             database_ptr db_sqlite = std::make_shared<Database>();
             std::unique_ptr<Server> server = std::make_unique<Server>(port, db_sqlite);

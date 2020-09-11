@@ -4,9 +4,9 @@ option(CHECK_SANITIZE "enable sanitizers checks on debug mode" OFF)
 option(CHECK_DOXYGEN "enable doc generation" OFF)
 
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
-    project(AppChat VERSION 0.7.$ENV{TRAVIS_BUILD_NUMBER})
+    project(AppChat VERSION 0.8.$ENV{TRAVIS_BUILD_NUMBER})
 else ()
-    project(AppChat VERSION 0.7.1)
+    project(AppChat VERSION 0.8.1)
 endif ()
 
 # Adding sanitizers
@@ -51,7 +51,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/protocol)
 
 # Build appchat-server
 if (NOT WIN32)
-#    add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/src/server)
 endif()
 
 # Build appchat-client

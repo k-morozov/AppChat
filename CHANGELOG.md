@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.7.4] - 2020-08-06
+### Problems
+
+- Failed build Travis CI (protobuf)
+
+## [0.9] 2020-09-11 - now
+
+### Added
+
+### Changed
+
+
+## [0.8] 2020-08-06 - 2020-09-11
 
 ### Added
 
@@ -19,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add debug define and sanitize [@k-morozov](https://github.com/k-morozov).
 - Add Windows client build (Travic CI) [@tuminskiy](https://github.com/tuminskiy).
 - Rewritten CMake [@asminimulin](https://github.com/asminimulin).
+- Add new window [@k-morozov](https://github.com/k-morozov).
+- Add debug sanitaizers [@k-morozov](https://github.com/k-morozov).
 
 ### Changed
 - Remove stacktrace [@k-morozov](https://github.com/k-morozov).
@@ -27,3 +40,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add feature to Travic-CI to generate DEB pacakages (unstable) [@k-morozov](https://github.com/k-morozov).
 - Change unit-test fraemwork (replace gtest to boost::test) [@k-morozov](https://github.com/k-morozov).
 - Rewrite install-boost script to Python [@tuminskiy](https://github.com/tuminskiy).
+- Change protocol to protobuf [@k-morozov](https://github.com/k-morozov).
+- Rewrite server to multithreading(+async) [@k-morozov](https://github.com/k-morozov).
