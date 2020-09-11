@@ -1,16 +1,15 @@
 #!/bin/bash
 
 build_pb_msgs() {
-	echo "build protobuf messages"
+	echo "Build protobuf messages"
 	protoc --version
-	pwd
-	cd ../src/protocol/include/protocol/proto/
-	echo "dir after cd"
-	pwd
-	rm -r build/
-	mkdir build/
+	PATH_PB=../src/protocol/include/protocol/proto
+	rm -r $PATH_PB/build/
+	mkdir $PATH_PB/build/
 	ls
-	protoc -I . --cpp_out ./build/ request.proto response.proto messages.proto	
+	protoc -I $PATH_PB --cpp_out=$PATH_PB/build request.proto	
+	protoc -I $PATH_PB --cpp_out=$PATH_PB/build response.proto
+	protoc -I $PATH_PB --cpp_out=$PATH_PB/build messages.proto
 }
 
 build_pb_msgs
