@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>110</y>
       <width>231</width>
       <height>25</height>
      </rect>
@@ -29,25 +29,15 @@
       <height>16777215</height>
      </size>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_password">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>81</width>
-      <height>38</height>
-     </rect>
-    </property>
     <property name="text">
-     <string>Password:</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLineEdit" name="logon">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>40</y>
+      <y>50</y>
       <width>231</width>
       <height>25</height>
      </rect>
@@ -58,18 +48,8 @@
       <height>16777215</height>
      </size>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_login">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>81</width>
-      <height>29</height>
-     </rect>
-    </property>
     <property name="text">
-     <string>Username:</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="push_registration">
@@ -98,22 +78,32 @@
      <string>autorisation</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>256</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuHello">
-    <property name="title">
-     <string>Hello</string>
+   <widget class="QLabel" name="label_password">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Password:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <addaction name="menuHello"/>
+   <widget class="QLabel" name="label_username">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Username:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

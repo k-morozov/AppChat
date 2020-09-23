@@ -32,7 +32,7 @@ namespace {
             }
 
             if (vm.count("port")) {
-                port = vm["port"].as<int>();
+                port = static_cast<unsigned short>(vm["port"].as<int>());
                 BOOST_LOG_TRIVIAL(info) << "Port was set to "
                      << port << ".";
             }
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     unsigned short port = SERVER_DEFAULT_PORT;
 
     if (set_parametrs(argc, argv, port)) {
-        BOOST_LOG_TRIVIAL(info) << "starting server v.0.8";
+        BOOST_LOG_TRIVIAL(info) << "starting server v.0.8, CXX=" << __cplusplus;
         try {
             database_ptr db_sqlite = std::make_shared<Database>();
             std::unique_ptr<Server> server = std::make_unique<Server>(port, db_sqlite);

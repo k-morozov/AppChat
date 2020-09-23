@@ -1,0 +1,44 @@
+image: kstmorozov/appchat-env:latest
+
+build:
+  stage: build
+  before_script:
+    - ./scripts/build_pb.sh
+  script:  
+    - mkdir build && cd build
+    - cmake ..
+    - cmake --build .
+    - ctest --extra-verbose
+    # or ???
+    #- cmake --build . --target test
+    # ./tests_protocol --log_level=message --color_output
+    - cmake --build . --target package
+  artifacts:
+    paths:
+      - build/bin/release/appchat-server
+      - build/AppChat-0.8.1-Linux.deb
+      - ./src/py_tests/request_pb2.py
+      - ./src/py_tests/response_pb2.py
+      - ./src/py_tests/messages_pb2.py
+
+test:
+  stage: test
+  before_script:
+    - apt-get install -y python3 python3-pip
+    - pip3 install protobuf
+    - ./scripts/build_pb.sh
+  script:
+    - ./build/bin/release/appchat-server &
+    - python3 src/py_tests/test_runner.py
+
+deploy:
+  stage: deploy
+  only:
+    refs:
+      - master
+  before_script:
+      - apt-get install -y curl
+  script:
+     - curl -T build/AppChat-0.8.1-Linux.deb -uk-morozov:$BINTRAY_API_KEY "https://api.bintray.com/content/k-morozov/AppChat/linux/0.8.1/AppChat-0.8.1-Linux.deb;deb_distribution=bionic;deb_component=main;deb_architecture=amd64;publish=1"
+
+

@@ -6,49 +6,49 @@ void Client::close_connection() {
         boost::system::error_code ec;
         sock.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
         if (ec) {
-            std::cout << "Error when shutdown socket." << std::endl;
+            qWarning() << "Error when shutdown socket.";
         }
         sock.close(ec);
         if (ec) {
-            std::cout << "Error when close socket." << std::endl;
+            qWarning() << "Error when close socket.";
         }
-        std::cout << "Close socket." << std::endl;
+        qDebug() << "Close socket.";
     }
     mtx_sock.unlock();
 }
 
 void Client::do_connect(std::vector<uint8_t>&&  __buffer) {
-    std::cout << "start do_connect()" << std::endl;
+    qDebug()<< "start do_connect()";
     boost::asio::async_connect(sock, eps,
         [this, ptr_buffer = std::move(__buffer)](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) mutable {
            if (!ec) {
                send_login_request(std::move(ptr_buffer));
-               std::cout << "success finish do_connect()" << std::endl;
+               qDebug() << "success finish do_connect()";
            }
            else {
-               std::cout << "error do_connect()" << std::endl;
+               qWarning() << "error do_connect()";
            }
     });
 }
 
 void Client::send_login_request(std::vector<uint8_t>&& __buffer) {
-    std::cout << "send_login_request()" << std::endl;
+//    qDebug() << "send_login_request()";
 
     boost::asio::async_write(sock, boost::asio::buffer(__buffer.data(), __buffer.size()),
                                      [this](boost::system::error_code ec, std::size_t nbytes) {
             if (!ec) {
-                std::cout << "send login_request=" << nbytes << " bytes" << std::endl;
+                qDebug() << "send login_request=" << nbytes << " bytes";
                 async_read_pb_header();
 
             } else {
-                std::cout << "error send_login_request(header)" << std::endl;
+                qWarning() << "error send_login_request(header)";
                 close_connection();
             }
     });
 }
 
 void Client::async_read_pb_header() {
-    std::cout << "called async_read_pb_header()" << std::endl;
+//    qDebug() << "called async_read_pb_header()";
     boost::asio::async_read(sock, boost::asio::buffer(bin_buffer.data(), Protocol::SIZE_HEADER),
                             std::bind(&Client::do_read_pb_header,
                                       shared_from_this(),
@@ -57,23 +57,22 @@ void Client::async_read_pb_header() {
 
 }
 
-void Client::do_read_pb_header(boost::system::error_code error, std::size_t nbytes) {
+void Client::do_read_pb_header(boost::system::error_code error, std::size_t) {
     if (!error) {
-        std::cout << "new header read: " << nbytes << " bytes" << std::endl;
+//        qDebug() << "new header read: " << nbytes << " bytes";
 
         Serialize::Header new_header;
         bool flag = new_header.ParseFromArray(bin_buffer.data(), Protocol::SIZE_HEADER);
         if (flag) {
-            std::cout << "parse header: OK" << std::endl;
+            qDebug() << "parse header: OK";
         } else {
-            std::cout << "parse header: FAIL" << std::endl;
-            std::cout << new_header << std::endl;
+            qWarning() << "parse header: FAIL";
             return ;
         }
         async_read_pb_msg(new_header);
 
     } else {
-        std::cout << "error read_pb_request_header()" << std::endl;
+        qWarning() << "error read_pb_request_header()";
         close_connection();
     }
 }
@@ -82,6 +81,7 @@ void Client::async_read_pb_msg(Serialize::Header new_header) {
     __read_buffer.resize(new_header.length());
     switch (static_cast<TypeCommand>(new_header.command())) {
         case TypeCommand::AutorisationResponse:
+            qDebug()<< "AutorisationResponse:"  ;
             boost::asio::async_read(sock, boost::asio::buffer(__read_buffer),
                                       std::bind(&Client::do_read_input_response,
                                                 shared_from_this(),
@@ -96,7 +96,7 @@ void Client::async_read_pb_msg(Serialize::Header new_header) {
                                                 std::placeholders::_2));
         break;
         case TypeCommand::EchoRequest:
-            std::cout << "EchoRequest: " << std::endl;
+//            qDebug()<< "EchoRequest: "  ;
         break;
         case TypeCommand::EchoResponse:
             boost::asio::async_read(sock, boost::asio::buffer(__read_buffer),
@@ -114,150 +114,161 @@ void Client::async_read_pb_msg(Serialize::Header new_header) {
 
         break;
         default:
-            std::cout << "Unknown command " << new_header.command() << std::endl;
+            qDebug()<< "Unknown command " << new_header.command();
             break;
     }
 }
 
 void Client::do_read_input_response(boost::system::error_code error, std::size_t nbytes) {
     if (!error) {
-        std::cout << "read responser=" << nbytes << " bytes" << std::endl;
+        qDebug()<< "read responser=" << nbytes << " bytes";
 
         Serialize::Response response;
         bool flag_parse = response.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
         if (flag_parse) {
-            std::cout << "parse response: OK" << std::endl;
+            qDebug() << "parse response: OK";
         } else {
-            std::cout << "parse response: FAIL" << std::endl;
+            qWarning() << "parse response: FAIL";
             close_connection();
             return ;
         }
 
         if (response.has_input_response()) {
-            std::cout << "response include input_response" << std::endl;
+            qDebug()<< "response include input_response";
             if (response.input_response().status() == Serialize::STATUS::OK) {
-                std::cout << "Autorisation response: OK" << std::endl;
+                qDebug()<< "Autorisation response: OK";
                 emit send_input_code(InputCode::AutorOK);
             } else {
                 emit send_input_code(InputCode::IncorrectAutor);
-                std::cout << "Not found login/password" << std::endl;
+                qWarning() << "Not found login/password";
                 close_connection();
                 return;
             }
 
             set_login_id(response.input_response().client_id());
-            change_room(room_id);
+//            change_room(current_room);
 
-            std::cout << "Success send_join_room_request()" << std::endl;
+            qDebug()<< "Success send_join_room_request()";
             async_read_pb_header();
 
         } else {
-            std::cout << "response not include input_response" << std::endl;
+            qWarning() << "response not include input_response";
         }
     }
     else {
-        std::cout << "error when read response(data)" << std::endl;
+        qWarning() << "error when read response(data)";
         close_connection();
         return ;
     }
 }
 
-void Client::do_read_reg_response(boost::system::error_code error, std::size_t nbytes) {
+void Client::do_read_reg_response(boost::system::error_code error, std::size_t ) {
     if (!error) {
-        std::cout << "read responser=" << nbytes << " bytes" << std::endl;
+//        qDebug()<< "read responser=" << nbytes << " bytes";
 
         Serialize::Response response;
         bool flag_parse = response.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
         if (flag_parse) {
-            std::cout << "parse response: OK" << std::endl;
+            qDebug()<< "parse response: OK";
         } else {
-            std::cout << "parse response: FAIL" << std::endl;
+            qWarning() << "parse response: FAIL";
             close_connection();
             return ;
         }
 
         if (response.has_reg_response()) {
-            std::cout << "response include reg_response" << std::endl;
+            qDebug()<< "response include reg_response";
             if (response.reg_response().status() == Serialize::STATUS::OK) {
-                std::cout << "Registration response: OK" << std::endl;
+                qDebug()<< "Registration response: OK";
                 emit send_input_code(InputCode::RegistrOK);
             } else {
                 emit send_input_code(InputCode::BusyRegistr);
-                std::cout << "Registration response: FAIL, busy login" << std::endl;
+                qWarning() << "Registration response: FAIL, busy login";
                 close_connection();
                 return;
             }
 
             set_login_id(response.input_response().client_id());
-            change_room(room_id);
+//            change_room(current_room);
 
-            std::cout << "Success send_join_room_request()" << std::endl;
+            qDebug()<< "Success send_join_room_request()"  ;
             async_read_pb_header();
 
         } else {
-            std::cout << "response not include reg_response" << std::endl;
+            qWarning() << "response not include reg_response"  ;
         }
     }
     else {
-        std::cout << "error when read response(data)" << std::endl;
+        qWarning() << "error when read response(data)";
         close_connection();
         return ;
     }
 }
 
-void Client::do_read_join_room_response(boost::system::error_code error, std::size_t nbytes) {
+void Client::do_read_join_room_response(boost::system::error_code error, std::size_t) {
     if (!error) {
-        std::cout << "read responser=" << nbytes << " bytes" << std::endl;
+//        qDebug()<< "read responser=" << nbytes << " bytes"  ;
 
         Serialize::Response response;
         bool flag_parse = response.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
         if (flag_parse) {
-            std::cout << "parse response: OK" << std::endl;
+            qDebug() << "parse response: OK";
         } else {
-            std::cout << "parse response: FAIL" << std::endl;
+            qWarning() << "parse response: FAIL";
             close_connection();
             return ;
         }
 
         if (response.has_join_room_response()) {
-            std::cout << "response include join_room" << std::endl;
+            qDebug() << "response include join_room";
             if (response.join_room_response().status() == Serialize::STATUS::OK) {
-                std::cout << "Response join_room: OK" << std::endl;
-                room_id = response.join_room_response().room_id();
+                qDebug() << "Response join_room: OK"  ;
+                channels_history.try_emplace(response.join_room_response().room_id());
+                emit sig_update_channels();
+
             } else {
-                std::cout << "Response join_room: FAIL" << std::endl;
+                qWarning() << "Response join_room: FAIL";
                 close_connection();
                 return;
             }
             async_read_pb_header();
         } else {
-            std::cout << "response not include join_room" << std::endl;
+            qWarning() << "response not include join_room";
         }
     }
     else {
-        std::cout << "error when read response(data)" << std::endl;
+        qDebug()<< "error when read response(data)";
         close_connection();
         return ;
     }
 }
 
 void Client::do_read_echo_response(boost::system::error_code error, std::size_t) {
+    std::cout << "do_read_echo_response()" << std::endl;
     if (!error) {
         Serialize::Response new_response;
         bool flag_parse = new_response.ParseFromArray(__read_buffer.data(), static_cast<int>(__read_buffer.size()));
         if (flag_parse) {
-            std::cout << "parse echo_response: OK" << std::endl;
+            qDebug()<< "parse echo_response: OK";
         } else {
-            std::cout << "parse echo_response: FAIL" << std::endl;
+            qWarning() << "parse echo_response: FAIL";
         }
-        std::cout << ">>>" << new_response.text_response().room_id()
-                  << new_response.text_response().login()
-                  << ": " << new_response.text_response().text() << std::endl;
-        send_text(new_response.text_response().login(), new_response.text_response().text(), DateTime());
+
+        // @todo not stable
+        ClientTextMsg msg {
+            new_response.text_response().login(),
+            new_response.text_response().text(),
+            new_response.text_response().room_id(),
+            DateTime()
+        };
+        channels_history[msg.channel_id].push_back(msg);
+        std::cout << "from server " << msg.author << ": " << msg.text << std::endl;
+        send_text(msg);
+
         async_read_pb_header();
     }
     else {
-        std::cout << "Error read_pb_text_res()" << std::endl;
+        qWarning() << "Error read_pb_text_res()";
         close_connection();
     }
 }
@@ -282,14 +293,14 @@ void Client::start_send_msgs() {
                 }
         }
         else {
-            std::cout << "Error send_request_header()" << std::endl;
+            qWarning() << "Error send_request_header()";
             close_connection();
         }
     });
 }
 
 void Client::change_room(int new_room_id) {
-    std::cout << "called change_room: " << new_room_id << std::endl;
+    qDebug() << "called change_room:" << new_room_id;
     auto request_ptr = Protocol::MsgFactory::join_room_request(new_room_id);
     auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::JoinRoomRequest, request_ptr->ByteSizeLong());
     auto a_bin_buffer = Protocol::MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));
@@ -298,7 +309,7 @@ void Client::change_room(int new_room_id) {
 }
 
 void Client::send_msg_to_server(const std::string& text, int _room_id) {
-//    std::cout << "send_msg_to_server(): login=" << login << ", text=" << text << std::endl;
+//    qDebug()<< "send_msg_to_server(): login=" << login << ", text=" << text  ;
     auto request_ptr = Protocol::MsgFactory::create_text_request(login, _room_id, text);
     auto header_ptr = Protocol::MsgFactory::create_header(TypeCommand::EchoRequest, request_ptr->ByteSizeLong());
     auto a_bin_buffer = Protocol::MsgFactory::serialize_request(std::move(header_ptr), std::move(request_ptr));

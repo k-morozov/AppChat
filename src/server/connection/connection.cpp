@@ -13,7 +13,7 @@ void Connection::reuse(boost::asio::ip::tcp::socket&& _socket) {
 
 void Connection::free_connection() {
     BOOST_LOG_TRIVIAL(warning) << "free_connection()";
-    ChannelsManager::Instance().leave(client_id, room_id);
+    ChannelsManager::Instance().leave_from_all_channels(client_id);
 
     mtx_sock.lock();
     if(socket.is_open()) {
@@ -30,10 +30,9 @@ void Connection::free_connection() {
     }
     mtx_sock.unlock();
 
-//    packets_to_client.clear();
     client_id = -1;
-    login.clear();
-    password.clear();
+    login = "unused";
+    password = "unused";
     busy = false;
     room_id = 0;
 
@@ -138,10 +137,10 @@ void Connection::do_autorisation(Serialize::Request new_request) {
                                     client_id));
 
         BOOST_LOG_TRIVIAL(info) << "Authorization: " << (client_id!=-1 ? "OK" : "FAIL");
-
-        if (client_id==-1) {
-            free_connection();
-        }
+// @todo incorrect inout
+//        if (client_id==-1) {
+//            free_connection();
+//        }
     }
     else {
         BOOST_LOG_TRIVIAL(error) << "new_request not have input_request";
@@ -177,7 +176,8 @@ void Connection::do_registration(Serialize::Request new_request) {
         }
         else {
             BOOST_LOG_TRIVIAL(error) << "Registration failed";
-            free_connection();
+            // @todo incorrect inout
+//            free_connection();
         }
     } else {
         BOOST_LOG_TRIVIAL(error) << "new_request not have reg_request";
@@ -193,7 +193,7 @@ void Connection::do_join_room(Serialize::Request new_request) {
         BOOST_LOG_TRIVIAL(info) << "join to roomid=" << new_roomid;
 
         bool flag = true;
-        ChannelsManager::Instance().leave(client_id, room_id);
+//        ChannelsManager::Instance().leave(client_id, room_id);
         flag = ChannelsManager::Instance().join(self, new_roomid, db);
 
         boost::asio::post(thread_pool->get_executor(),
@@ -430,7 +430,7 @@ void Connection::do_read_pb_join_room_req(boost::system::error_code error, std::
             BOOST_LOG_TRIVIAL(info) << "join to roomid=" << new_roomid;
 
             bool flag = true;
-            ChannelsManager::Instance().leave(client_id, room_id);
+//            ChannelsManager::Instance().leave(client_id, room_id);
             flag = ChannelsManager::Instance().join(self, new_roomid, db);
 
             auto response_ptr = Protocol::MsgFactory::create_join_room_response(room_id, flag);
@@ -500,9 +500,6 @@ void  Connection::add_msg_send_queue(std::vector<uint8_t>&& bin_buffer) {
     if (!process_write) {
         sending_msgs_to_client();
     }
-//    boost::asio::post(*thread_pool, [this, bin_buffer]() {
-//        boost::asio::write(socket, boost::asio::buffer(bin_buffer));
-//    });
 }
 
 void Connection::sending_msgs_to_client() {

@@ -17,12 +17,17 @@ set(CLIENT_SOURCES
     ${Client_dir}/client.cpp
     ${GUI_dir}/mainwindow.h
     ${GUI_dir}/mainwindow.cpp
+    ${GUI_dir}/channelswindow.h
+    ${GUI_dir}/channelswindow.cpp
     ${GUI_dir}/chatwindow.cpp
     ${GUI_dir}/chatwindow.h
     ${GUI_dir}/mainwindow.ui
     ${GUI_dir}/chatwindow.ui
+    ${GUI_dir}/channelswindow.ui
     ${Control_dir}/control.h
     ${Control_dir}/control.cpp
+    images.qrc
+
 )
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)

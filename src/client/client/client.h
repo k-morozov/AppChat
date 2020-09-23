@@ -1,15 +1,17 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <iostream>
 #include <string>
 #include <queue>
 #include <mutex>
 #include <memory>
+#include <set>
+#include <unordered_map>
 #include <boost/asio.hpp>
 #include "protocol/protocol.h"
 #include <QWidget>
-
+#include <QDebug>
+#include <QTime>
 /**
  * @brief Client class
  * 
@@ -28,7 +30,8 @@ public:
     Client(boost::asio::io_service &io, const boost::asio::ip::tcp::resolver::results_type& _eps)
         : io_service(io), sock(io), eps(_eps)
     {
-        std::cout << "create client" << std::endl;
+        qDebug() << "[" << QTime::currentTime().toString("hh:mm:ss.zzz") << "] " << "create client";
+
     }
 
     /**
@@ -41,9 +44,28 @@ public:
     void send_msg_to_server(const std::string& text, int room_id);
 
 
+    auto get_login() const noexcept { return login; }
+    void set_login(const std::string& new_login) { login = new_login; }
+    auto get_password() const noexcept { return password; }
+    void set_password(const std::string& new_password) { password = new_password; }
+    auto get_channels() const noexcept {
+        std::set<identifier_t> values;
+        for(const auto& [channel, history] : channels_history) {
+            values.insert(channel);
+        }
+        return values;
+    }
+    void set_current_channel(int room_id) noexcept {
+        current_room = room_id;
+    }
 
-    void set_login(const std::string& new_login) {
-        login = new_login;
+    auto get_current_channel() const noexcept {
+        return current_room;
+    }
+
+    // @todo const and check limit?
+    auto get_history(identifier_t channel_id) {
+        return channels_history[channel_id];
     }
 
     void set_login_id(identifier_t id)   { client_id = id;}
@@ -54,6 +76,7 @@ public:
         std::cout << "Destr client" << std::endl;
         close_connection();
     }
+
 
 private:
     boost::asio::io_service &io_service;
@@ -66,9 +89,10 @@ private:
     std::queue<std::vector<uint8_t>> msg_to_server;
 
     std::string login;
-    char password[Block::Password];
+    std::string password;
     identifier_t client_id;
-    identifier_t room_id = 0;
+    identifier_t current_room = 0;
+    std::unordered_map<identifier_t, std::deque<ClientTextMsg>> channels_history;
 
 private:
 
@@ -93,12 +117,14 @@ signals:
      * @param text 
      * @param dt date and time of sending the text
      */
-    void send_text(const std::string& from, const std::string& text, DateTime dt);
+    void send_text(ClientTextMsg);
 
     /**
      * @brief send input code
      */
     void send_input_code(InputCode);
+
+    void sig_update_channels();
 };
 
 #endif // CLIENT_H

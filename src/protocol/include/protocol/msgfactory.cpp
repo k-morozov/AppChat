@@ -6,7 +6,7 @@ namespace Protocol {
 
     }
 
-
+    [[nodiscard]]
     ptr_proto_request_t MsgFactory::create_input_request(const std::string& login, const std::string& password) {
         auto in_request = std::make_unique<Serialize::InRequest>();
         in_request->set_login(login);
@@ -18,6 +18,7 @@ namespace Protocol {
         return request;
     }
 
+    [[nodiscard]]
     ptr_proto_request_t MsgFactory::create_reg_request(const std::string& login, const std::string& password) {
         auto in_request = std::make_unique<Serialize::RegRequest>();
         in_request->set_login(login);
@@ -29,6 +30,7 @@ namespace Protocol {
         return request;
     }
 
+    [[nodiscard]]
     ptr_proto_request_t MsgFactory::join_room_request(int room_id) {
         auto jr_request = std::make_unique<Serialize::JoinRoomRequest>();
         jr_request->set_room_id(room_id);
@@ -39,6 +41,7 @@ namespace Protocol {
         return request;
     }
 
+    [[nodiscard]]
     ptr_proto_request_t MsgFactory::create_text_request(const std::string& login, int room_id, const std::string& text) {
         auto text_request = std::make_unique<Serialize::TextRequest>();
         text_request->set_login(login);
@@ -51,6 +54,7 @@ namespace Protocol {
         return request;
     }
 
+    [[nodiscard]]
     ptr_header_t MsgFactory::create_header(TypeCommand command, std::size_t length) {
         auto header = std::make_unique<Serialize::Header>();
         header->set_length(length);
@@ -62,6 +66,7 @@ namespace Protocol {
         return header;
     }
 
+    [[nodiscard]]
     ptr_proto_response_t MsgFactory::create_input_response(int client_id) {
         auto in_response = std::make_unique<Serialize::InputResponse>();
         in_response->set_client_id(client_id);
@@ -79,6 +84,7 @@ namespace Protocol {
         return response;
     }
 
+    [[nodiscard]]
     ptr_proto_response_t MsgFactory::create_reg_response(int client_id) {
         auto reg_response = std::make_unique<Serialize::RegResponse>();
         reg_response->set_client_id(client_id);
@@ -96,6 +102,7 @@ namespace Protocol {
         return response;
     }
 
+    [[nodiscard]]
     ptr_proto_response_t MsgFactory::create_text_response(const std::string& login, int room_id, const std::string& text) {
         auto text_response = std::make_unique<Serialize::TextResponse>();
         text_response->set_login(login);
@@ -108,6 +115,7 @@ namespace Protocol {
         return response;
     }
 
+    [[nodiscard]]
     ptr_proto_response_t MsgFactory::create_join_room_response(int new_room_id, bool flag) {
         auto jr_response = std::make_unique<Serialize::JoinRoomResponse>();
         jr_response->set_room_id(new_room_id);
@@ -124,6 +132,7 @@ namespace Protocol {
         return response;
     }
 
+    [[nodiscard]]
     std::vector<uint8_t> MsgFactory::serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr) {
         std::vector<uint8_t> bin_buffer(SIZE_HEADER + response_ptr->ByteSizeLong());
         header_ptr->set_length(response_ptr->ByteSizeLong());
@@ -133,6 +142,7 @@ namespace Protocol {
         return bin_buffer;
     }
 
+    [[nodiscard]]
     std::vector<uint8_t> MsgFactory::serialize_request(ptr_header_t&& header_ptr, ptr_proto_request_t&& request_ptr) {
         std::vector<uint8_t> bin_buffer(SIZE_HEADER + request_ptr->ByteSizeLong());
         header_ptr->set_length(request_ptr->ByteSizeLong());

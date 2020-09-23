@@ -27,8 +27,8 @@ Database::Database() {
     const auto dir_path = std::string(std::getenv("HOME")) + "/Appchat/";
     BOOST_LOG_TRIVIAL(info) << "Home dir: " << dir_path;
 
-    if (!boost::filesystem::exists(dir_path)) {
-        boost::filesystem::create_directory(dir_path);
+    if (!std::filesystem::exists(dir_path)) {
+        std::filesystem::create_directory(dir_path);
         BOOST_LOG_TRIVIAL(info) << "create dir for appchat: " << dir_path;
     }
 

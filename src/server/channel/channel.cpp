@@ -52,7 +52,7 @@ void Channel::notification(TextSendData data) {
 //    BOOST_LOG_TRIVIAL(info) << "Channel::notification() channel_id=" << channel_id << ", count subs=" << subscribers.size();
     for(auto [id, sub]:subscribers) {
         BOOST_LOG_TRIVIAL(info) << "sub: " << sub->get_login() << " != " << data.login;
-        if (sub->get_login() != data.login)
+//        if (sub->get_login() != data.login)
         {
             sub->send_msg_to_client(data.login, data.text, data.room_id);
         }

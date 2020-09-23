@@ -14,6 +14,10 @@ class ChatWindow : public QWidget
 
 public:
     explicit ChatWindow(QWidget *parent = nullptr);
+    void set_client(std::shared_ptr<Client> a_client) {
+        client_ptr = a_client;
+    }
+
     ~ChatWindow();
 
 signals:
@@ -24,7 +28,7 @@ signals:
      * @param text message's content
      * @param room_id room where user is subscriber
      */
-    void send_text_data(const std::string& login, const std::string& text, int room_id);
+    void send_text_data(const ClientTextMsg&);
 
     /**
      * @brief Change the room
@@ -33,11 +37,15 @@ signals:
      */
     void send_change_room(int new_room_id);
 
+    void go_channels_window();
+
 private slots:
     void on_push_send_clicked();
 
 private slots:
-    void on_push_change_room_id_clicked();
+//    void on_push_change_room_id_clicked();
+
+    void on_button_back_clicked();
 
 public slots:
     /**
@@ -47,14 +55,13 @@ public slots:
      * @param message message's content
      * @param dt date and time of sending the text
      */
-    void print_text(const std::string& login, const std::string& message, DateTime dt);
+    void print_text(const ClientTextMsg& msg);
+
+    void upload_history();
 
 private:
     Ui::ChatWindow *ui;
-
-    QString logon;
-    QString password;
-    QString roomid;
+    std::shared_ptr<Client> client_ptr;
 };
 
 #endif // CHATWINDOW_H

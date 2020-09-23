@@ -5,6 +5,7 @@
 #include "client/client.h"
 #include "gui/mainwindow.h"
 #include "gui/chatwindow.h"
+#include "gui/channelswindow.h"
 
 #include "protocol/msgfactory.h"
 
@@ -33,7 +34,7 @@ public:
      * @brief Close client socket when destroy UI controller.
      */
     ~Control() {
-        std::cout << "Destr Control" << std::endl;
+         qDebug() << "Destr Control" ;
         if (client) {
             client->close_connection();
         }
@@ -42,11 +43,8 @@ public:
 signals:
     /**
      * @brief Show reveived message
-     * @param login message sender's login
-     * @param text message content
-     * @param dt date and time of sending the text
      */
-    void send_text_to_gui(const std::string& login, const std::string& text, DateTime dt);
+    void send_text_to_gui(const ClientTextMsg& msg);
 
     void send_input_code(InputCode);
 
@@ -62,7 +60,7 @@ public slots:
             try {
                 connect_to_server(login, password, TypeCommand::AuthorisationRequest);
             } catch (std::exception &ex) {
-                std::cout << "exception from thread: " << ex.what() << std::endl;;
+                 qDebug() << "exception from thread: " << ex.what();
             }
         });
         th.detach();
@@ -79,7 +77,7 @@ public slots:
             try {
                 connect_to_server(login, password, TypeCommand::RegistrationRequest);
             } catch (std::exception &ex) {
-                std::cout << "exception from thread: " << ex.what() << std::endl;;
+                 qDebug() << "exception from thread: " << ex.what();
             }
         });
         th.detach();
@@ -91,9 +89,9 @@ public slots:
      * @param text message content
      * @param room_id sender's room
      */
-    void get_text_from_gui(const std::string& login, const std::string& text, int room_id) {
-        std::cout << "get_text_from_gui()" << std::endl;
-        client->send_msg_to_server(text, room_id);
+    void get_text_from_gui(const ClientTextMsg& msg) {
+        qDebug() << "send msg to server";
+        client->send_msg_to_server(msg.text, msg.channel_id);
     }
 
     /**
@@ -102,8 +100,8 @@ public slots:
      * @param text message content
      * @param dt date and time of sending the text
      */
-    void text_from_client(const std::string& from, const std::string& text, DateTime dt) {
-        send_text_to_gui(from, text, dt);
+    void text_from_client(const ClientTextMsg& msg) {
+        send_text_to_gui(msg);
     }
 
     /**
@@ -118,22 +116,30 @@ public slots:
      * @brief change_window
      * @todo IWindow - classes
      */
-    void change_window(InputCode a_code) {
-        QObject::connect(this, SIGNAL(send_input_code(InputCode)), &w, SLOT(handler_input_code(InputCode)));
-        if (a_code == InputCode::BusyRegistr || a_code == InputCode::IncorrectAutor) {
-            emit send_input_code(a_code);
-        }
-        else {
-            w.hide();
-            chat_window.show();
+    void change_window(InputCode a_code);
+    void change_room_from_chat();
+
+    void update_channels() {
+        if (channels_window) {
+            channels_window->update_list_channels();
         }
     }
 
+    void go_channel(int room_id) {
+        if (chat_window) {
+            client->set_current_channel(room_id);
+            chat_window->upload_history();
+
+            channels_window->hide();
+            chat_window->show();
+        }
+    }
 
 private:
     std::shared_ptr<Client> client;
-    MainWindow w;
-    ChatWindow chat_window;
+    std::unique_ptr<MainWindow> start_window;
+    std::unique_ptr<ChannelsWindow> channels_window;
+    std::unique_ptr<ChatWindow> chat_window;
 
     std::vector<uint8_t> __buffer;
 

@@ -5,12 +5,27 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    ui->label_username->setStyleSheet("color: rgb(255, 250, 250)");
+    ui->label_password->setStyleSheet("color: rgb(255,250,250)");
+
+    QPalette pail;
+//    pail.setBrush(this->backgroundRole(), QBrush(QPixmap(":/theme/gui/images/mainwindow.jpg")));
+    pail.setColor(this->backgroundRole(), Qt::darkCyan);
+    this->setPalette(pail);
+//    this->setAutoFillBackground(true);
+
     ui->password->setEchoMode(QLineEdit::Password);
+
+    QWidget::setTabOrder(ui->logon, ui->password);
+    QWidget::setTabOrder(ui->password, ui->push_autorisation);
+    QWidget::setTabOrder(ui->push_autorisation, ui->push_registration);
+    QWidget::setTabOrder(ui->push_registration, ui->logon);
 }
 
 MainWindow::~MainWindow()
@@ -20,10 +35,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_push_autorisation_clicked()
 {
-    logon = ui->logon->text();
-    password = ui->password->text();
-    if (logon.isEmpty() || password.isEmpty()) return;
-    send_autorisation_info(logon.toStdString(), password.toStdString());
+    const auto login = ui->logon->text().toStdString();
+    const auto password = ui->password->text().toStdString();
+    if (login.empty() || password.empty()) return;
+    send_autorisation_info(login, password);
     ui->logon->clear();
     ui->password->clear();
 }
@@ -31,10 +46,10 @@ void MainWindow::on_push_autorisation_clicked()
 
 void MainWindow::on_push_registration_clicked()
 {
-    logon = ui->logon->text();
-    password = ui->password->text();
-    if (logon.isEmpty() || password.isEmpty()) return;
-    send_registration_info(logon.toStdString(), password.toStdString());
+    const auto login = ui->logon->text().toStdString();
+    const auto password = ui->password->text().toStdString();
+    if (login.empty() || password.empty()) return;
+    send_registration_info(login, password);
     ui->logon->clear();
     ui->password->clear();
 }

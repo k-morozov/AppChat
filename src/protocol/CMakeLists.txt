@@ -26,12 +26,11 @@ set_target_properties(${PROTOCOL_LIB_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED ON
 )
 
-target_compile_options(${PROTOCOL_LIB_NAME} PRIVATE "-O2;-Wall;-Wextra;-Wpedantic;-fPIC")
+target_compile_options(${PROTOCOL_LIB_NAME} PRIVATE "-O2;-fPIC")
 
 target_link_libraries(${PROTOCOL_LIB_NAME}
     PRIVATE
         pthread
-        project_warnings
         project_sanitizers
 )
 
@@ -45,8 +44,10 @@ add_library(messages_pb_lib STATIC include/protocol/proto/build/messages.pb.cc
 include/protocol/proto/build/request.pb.cc 
 include/protocol/proto/build/response.pb.cc)
 
-target_link_libraries(messages_pb_lib protobuf)
 set_target_properties(messages_pb_lib PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
 )
+
+target_link_libraries(messages_pb_lib protobuf)
+

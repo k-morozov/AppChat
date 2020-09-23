@@ -3,149 +3,115 @@
 #include "protocol/protocol.h"
 #include <memory>
 
-BOOST_AUTO_TEST_CASE(registration_basic) {
+BOOST_AUTO_TEST_CASE(request_reg_1) {
     std::string login = "vasiliy";
     std::string passsword = "a1s22g_1";
 
-    RegistrationRequest  request(login.data(),passsword.data());
+    auto reg_request_bin = Protocol::MsgFactory::create_reg_request(login, passsword);
 
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
+    BOOST_CHECK(reg_request_bin->has_register_request());
+    BOOST_CHECK(!reg_request_bin->has_input_request());
+    BOOST_CHECK(!reg_request_bin->has_text_request());
+    BOOST_CHECK(!reg_request_bin->has_join_room_request());
 }
 
-BOOST_AUTO_TEST_CASE(registration_empty_login) {
+BOOST_AUTO_TEST_CASE(request_reg_2) {
+    std::string login = "vasiliysdasdasdasadsdadsad asdsad";
+    std::string passsword = "a1s22g_1sadasdsadsadasdsad1231231242142140856856";
+
+    auto reg_request_bin = Protocol::MsgFactory::create_reg_request(login, passsword);
+
+    BOOST_CHECK(reg_request_bin->has_register_request());
+    BOOST_CHECK(!reg_request_bin->has_input_request());
+    BOOST_CHECK(!reg_request_bin->has_text_request());
+    BOOST_CHECK(!reg_request_bin->has_join_room_request());
+}
+
+BOOST_AUTO_TEST_CASE(request_reg_3) {
     std::string login = "";
-    std::string passsword = "a1s22g";
-    RegistrationRequest  request(login.data(),passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(registration_empty_password) {
-    std::string login = "vasiliy";
-    std::string passsword       = "";
-    RegistrationRequest  request(login.data(), passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(registration_over_login) {
-    std::string fake_login = "vasiliyaaaaaaaaBBBB";
-    std::string login = "vasiliyaaaaaaaa";
-    std::string passsword = "a1s22g";
-    RegistrationRequest  request(fake_login.data(),passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(registration_over_password) {
-    std::string login = "vasiliy";
-    std::string fake_passsword  = "12345678901234567890123456789012345";
-    std::string passsword       = "1234567890123456789012345678901";
-    RegistrationRequest  request(login.data(), fake_passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::RegistrationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(autorisation_basic) {
-    std::string login = "vasiliy";
-    std::string passsword = "a1s22g_1";
-
-    AutorisationRequest  request(login.data(),passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(autorisation_empty_login) {
-    std::string login = "";
-    std::string passsword = "a1s22g_1";
-
-    AutorisationRequest  request(login.data(),passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(autorisation_empty_password) {
-    std::string login = "vasiliy";
     std::string passsword = "";
 
-    AutorisationRequest  request(login.data(),passsword.data());
+    auto reg_request_bin = Protocol::MsgFactory::create_reg_request(login, passsword);
 
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
+    BOOST_CHECK(reg_request_bin->has_register_request());
+    BOOST_CHECK(!reg_request_bin->has_input_request());
+    BOOST_CHECK(!reg_request_bin->has_text_request());
+    BOOST_CHECK(!reg_request_bin->has_join_room_request());
 }
 
-BOOST_AUTO_TEST_CASE(autorisation_over_login) {
-    std::string fake_login      = "vasiliyaaaaaaaaBBBB";
-    std::string login           = "vasiliyaaaaaaaa";
-    std::string passsword = "a1s22g";
-    AutorisationRequest  request(fake_login.data(),passsword.data());
-
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
-}
-
-BOOST_AUTO_TEST_CASE(autorisation_over_password) {
+BOOST_AUTO_TEST_CASE(registration_request_1) {
     std::string login = "vasiliy";
-    std::string fake_passsword  = "12345678901234567890123456789012345";
-    std::string passsword       = "1234567890123456789012345678901";
-    AutorisationRequest  request(login.data(), fake_passsword.data());
+    std::string passsword = "a1s22g_1";
 
-    BOOST_CHECK(request.get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request.get_type_data() == TypeCommand::AuthorisationRequest);
-    BOOST_CHECK(request.get_login() == login);
-    BOOST_CHECK(request.get_password() == passsword);
+    auto reg_request_bin = Protocol::MsgFactory::create_reg_request(login, passsword);
+
+    BOOST_CHECK(reg_request_bin->register_request().login() == login);
+    BOOST_CHECK(reg_request_bin->register_request().password() == passsword);
 }
 
-BOOST_AUTO_TEST_CASE(autorisation_basic_ptr) {
+BOOST_AUTO_TEST_CASE(registration_request_2) {
+    std::string login = "vasilsdasafmdskndlskn dsmfkkdsnfkndsnfsdlnfkldsnflknsdfkndslkfniy";
+    std::string passsword = "a1s22g_133289408324877gds8f7gds7gsd7g987dsfg87sd89g78ds7g7sdg987sd8g7987dsg";
+
+    auto reg_request_bin = Protocol::MsgFactory::create_reg_request(login, passsword);
+
+    BOOST_CHECK(reg_request_bin->register_request().login() == login);
+    BOOST_CHECK(reg_request_bin->register_request().password() == passsword);
+}
+
+//*********************************************************************************************************************
+BOOST_AUTO_TEST_CASE(request_auto_1) {
     std::string login = "vasiliy";
-    std::string password = "a1s22g_1";
+    std::string passsword = "a1s22g_1";
 
-    autor_request_ptr request;
-    request = std::make_shared<AutorisationRequest>(login.data(), password.data());
+    auto in_request_bin = Protocol::MsgFactory::create_input_request(login, passsword);
 
-    BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
-    BOOST_CHECK(request->get_login() == login);
-    BOOST_CHECK(request->get_password() == password);
+    BOOST_CHECK(!in_request_bin->has_register_request());
+    BOOST_CHECK(in_request_bin->has_input_request());
+    BOOST_CHECK(!in_request_bin->has_text_request());
+    BOOST_CHECK(!in_request_bin->has_join_room_request());
 }
 
-BOOST_AUTO_TEST_CASE(input_basic_empty_ptr) {
-    input_request_ptr request;
-    request = std::make_shared<AutorisationRequest>();
+BOOST_AUTO_TEST_CASE(request_auto_2) {
+    std::string login = "vasiliysdasdasdasadsdadsad asdsad";
+    std::string passsword = "a1s22g_1sadasdsadsadasdsad1231231242142140856856";
 
-    BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
+    auto in_request_bin = Protocol::MsgFactory::create_input_request(login, passsword);
+
+    BOOST_CHECK(!in_request_bin->has_register_request());
+    BOOST_CHECK(in_request_bin->has_input_request());
+    BOOST_CHECK(!in_request_bin->has_text_request());
+    BOOST_CHECK(!in_request_bin->has_join_room_request());
 }
 
-BOOST_AUTO_TEST_CASE(autorisation_basic_empty_ptr) {
-    autor_request_ptr request;
-    request = std::make_shared<AutorisationRequest>();
+BOOST_AUTO_TEST_CASE(request_auto_3) {
+    std::string login = "";
+    std::string passsword = "";
 
-    BOOST_CHECK(request->get_protocol_version() == PROTOCOL_VERS);
-    BOOST_CHECK(request->get_type_data() == TypeCommand::AuthorisationRequest);
+    auto in_request_bin = Protocol::MsgFactory::create_input_request(login, passsword);
+
+    BOOST_CHECK(!in_request_bin->has_register_request());
+    BOOST_CHECK(in_request_bin->has_input_request());
+    BOOST_CHECK(!in_request_bin->has_text_request());
+    BOOST_CHECK(!in_request_bin->has_join_room_request());
+}
+
+BOOST_AUTO_TEST_CASE(auto_request_1) {
+    std::string login = "vasiliy";
+    std::string passsword = "a1s22g_1";
+
+    auto in_request_bin = Protocol::MsgFactory::create_input_request(login, passsword);
+
+    BOOST_CHECK(in_request_bin->input_request().login() == login);
+    BOOST_CHECK(in_request_bin->input_request().password() == passsword);
+}
+
+BOOST_AUTO_TEST_CASE(auto_request_2) {
+    std::string login = "vasilsdasafmdskndlskn dsmfkkdsnfkndsnfsdlnfkldsnflknsdfkndslkfniy";
+    std::string passsword = "a1s22g_133289408324877gds8f7gds7gsd7g987dsfg87sd89g78ds7g7sdg987sd8g7987dsg";
+
+    auto in_request_bin = Protocol::MsgFactory::create_input_request(login, passsword);
+
+    BOOST_CHECK(in_request_bin->input_request().login() == login);
+    BOOST_CHECK(in_request_bin->input_request().password() == passsword);
 }

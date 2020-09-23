@@ -19,26 +19,37 @@ class MsgFactory
 public:
     MsgFactory();
 
+    [[nodiscard]]
     static ptr_proto_request_t create_input_request(const std::string& login, const std::string& password);
 
+    [[nodiscard]]
     static ptr_proto_request_t create_reg_request(const std::string& login, const std::string& password);
 
+    [[nodiscard]]
     static ptr_proto_request_t join_room_request(int room_id);
 
+    [[nodiscard]]
     static ptr_proto_request_t create_text_request(const std::string& login, int room_id, const std::string& text);
 
+    [[nodiscard]]
     static ptr_header_t create_header(TypeCommand command, std::size_t length);
 
+    [[nodiscard]]
     static ptr_proto_response_t create_input_response(int client_id);
 
+    [[nodiscard]]
     static ptr_proto_response_t create_reg_response(int client_id);
 
+    [[nodiscard]]
     static ptr_proto_response_t create_text_response(const std::string& login, int room_id, const std::string& text);
 
+    [[nodiscard]]
     static ptr_proto_response_t create_join_room_response(int new_room_id, bool flag);
 
+    [[nodiscard]]
     static std::vector<uint8_t> serialize_response(ptr_header_t&& header_ptr, ptr_proto_response_t&& response_ptr);
 
+    [[nodiscard]]
     static std::vector<uint8_t> serialize_request(ptr_header_t&& header_ptr, ptr_proto_request_t&& request_ptr);
 };
 

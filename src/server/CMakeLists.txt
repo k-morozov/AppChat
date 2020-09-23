@@ -10,6 +10,9 @@ set(DIR_STORAGE     storage)
 
 set(CMAKE_CXX_FLAGS "-lboost_program_options")
 
+#add_definitions(-DBOOST_LOG_DYN_LINK)
+set(Boost_USE_STATIC_LIBS ON)
+
 set(CHANNELS_SRC
     ${DIR_CHANNEL}/iroom.h
     ${DIR_CHANNEL}/iroom.cpp
@@ -30,7 +33,7 @@ set(LOGGER_SRC
     ${DIR_LOG}/logger.h
     ${DIR_LOG}/logger.cpp
 )
-
+find_package(sqlite3)
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
 set(STORAGE_SRC
      ${DIR_STORAGE}/database.h
@@ -53,7 +56,7 @@ target_include_directories(${SERVER_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-unset(PROTOCOL_INCLUDE_DIRECTORIES)
+#unset(PROTOCOL_INCLUDE_DIRECTORIES)
 
 target_sources(${SERVER_NAME} PRIVATE ${SERVER_SOURCES})
 
@@ -62,14 +65,23 @@ set_target_properties(${SERVER_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED ON
 )
 
-target_compile_options(${SERVER_NAME} PRIVATE "-O2;-Wall;-Wextra;-Wpedantic;-lboost_log_setup;-lboost_log;-lboost_program_options;")
+target_compile_options(${SERVER_NAME} PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -std=c++17
+    -lboost_log_setup
+    -lboost_log
+    -lboost_program_options
+)
 
 find_library(SQLITE3_LIBRARY NAMES sqlite3)
-find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework program_options log_setup log filesystem REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system date_time unit_test_framework program_options log_setup log REQUIRED)
 
 target_link_libraries (${SERVER_NAME}
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
+    ${BOOST_LOG_LUBRARY}
     ${BOOST_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
     protocol_lib
@@ -77,6 +89,8 @@ target_link_libraries (${SERVER_NAME}
     project_warnings
     project_sanitizers
     messages_pb_lib
+    stdc++fs
+
 )
 
 if (NOT WIN32)

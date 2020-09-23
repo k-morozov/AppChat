@@ -2,25 +2,29 @@
 
 
 connection_ptr ConnectionManager::get_connection(boost::asio::ip::tcp::socket&& _socket) {
-    BOOST_LOG_TRIVIAL(info) << "get_connection()";
-    auto it = std::find_if(pool_connections.begin(), pool_connections.end(), [](const connection_ptr& ptr) {
-       return !ptr->is_busy();
-    });
-    if (it!=pool_connections.end()) {
-        (*it)->reuse(std::move(_socket));
+    auto block = std::make_shared<Connection>(thread_pool, std::move(_socket), db);
+    pool_connections.push_back(block);
+    return block;
 
-        BOOST_LOG_TRIVIAL(info) << "use old connection, current size pool = " << pool_connections.size();
-        print_pool();
-        return (*it);
-    }
-    else {
-        auto block = std::make_shared<Connection>(thread_pool, std::move(_socket), db);
-        pool_connections.push_back(block);
+//    BOOST_LOG_TRIVIAL(info) << "get_connection()";
+//    auto it = std::find_if(pool_connections.begin(), pool_connections.end(), [](const connection_ptr& ptr) {
+//       return !ptr->is_busy();
+//    });
+//    if (it!=pool_connections.end()) {
+//        (*it)->reuse(std::move(_socket));
 
-        BOOST_LOG_TRIVIAL(info) << "create new connection, current size pool = " << pool_connections.size();
-        print_pool();
-        return block;
-    }
+//        BOOST_LOG_TRIVIAL(info) << "use old connection, current size pool = " << pool_connections.size();
+//        print_pool();
+//        return (*it);
+//    }
+//    else {
+//        auto block = std::make_shared<Connection>(thread_pool, std::move(_socket), db);
+//        pool_connections.push_back(block);
+
+//        BOOST_LOG_TRIVIAL(info) << "create new connection, current size pool = " << pool_connections.size();
+//        print_pool();
+//        return block;
+//    }
 
 }
 

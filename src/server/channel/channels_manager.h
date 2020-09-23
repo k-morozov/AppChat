@@ -42,6 +42,8 @@ public:
      */
     void leave(identifier_t client_id, identifier_t room_id);
 
+    void leave_from_all_channels(identifier_t a_client_id);
+
 private:
     /**
      * @brief Construct a new Channels Manager
@@ -49,7 +51,7 @@ private:
     ChannelsManager();
 
     std::unordered_map<identifier_t, iroom_ptr> channels;
-    std::unordered_map<identifier_t, identifier_t> clients_in_room;
+    std::unordered_map<identifier_t, std::deque<identifier_t>> client_in_rooms;
     std::unordered_map<identifier_t, std::string> clientid_to_login;
 
 };

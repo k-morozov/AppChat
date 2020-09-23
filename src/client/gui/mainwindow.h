@@ -25,23 +25,16 @@ class MainWindow : public QMainWindow
 public:
     /**
      * @brief Construct ManWindow
-     * 
      * @param parent QObejct parent that is neccessary to support Qt memory system
      */
     MainWindow(QWidget *parent = nullptr);
 
+    void handler_input_code(InputCode input_code);
     /**
      * @brief Destroy the Main Window object
-     * 
      */
     ~MainWindow();
 
-    /**
-     * @brief Get message from UI
-     * 
-     * @return std::string 
-     */
-    std::string get_message();
 signals:
     /**
      * @brief Notify user is authorizing on the server
@@ -75,12 +68,9 @@ private slots:
      * 
      * @param input_code
      */
-    void handler_input_code(InputCode input_code);
+
+
 private:
     Ui::MainWindow *ui;
-
-    QString logon;
-    QString password;
-    QString roomid;
 };
 #endif // MAINWINDOW_H

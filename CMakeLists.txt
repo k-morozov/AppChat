@@ -38,8 +38,6 @@ else ()
     endif()
 endif()
 
-include_directories(${Protobuf_INCLUDE_DIRS})
-
 include(${CMAKE_SOURCE_DIR}/cmake/ProjectWarnings.cmake)
 add_library(project_warnings INTERFACE)
 enable_warnings(project_warnings)
@@ -58,14 +56,14 @@ endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/client)
 
 # build tests
-#add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
 
 if (NOT WIN32)
     set(CPACK_GENERATOR DEB)
     set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
     set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
     set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-    set(CPACK_PACKAGE_CONTACT scfocus@yandex.ru)
+    set(CPACK_PACKAGE_CONTACT morozov-kst@yandex.ru)
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
     include(CPack)
 endif()
